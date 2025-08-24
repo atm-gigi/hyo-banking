@@ -18,7 +18,7 @@ java {
 
 checkstyle {
 	toolVersion = '10.17.0'
-	config = resources.text.fromFile('config/checkstyle/checkstyle.xml')
+	config = resources.text.fromFile('config/checkstyle/google_checks.xml')
 }
 
 spotbugs {
