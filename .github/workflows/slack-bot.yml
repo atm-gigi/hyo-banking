@@ -100,47 +100,47 @@ jobs:
 
           # Slack Block Kit payload 작성 (jq로 안전하게)
           jq -n \
-            --arg title        "$TITLE — $REPO" \
-            --arg actor        "$ACTOR" \
-            --arg eventname    "$EVENT_NAME" \
-            --arg action       "$ACTION" \
-            --arg url          "$URL" \
-            --arg repo         "$REPO" \
-            --arg numberField  "$NUM_FIELD" \
-            --arg summary      "$TITLE_RAW" \
-            --arg body         "$BODY_TRUNC" \
-            --arg run_url      "$GITHUB_RUN_URL" \
-            --arg color        "$COLOR" \
-            '{
-              attachments: [
-                {
-                  color: $color,
-                  blocks: [
-                    { "type": "header", "text": { "type": "plain_text", "text": $title, "emoji": true } },
-                    { "type": "section",
-                      "fields": [
-                        { "type": "mrkdwn", "text": "*Actor:*\n" + $actor },
-                        { "type": "mrkdwn", "text": "*Event:*\n" + $eventname + (if $action != "" then "/" + $action else "" end) },
-                        { "type": "mrkdwn", "text": "*Repo:*\n" + $repo },
-                        (if $numberField != "" then { "type": "mrkdwn", "text": $numberField } else empty end)
-                      ]
-                    },
-                    (if $summary != "" then { "type": "section", "text": { "type": "mrkdwn", "text": "*Title:*\n" + $summary } } else empty end),
-                    { "type": "section", "text": { "type": "mrkdwn", "text": "*Description:*\n" + $body } },
-                    { "type": "actions",
-                      "elements": [
-                        { "type": "button", "text": { "type": "plain_text", "text": "Open in GitHub" }, "url": $url }
-                      ]
-                    },
-                    { "type": "context",
-                      "elements": [
-                        { "type": "mrkdwn", "text": "Run: <" + $run_url + "|#${{ github.run_id }}> • $(date +%Y-%m-%d)" }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }' > payload.json
+          --arg title     "$TITLE — $REPO" \
+          --arg actor     "$ACTOR" \
+          --arg eventname "$EVENT_NAME" \
+          --arg action    "$ACTION" \
+          --arg url       "$URL" \
+          --arg repo      "$REPO" \
+          --arg number    "$NUMBER" \
+          --arg summary   "$TITLE_RAW" \
+          --arg body      "$BODY_TRUNC" \
+          --arg run_url   "$GITHUB_RUN_URL" \
+          --arg run_id    "$RUN_ID" \
+          --arg color     "$COLOR" \
+          --arg date      "$DATE" '
+          def field(x): {"type":"mrkdwn","text":x};
+    
+          {
+            attachments: [
+              {
+                color: $color,
+                blocks: (
+                  [
+                    {"type":"header","text":{"type":"plain_text","text":$title,"emoji":true}},
+                    {"type":"section","fields":[
+                      field("*Actor:*\n\($actor)"),
+                      field("*Event:*\n\($eventname)\(if $action != "" then "/\($action)" else "" end)"),
+                      field("*Repo:*\n\($repo)"),
+                      (if $number != "" then field("*Number:*\n#\($number)") else empty end)
+                    ]},
+                    (if $summary != "" then {"type":"section","text":{"type":"mrkdwn","text":"*Title:*\n\($summary)"}} else empty end),
+                    {"type":"section","text":{"type":"mrkdwn","text":"*Description:*\n\($body)"}},
+                    {"type":"actions","elements":[
+                      {"type":"button","text":{"type":"plain_text","text":"Open in GitHub"},"url":$url}
+                    ]},
+                    {"type":"context","elements":[
+                      {"type":"mrkdwn","text":"Run: <\($run_url)|#\($run_id)> • \($date)"}
+                    ]}
+                  ] | map(select(. != null))
+                )
+              }
+            ]
+          }' > payload.json
 
       - name: Send to Slack via Incoming Webhook
         env:
