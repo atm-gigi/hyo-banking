@@ -1,0 +1,112 @@
+# .github/workflows/reviewdog.yml
+name: reviewdog (FE/BE)
+on:
+  pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  backend:
+    name: backend (checkstyle/spotbugs)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hyo-banking-be
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17', cache: 'gradle' }
+
+      - run: ./gradlew checkstyleMain checkstyleTest spotbugsMain spotbugsTest --no-daemon
+
+      # Checkstyle → reviewdog
+      - uses: reviewdog/action-checkstyle@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: error
+          filter_mode: diff_context
+          fail_on_error: "false"
+          checkstyle_input: |
+            build/reports/checkstyle/main.xml
+            build/reports/checkstyle/test.xml
+
+      # SpotBugs → reviewdog
+      - uses: reviewdog/action-spotbugs@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          filter_mode: diff_context
+          fail_on_error: "false"
+          spotbugs_xml_report_path: |
+            build/reports/spotbugs/main.xml
+            build/reports/spotbugs/test.xml
+
+  frontend-mobile:
+    name: frontend-mobile (eslint/stylelint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hyo-banking-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npx eslint . -f junit -o eslint-report.xml || true
+      - run: npx stylelint "**/*.{css,scss,vue}" --custom-formatter "node_modules/stylelint-junit-formatter" > stylelint-report.xml || true
+
+      - uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-pr-review
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          eslint_reporter: junit
+          eslint_filter_mode: diff_context
+          level: warning
+          fail_on_error: "false"
+          eslint_input: "eslint-report.xml"
+
+      - uses: reviewdog/action-stylelint@v1
+        with:
+          reporter: github-pr-review
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          stylelint_input: "stylelint-report.xml"
+          stylelint_reporter: junit
+          filter_mode: diff_context
+          level: warning
+          fail_on_error: "false"
+  frontend-atm:
+    name: frontend-atm (eslint/stylelint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hyo-banking-atm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npx eslint . -f junit -o eslint-report.xml || true
+      - run: npx stylelint "**/*.{css,scss,vue}" --custom-formatter "node_modules/stylelint-junit-formatter" > stylelint-report.xml || true
+
+      - uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-pr-review
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          eslint_reporter: junit
+          eslint_filter_mode: diff_context
+          level: warning
+          fail_on_error: "false"
+          eslint_input: "eslint-report.xml"
+
+      - uses: reviewdog/action-stylelint@v1
+        with:
+          reporter: github-pr-review
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          stylelint_input: "stylelint-report.xml"
+          stylelint_reporter: junit
+          filter_mode: diff_context
+          level: warning
+          fail_on_error: "false"
+
