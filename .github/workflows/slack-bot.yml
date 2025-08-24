@@ -155,7 +155,6 @@ jobs:
     
           {
             channel: $channel,
-            text: $summary,
             attachments: [
               {
                 color: $color,
