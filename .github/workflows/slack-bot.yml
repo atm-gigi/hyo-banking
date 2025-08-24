@@ -94,6 +94,31 @@ jobs:
             BODY_TRUNC="(no description)"
           fi
 
+          # ── GitHub MD → Slack mrkdwn 변환 ──
+          BODY_SLACK="$BODY_TRUNC"
+          
+          # 1) 체크리스트: - [x] / - [ ]  → • :white_check_mark: / • :white_large_square:
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/^[[:space:]]*[-*][[:space:]]+\[[xX]\][[:space:]]+(.+)$/• :white_check_mark: \1/g')
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/^[[:space:]]*[-*][[:space:]]+\[[[:space:]]*\][[:space:]]+(.+)$/• :white_large_square: \1/g')
+          
+          # 2) 일반 리스트: - item / * item → • item
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/^[[:space:]]*[-*][[:space:]]+(.+)$/• \1/g')
+          
+          # 3) 헤딩: ### Title → *Title*  (Slack은 헤딩 문법 없음 → 볼드로 대체)
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/^(#{1,6})[[:space:]]*(.+)$/*\2*/g')
+          
+          # 4) 링크: [text](url) → <url|text>
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/\[([^\]]+)\]\((https?:[^)]+)\)/<\2|\1>/g')
+          
+          # 5) 볼드: **text** → *text*
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/\*\*([^*]+)\*\*/*\1*/g')
+          
+          # 6) 이미지: ![alt](url) → <url>
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/!\[[^]]*\]\((https?:[^)]+)\)/<\1>/g')
+          
+          # 7) 탭 → 공백
+          BODY_SLACK=$(printf "%s" "$BODY_SLACK" | sed -E 's/\t/    /g')
+
           # 번호 표기
           NUM_FIELD=""
           if [ -n "${NUMBER}" ]; then
@@ -110,7 +135,7 @@ jobs:
           --arg repo      "$REPO" \
           --arg number    "$NUMBER" \
           --arg summary   "$TITLE_RAW" \
-          --arg body      "$BODY_TRUNC" \
+          --arg body      "$BODY_SLACK" \
           --arg run_url   "$GITHUB_RUN_URL" \
           --arg run_id    "$RUN_ID" \
           --arg color     "$COLOR" \
@@ -130,8 +155,8 @@ jobs:
                       field("*Repo:*\n\($repo)"),
                       (if $number != "" then field("*Number:*\n#\($number)") else empty end)
                     ]},
-                    (if $summary != "" then {"type":"section","text":{"type":"mrkdwn","text":"*Title:*\n\($summary)"}} else empty end),
-                    {"type":"section","text":{"type":"mrkdwn","text":"*Description:*\n\($body)"}},
+                    (if $summary != "" then {"type":"section","text":{"type":"mrkdwn","text":"\($summary)"}} else empty end),
+                    {"type":"section","text":{"type":"mrkdwn","text":"\($body)"}},
                     {"type":"actions","elements":[
                       {"type":"button","text":{"type":"plain_text","text":"Open in GitHub"},"url":$url}
                     ]},
