@@ -18,7 +18,7 @@ java {
 
 checkstyle {
 	toolVersion = '10.17.0'
-	config = resources.text.fromFile('config/checkstyle/google_checks.xml')
+	config = resources.text.fromFile(rootProject.file('config/checkstyle/google_checks.xml'))
 }
 
 spotbugs {
@@ -55,6 +55,13 @@ tasks.named('test') {
 }
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+	reports {
+		xml.required = true
+		html.required = false
+	}
+}
+
+tasks.withType(Checkstyle).configureEach {
 	reports {
 		xml.required = true
 		html.required = false
