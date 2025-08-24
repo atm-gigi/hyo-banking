@@ -8,7 +8,7 @@ on:
         required: false
         default: 'Manual test from workflow_dispatch'
   issues:
-    types: [opened, edited, closed, reopened, assigned, labeled, unlabeled]
+    types: [opened, edited, closed, reopened]
   issue_comment:
     types: [created]
   pull_request:
@@ -22,9 +22,12 @@ permissions:
 jobs:
   notify:
     runs-on: ubuntu-latest
-    # 노이즈 줄이고 싶으면 아래처럼 조건을 추가해 주세요 (예: 라벨 없을 때만 전송)
-    # if: ${{ github.event_name != 'issues' || !contains(join(github.event.issue.labels.*.name, ','), 'no-slack') }}
-
+    
+    env:
+      CH_ISSUES:   ${{ vars.SLACK_CHANNEL_ISSUES }}
+      CH_PRS:      ${{ vars.SLACK_CHANNEL_PRS }}
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      
     steps:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -54,15 +57,22 @@ jobs:
 
           MERGED=$(jq -r '.pull_request.merged // false' "$EVENT_PATH")
 
+          # 이벤트 → 채널 라우팅
+          CHANNEL=""
+          case "${EVENT_NAME}" in
+            issues|issue_comment) CHANNEL="${CH_ISSUES}";;
+            pull_request)         CHANNEL="${CH_PRS}";;
+          esac
+          
           # 이벤트별 타이틀/이모지/색상
           TITLE=""
           COLOR="#dddddd"
           case "${EVENT_NAME}/${ACTION}" in
-            issues/opened)              TITLE="🆕 이슈 열림" ; COLOR="#36a64f" ;;
+            issues/opened)              TITLE="💡 이슈 열림" ; COLOR="#36a64f" ;;
             issues/closed)              TITLE="✅ 이슈 닫힘" ; COLOR="#aaaaaa" ;;
-            issues/reopened)            TITLE="♻️ 이슈 다시 열림" ; COLOR="#e3b341" ;;
+            issues/reopened)            TITLE="🔄 이슈 다시 열림" ; COLOR="#e3b341" ;;
             pull_request/opened)        TITLE="📣 풀 리퀘스트 요청" ; COLOR="#439FE0" ;;
-            pull_request/ready_for_review) TITLE="🚀 풀 리퀘스트 리뷰 요청 준비됨" ; COLOR="#439FE0" ;;
+            pull_request/ready_for_review) TITLE="🚀 풀 리퀘스트 리뷰 준비" ; COLOR="#439FE0" ;;
             pull_request/converted_to_draft) TITLE="📝 풀 리퀘스트 초안으로 변경" ; COLOR="#aaaaaa" ;;
             pull_request/closed)
               if [ "$MERGED" = "true" ]; then
@@ -127,6 +137,7 @@ jobs:
 
           # Slack Block Kit payload 작성 (jq로 안전하게)
           jq -n \
+          --arg channel  "$CHANNEL" \
           --arg title     "$TITLE_RAW — $TITLE" \
           --arg actor     "$ACTOR" \
           --arg eventname "$EVENT_NAME" \
@@ -143,19 +154,19 @@ jobs:
           def field(x): {"type":"mrkdwn","text":x};
     
           {
+            channel: $channel,
+            text: $summary,
             attachments: [
               {
                 color: $color,
                 blocks: (
                   [
                     {"type":"header","text":{"type":"plain_text","text":$title,"emoji":true}},
-                    {"type":"section","fields":[
-                      field("*Actor:*\n\($actor)"),
-                      field("*Event:*\n\($eventname)\(if $action != "" then "/\($action)" else "" end)"),
-                      field("*Repo:*\n\($repo)"),
-                      (if $number != "" then field("*Number:*\n#\($number)") else empty end)
-                    ]},
                     {"type":"section","text":{"type":"mrkdwn","text":"\($body)"}},
+                    {"type":"section","fields":[
+                      field("*작성자:*\n\($actor)"),
+                      (if $number != "" then field("*번호:*\n#\($number)") else empty end)
+                    ]},
                     {"type":"actions","elements":[
                       {"type":"button","text":{"type":"plain_text","text":"Open in GitHub"},"url":$url}
                     ]},
@@ -168,9 +179,16 @@ jobs:
             ]
           }' > payload.json
 
-      - name: Send to Slack via Incoming Webhook
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Send to Slack via chat.postMessage (Bot Token)
         run: |
           set -euo pipefail
-          curl -s -X POST -H 'Content-type: application/json' --data @payload.json "$SLACK_WEBHOOK_URL" >/dev/null
+          RESP=$(curl -sS -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-type: application/json; charset=utf-8" \
+            --data @payload.json)
+
+          echo "$RESP" | jq .
+          echo "$RESP" | jq -e '.ok == true' >/dev/null || {
+            echo "Slack API error: $(echo "$RESP" | jq -r '.error // "unknown_error"')"
+            exit 1
+          }
