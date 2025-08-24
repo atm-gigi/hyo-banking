@@ -127,7 +127,7 @@ jobs:
 
           # Slack Block Kit payload 작성 (jq로 안전하게)
           jq -n \
-          --arg title     "$TITLE — $REPO" \
+          --arg title     "$TITLE_RAW — $TITLE" \
           --arg actor     "$ACTOR" \
           --arg eventname "$EVENT_NAME" \
           --arg action    "$ACTION" \
@@ -155,7 +155,6 @@ jobs:
                       field("*Repo:*\n\($repo)"),
                       (if $number != "" then field("*Number:*\n#\($number)") else empty end)
                     ]},
-                    (if $summary != "" then {"type":"section","text":{"type":"mrkdwn","text":"\($summary)"}} else empty end),
                     {"type":"section","text":{"type":"mrkdwn","text":"\($body)"}},
                     {"type":"actions","elements":[
                       {"type":"button","text":{"type":"plain_text","text":"Open in GitHub"},"url":$url}
