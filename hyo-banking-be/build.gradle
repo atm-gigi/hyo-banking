@@ -17,8 +17,8 @@ java {
 }
 
 checkstyle {
-	toolVersion = '10.17.0'
-	config = resources.text.fromFile(rootProject.file('config/checkstyle/google_checks.xml'))
+	toolVersion = '11.0.0'
+	config = resources.text.fromFile('config/checkstyle/google_checks.xml')
 }
 
 spotbugs {
