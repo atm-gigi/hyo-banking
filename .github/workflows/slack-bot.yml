@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      CH_ISSUES:   ${{ vars.SLACK_CHANNEL_ISSUES }}
-      CH_PRS:      ${{ vars.SLACK_CHANNEL_PRS }}
+      CH_ISSUES:   ${{ secrets.SLACK_CH_ISSUES }}
+      CH_PRS:      ${{ secrets.SLACK_CH_PRS }}
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       
     steps:
