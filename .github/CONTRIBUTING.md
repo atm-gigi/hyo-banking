@@ -18,6 +18,7 @@ $git checkout -b feature/add-board-details
 ---
 
 ### **📦 커밋 컨벤션**
+
 - ✨`feat` : 새로운 기능 추가
 - 🐛`fix` : 버그 수정
 - 📚`docs` : 문서 수정
@@ -27,6 +28,7 @@ $git checkout -b feature/add-board-details
 - 💚`chore` : 빌드 업무 수정, 패키지 매니저 수정
 
 **🧾 커밋 메시지 형식**
+
 ```
 [Gitmoji][type][score] 변경사항 요약
 - 변경사항1
@@ -58,14 +60,27 @@ $git checkout -b feature/add-board-details
 - 메소드 체이닝 할 때 보기좋게 들여쓰기 해주기
 - 불필요한 줄임말, 축약 지양 (ex. `usr`, `cnt` 대신 `user`, `count`)
 
+**✅ 공통 스타일 - frontend**
+
+- **Prettier 자동 포맷팅 사용 필수**
+- 들여쓰기: **2칸 스페이스**
+- 세미콜론: **필수** (`;`)
+- 따옴표: **작은따옴표** (`'`)
+- 줄 길이: **100자 제한**
+- 개행문자: **LF (Unix 스타일)**
+- trailing comma: **ES5 호환 가능한 곳에만**
+- 중괄호 공백: **객체 리터럴에 공백 추가** `{ foo: bar }`
+- 화살표 함수 괄호: **매개변수 하나일 때 생략** `x => x`
+- Vue 파일: **script와 style 태그 내용 들여쓰기**
+
 **✅ 클래스/메서드/변수 네이밍**
 
-| **대상** | **규칙** | **예시** |
-| --- | --- | --- |
-| 클래스 | **UpperCamelCase** | `UserService`, `AccountController` |
-| 메서드 | **lowerCamelCase** | `getUserById()`, `registerUser()` |
-| 변수 | **lowerCamelCase** | `userName`, `accountList` |
-| 상수 | **UPPER_SNAKE_CASE** | `MAX_LIMIT`, `DEFAULT_TIMEOUT` |
+| **대상** | **규칙**             | **예시**                           |
+| -------- | -------------------- | ---------------------------------- |
+| 클래스   | **UpperCamelCase**   | `UserService`, `AccountController` |
+| 메서드   | **lowerCamelCase**   | `getUserById()`, `registerUser()`  |
+| 변수     | **lowerCamelCase**   | `userName`, `accountList`          |
+| 상수     | **UPPER_SNAKE_CASE** | `MAX_LIMIT`, `DEFAULT_TIMEOUT`     |
 
 **✅ 주석 스타일**
 
@@ -77,12 +92,22 @@ $git checkout -b feature/add-board-details
 `// TODO: 로그인 실패시 리다이렉션 로직 수정 필요
 // FIXME: 예외가 발생해도 로그가 안 찍힘. Logger 수정 필요`
 
+**✅ 프론트엔드 전용 네이밍**
+
+| **대상**        | **규칙**                      | **예시**                           |
+| --------------- | ----------------------------- | ---------------------------------- |
+| Vue 컴포넌트    | **PascalCase**                | `UserProfile.vue`, `LoginForm.vue` |
+| CSS 클래스      | **kebab-case**                | `user-profile`, `login-form`       |
+| Tailwind 클래스 | **공식 유틸리티 클래스 사용** | `bg-blue-500`, `text-center`       |
+| 이벤트 핸들러   | **handle + 동사**             | `handleSubmit`, `handleClick`      |
+| 상태 변수       | **is + 상태**                 | `isLoading`, `isVisible`           |
+
 ---
 
 ### 💡 이슈 작성 팁
 
 - 이슈 마지막 줄 그림
-<img width="799" height="140" alt="image" src="https://github.com/user-attachments/assets/a6bd12a4-cd46-4e3e-a274-8669ab4f9f7a" />
+  <img width="799" height="140" alt="image" src="https://github.com/user-attachments/assets/a6bd12a4-cd46-4e3e-a274-8669ab4f9f7a" />
 
 - `assignee` -> 자기 자신 혹은 같이 하시는분 등록
 - `label & issue type` -> 이슈의 타입 또는 속성(예시 : 개발일 경우 enhancement)
