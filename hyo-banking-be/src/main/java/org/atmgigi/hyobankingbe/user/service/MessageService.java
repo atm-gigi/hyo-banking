@@ -5,10 +5,15 @@ import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.atmgigi.hyobankingbe.user.dto.VerificationRequestDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.atmgigi.hyobankingbe.user.domain.VerificationCode;
 import org.atmgigi.hyobankingbe.user.repository.VerificationCodeRepository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Random;
 
@@ -41,6 +46,7 @@ public class MessageService {
             VerificationCode code = VerificationCode.builder()
                     .phone(toPhoneNumber)
                     .code(randomNum)
+                    .isVerified(false)
                     .build();
             codeRepository.save(code); // 인증 코드 저장
             messageService.send(message); // 인증코드 전송
@@ -51,6 +57,19 @@ public class MessageService {
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
+    }
+
+    @Transactional
+    public boolean verificationMessageCode(VerificationRequestDTO dto) {
+        VerificationCode code = codeRepository.findByPhone(dto.phone())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 번호입니다."));
+
+        if(code.getCode().equals(dto.code())) {
+            code.success();
+            codeRepository.save(code);
+            return true;
+        }
+        return false;
     }
 
     // 랜덤한 6자리 숫자 생성

@@ -1,6 +1,8 @@
 package org.atmgigi.hyobankingbe.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.atmgigi.hyobankingbe.user.dto.UserResponseDTO;
+import org.atmgigi.hyobankingbe.user.dto.VerificationRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.atmgigi.hyobankingbe.user.dto.UserJoinRequestDTO;
@@ -18,14 +20,13 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserJoinRequestDTO joinDTO) {
-        userService.createUser(joinDTO);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserJoinRequestDTO joinDTO) {
+        return ResponseEntity.ok( userService.createUser(joinDTO));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Long> loginUser(@RequestBody UserLoginRequestDTO loginDTO) {
+    public ResponseEntity<UserResponseDTO> loginUser(@RequestBody UserLoginRequestDTO loginDTO) {
         return ResponseEntity.ok(userService.loginUser(loginDTO));
     }
 
@@ -37,14 +38,16 @@ public class UserController {
 
     // 핸드폰 번호 인증메세지 전송
     @PostMapping("/message/send")
-    public ResponseEntity<?> sendMessage() {
-//        messageService.sendSms();
-        return ResponseEntity.ok(null);
+    public ResponseEntity<String> sendMessage(@RequestParam("phone") String phone) {
+        messageService.sendSms(phone);
+        return ResponseEntity.ok("메세지가 전송되었습니다.");
     }
 
     // 핸드폰 번호 인증
-    @GetMapping("/message/verification")
-    public ResponseEntity<?> verifyCode() {
-        return ResponseEntity.ok(null);
+    @PostMapping("/message/verification")
+    public ResponseEntity<String> verifyCode(@RequestBody VerificationRequestDTO verificationDTO) {
+        if(messageService.verificationMessageCode(verificationDTO))
+            return ResponseEntity.ok("인증이 완료되었습니다.");
+        return ResponseEntity.ok("인증에 실패하였습니다.");
     }
 }

@@ -3,6 +3,7 @@ package org.atmgigi.hyobankingbe.user.domain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class VerificationCode {
 
     @Id
@@ -17,4 +19,9 @@ public class VerificationCode {
     private long id;
     private String phone;
     private String code;
+    private boolean isVerified;
+
+    public void success() {
+        this.isVerified = true;
+    }
 }

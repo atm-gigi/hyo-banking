@@ -1,6 +1,7 @@
 package org.atmgigi.hyobankingbe.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.atmgigi.hyobankingbe.user.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,8 @@ import org.atmgigi.hyobankingbe.user.domain.User;
 import org.atmgigi.hyobankingbe.user.dto.UserJoinRequestDTO;
 import org.atmgigi.hyobankingbe.user.dto.UserLoginRequestDTO;
 import org.atmgigi.hyobankingbe.user.repository.UserRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +24,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public void createUser(UserJoinRequestDTO dto) {
+    public UserResponseDTO createUser(UserJoinRequestDTO dto) {
         User user = User.builder()
-                .loginId(dto.getLoginId())
-                .name(dto.getName())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .phone(dto.getPhone())
+                .loginId(dto.loginId())
+                .name(dto.name())
+                .password(passwordEncoder.encode(dto.password()))
+                .phone(dto.phone())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
+
+        return UserResponseDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .build();
     }
 
     @Override
@@ -38,20 +48,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long loginUser(UserLoginRequestDTO dto) {
-        // 비밀번호 암호화
-        String encodePassword = passwordEncoder.encode(dto.getPassword());
-
-        if(!userRepository.existsByLoginId(dto.getLoginId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 잘못입력하였습니다.");
-        }
-        if(!userRepository.existsByPassword(encodePassword)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 잘못입력하였습니다.");
-        }
-
-        User user = userRepository.findByLoginIdAndPassword(dto.getLoginId(), encodePassword)
+    public UserResponseDTO loginUser(UserLoginRequestDTO dto) {
+        User user = userRepository.findByLoginId(dto.loginId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
 
-        return user.getId();
+        if(!passwordEncoder.matches(dto.password(), user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
+
+        return UserResponseDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .build();
     }
 }

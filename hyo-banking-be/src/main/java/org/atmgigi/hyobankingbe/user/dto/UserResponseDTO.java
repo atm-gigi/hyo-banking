@@ -1,11 +1,14 @@
 package org.atmgigi.hyobankingbe.user.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-public record UserLoginRequestDTO (
-    String loginId,
-    String password
+@Builder
+public record UserResponseDTO (
+
+    long userId,
+    String name,
+    String phone
 ) {}

@@ -2,12 +2,13 @@ package org.atmgigi.hyobankingbe.user.service;
 
 import org.atmgigi.hyobankingbe.user.dto.UserJoinRequestDTO;
 import org.atmgigi.hyobankingbe.user.dto.UserLoginRequestDTO;
+import org.atmgigi.hyobankingbe.user.dto.UserResponseDTO;
 
 public interface UserService {
 
-    void createUser(UserJoinRequestDTO dto);
+    UserResponseDTO createUser(UserJoinRequestDTO dto);
 
     boolean existUserId(String loginId);
 
-    long loginUser(UserLoginRequestDTO dto);
+    UserResponseDTO loginUser(UserLoginRequestDTO dto);
 }

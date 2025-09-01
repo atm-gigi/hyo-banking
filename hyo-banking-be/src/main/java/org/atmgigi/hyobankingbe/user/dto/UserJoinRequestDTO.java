@@ -5,13 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserJoinRequestDTO {
-
-    private String loginId;
-    private String password;
-    private String name;
-    private String phone;
-}
+public record UserJoinRequestDTO (
+    String loginId,
+    String password,
+    String name,
+    String phone
+) {}
