@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 public class IdempotencyKey {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
