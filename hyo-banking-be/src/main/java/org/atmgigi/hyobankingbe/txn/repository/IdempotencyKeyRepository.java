@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IdempotencyKeyRepository extends JpaRepository<IdempotencyKey, Long> {
@@ -22,4 +24,6 @@ public interface IdempotencyKeyRepository extends JpaRepository<IdempotencyKey, 
     @Transactional
     @Query("delete from IdempotencyKey i where i.expiresAt < :now")
     int deleteExpired(@Param("now") LocalDateTime now);
+
+    Optional<IdempotencyKey> findByIdemKeyAndUserId(String idemKey, Long userId);
 }
