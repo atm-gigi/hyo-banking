@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "txn")
@@ -30,4 +32,7 @@ public class Txn {
 
     @Column(nullable = false)
     private String description;
+
+    @OneToMany(mappedBy = "txn", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TxnEntry> txnEntries = new ArrayList<>();
 }
