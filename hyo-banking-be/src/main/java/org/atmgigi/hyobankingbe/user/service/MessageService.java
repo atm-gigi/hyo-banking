@@ -1,4 +1,4 @@
-package user.service;
+package org.atmgigi.hyobankingbe.user.service;
 
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
@@ -7,8 +7,8 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import user.domain.VerificationCode;
-import user.repository.VerificationCodeRepository;
+import org.atmgigi.hyobankingbe.user.domain.VerificationCode;
+import org.atmgigi.hyobankingbe.user.repository.VerificationCodeRepository;
 
 import java.util.Random;
 

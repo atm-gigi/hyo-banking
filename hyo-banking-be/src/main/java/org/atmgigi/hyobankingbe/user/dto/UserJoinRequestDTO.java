@@ -1,4 +1,4 @@
-package user.dto;
+package org.atmgigi.hyobankingbe.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
