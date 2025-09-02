@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('../views/PutPaymentView.vue'),
     },
     {
+      path: '/select-amount',
+      name: 'select-amount',
+      component: () => import('../views/SelectAmountView.vue'),
+    },
+    {
       path: '/ten-key',
       name: 'ten-key',
       component: () => import('../views/TenKeyView.vue'),

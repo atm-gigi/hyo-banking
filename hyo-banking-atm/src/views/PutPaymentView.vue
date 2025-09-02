@@ -20,7 +20,7 @@
 
   const handleEnter = () => {
     router.push({
-      name: 'ten-key',
+      name: 'select-amount',
       query: { task: route.query.task, payment: route.query.payment },
     });
   };
