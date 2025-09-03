@@ -2,6 +2,7 @@ package org.atmgigi.hyobankingbe.txn.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.atmgigi.hyobankingbe.account.domain.Account;
 import org.atmgigi.hyobankingbe.txn.enums.EntryType;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -26,15 +27,16 @@ public class TxnEntry {
     @JoinColumn(name = "txn_id", nullable = false, foreignKey = @ForeignKey(name = "fk_entry_txn"))
     private Txn txn;
 
-    // TODO: 연결 필요
-    @Column(name = "account_id", nullable = false)
-    private Long accountId;
+    // FK: account_id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false, foreignKey = @ForeignKey(name = "fk_entry_acct"))
+    private Account account;
 
     @Column(name = "entry_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private EntryType entryType;
 
-    @Column(nullable = false, precision = 18, scale = 0)
+    @Column(nullable = false, precision = 18)
     private BigDecimal amount;
 
     // ISO 4217 코드 3자리

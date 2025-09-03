@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @Table(
         name = "account",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"bankCode", "accountNo"})
+                @UniqueConstraint(columnNames = {"bankCode", "accountNo"}),
+                @UniqueConstraint(columnNames = {"accoundNo", "currencyCode"})
         }
 )
 @NoArgsConstructor
@@ -33,7 +34,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String accountType;
+    private AccountType accountType;
 
     @Column(nullable = false)
     private String currencyCode;

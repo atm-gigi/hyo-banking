@@ -19,10 +19,6 @@ public class Txn {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //TODO: 연결 필요
-    @Column(name = "macro_execution_id")
-    private Long macroExecutionId;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_txn_user"))
     private User user;

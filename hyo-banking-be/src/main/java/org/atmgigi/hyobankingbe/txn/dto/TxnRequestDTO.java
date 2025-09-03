@@ -8,9 +8,6 @@ import java.math.BigDecimal;
 
 @Schema(description = "트랜잭션(전표) 등록 DTO")
 public record TxnRequestDTO (
-        @Schema(description = "매크로 실행 ID", example = "2001")
-        Long macroExecutionId,
-
         @Schema(description = "트랜잭션 타입", example = "DEPOSIT")
         @NotNull
         OperationType txnType,
