@@ -13,6 +13,7 @@ import org.atmgigi.hyobankingbe.txn.enums.IdemStatus;
 import org.atmgigi.hyobankingbe.txn.repository.IdempotencyKeyRepository;
 import org.atmgigi.hyobankingbe.txn.repository.TxnEntryRepository;
 import org.atmgigi.hyobankingbe.txn.repository.TxnRepository;
+import org.atmgigi.hyobankingbe.user.domain.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class IdempotencyHandler {
     public ResponseEntity<TxnCreatedResponseDTO> handle(final TxnRequestDTO txnRequestDTO, final String idempotencyKey) {
 
         //0. 계좌 정보로 유저 찾기
-        Long userId = null;
+        User user = null;
 
         //1. 멱등키 저장 및 확인
         final String requestJSON = JsonUtil.toCanonicalJson(objectMapper, txnRequestDTO);
@@ -43,7 +44,7 @@ public class IdempotencyHandler {
 
         IdempotencyKey data = IdempotencyKey.builder()
                 .idemKey(idempotencyKey)
-                .userId(userId)
+                .user(user)
                 .expiresAt(LocalDateTime.now().plusDays(1))
                 .operation(txnRequestDTO.txnType())
                 .status(IdemStatus.PROCESSING)
@@ -55,8 +56,8 @@ public class IdempotencyHandler {
             data = idempotencyKeyRepository.saveAndFlush(data);
         }catch (DataIntegrityViolationException ex) { // 유니크 키 그런 것들로 인해 실패했을때 ( 이미 키값이 존재함 )
             // 2. 중복된 정보 가져오기
-            IdempotencyKey existing = idempotencyKeyRepository.findByIdemKeyAndUserId(idempotencyKey, userId)
-                    .orElseThrow(() -> new IdempotencyKeyNotFoundException(userId, idempotencyKey));
+            IdempotencyKey existing = idempotencyKeyRepository.lockByUserAndIdemKey(user, idempotencyKey)
+                    .orElseThrow(() -> new IdempotencyKeyNotFoundException(user.getId(), idempotencyKey));
 
             if(!Objects.equals(existing.getRequestHash(), requestHash)) {
                 throw new IdempotencyConflictException("멱등키 충돌");

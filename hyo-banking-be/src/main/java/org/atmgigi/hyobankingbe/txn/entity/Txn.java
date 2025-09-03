@@ -2,6 +2,7 @@ package org.atmgigi.hyobankingbe.txn.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.atmgigi.hyobankingbe.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -22,9 +23,9 @@ public class Txn {
     @Column(name = "macro_execution_id")
     private Long macroExecutionId;
 
-    //TODO: 연결 필요
-    @Column(name = "user_id",nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_txn_user"))
+    private User user;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

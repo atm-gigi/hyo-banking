@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.atmgigi.hyobankingbe.txn.enums.OperationType;
 import org.atmgigi.hyobankingbe.txn.enums.IdemStatus;
+import org.atmgigi.hyobankingbe.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -27,9 +28,9 @@ public class IdempotencyKey {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //TODO: 연결 필요
-    @Column(name = "user_id",nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_idem_user"))
+    private User user;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
