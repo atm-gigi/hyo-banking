@@ -34,6 +34,46 @@ const router = createRouter({
       name: 'ten-key',
       component: () => import('../views/TenKeyView.vue'),
     },
+    {
+      path: '/get-cash',
+      name: 'get-cash',
+      component: () => import('../views/InputCashView.vue'),
+    },
+    {
+      path: '/manual-input',
+      name: 'manual-input',
+      component: () => import('../views/ManualInputView.vue'),
+    },
+    {
+      path: '/input-password',
+      name: 'input-password',
+      component: () => import('../views/InputPasswordView.vue'),
+    },
+    {
+      path: '/loading',
+      name: 'loading',
+      component: () => import('../views/LoadingView.vue'),
+    },
+    {
+      path: '/end-transaction',
+      name: 'end-transaction',
+      component: () => import('../views/EndTransactionView.vue'),
+    },
+    {
+      path: '/undo-transaction',
+      name: 'undo-transaction',
+      component: () => import('../views/UndoTransactionView.vue'),
+    },
+    {
+      path:'/suggest-door-phone',
+      name:'suggest-door-phone',
+      component: () => import('../views/SuggestDoorPhoneView.vue'),
+    },
+    {
+      path:'/error',
+      name:'error',
+      component: () => import('../views/ErrorView.vue'),
+    }
   ],
 });
 
