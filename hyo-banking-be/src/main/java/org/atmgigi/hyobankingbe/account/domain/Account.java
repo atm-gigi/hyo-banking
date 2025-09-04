@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.atmgigi.hyobankingbe.user.domain.User;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -42,10 +43,15 @@ public class Account {
     @Column(nullable = false)
     private int balanceCache;
 
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void setBalanceCache(int balance) {
+        this.balanceCache += balance;
+    }
 }

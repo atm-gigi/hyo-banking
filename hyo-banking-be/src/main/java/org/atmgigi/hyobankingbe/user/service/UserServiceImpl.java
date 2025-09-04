@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
                 .name(dto.name())
                 .password(passwordEncoder.encode(dto.password()))
                 .phone(dto.phone())
-                .createdAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
