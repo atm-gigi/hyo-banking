@@ -1,23 +1,10 @@
 <script setup>
-  import { PAYMENT_TYPES, TASK_TYPES } from '@/constants';
-  import { computed, ref } from 'vue';
+  import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
   const route = useRoute();
   const router = useRouter();
   const amount = ref(null);
-
-  const task = computed(() => {
-    if (route.query.task === TASK_TYPES.DEPOSIT) return '입금';
-    if (route.query.task === TASK_TYPES.WITHDRAW) return '출금';
-    return null;
-  });
-
-  const payment = computed(() => {
-    if (route.query.payment === PAYMENT_TYPES.CARD) return '카드';
-    if (route.query.payment === PAYMENT_TYPES.BANKBOOK) return '통장';
-    return null;
-  });
 
   const buttons = ref([
     { type: 'amount', label: '3만원', value: 30000 },
@@ -49,21 +36,31 @@
       // 금액 선택 로직
       console.log(`${button.label} (${button.value}원) 선택됨`);
       amount.value = button.value;
-      router.push({
-        name: 'input-password',
-        query: { task: route.query.task, payment: route.query.payment },
-      });
+      if (route.query.task === 'transfer') {
+        router.push({
+          name: 'check-transfer',
+          query: { task: route.query.task, amount: amount.value },
+        });
+      } else {
+        router.push({
+          name: 'input-password',
+          query: { task: route.query.task },
+        });
+      }
     } else if (button.type === 'action') {
       // 기능 버튼 로직
       switch (button.action) {
         case 'manualInput':
           router.push({
             name: 'manual-input',
-            query: { task: route.query.task, payment: route.query.payment },
+            query: { task: route.query.task },
           });
           break;
         case 'cancel':
-          router.go(-1);
+          router.push({
+            name: 'undo-transaction',
+            query: { task: route.query.task },
+          });
           break;
       }
     }

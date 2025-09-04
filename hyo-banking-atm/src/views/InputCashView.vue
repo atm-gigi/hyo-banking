@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="w-screen flex justify-center pb-10 gap-10 px-10 mt-auto">
+      <div class="w-screen h-32 flex justify-center pb-10 gap-10 px-10 mt-auto">
         <TaskButton
           text="아니오"
           class="w-full max-w-sm"

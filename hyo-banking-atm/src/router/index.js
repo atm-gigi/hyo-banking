@@ -10,9 +10,9 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/choose-task',
-      name: 'choose-task',
-      component: () => import('../views/ChooseTaskView.vue'),
+      path: '/select-task',
+      name: 'select-task',
+      component: () => import('../views/SelectTaskView.vue'),
     },
     {
       path: '/payment-method',
@@ -33,6 +33,36 @@ const router = createRouter({
       path: '/ten-key',
       name: 'ten-key',
       component: () => import('../views/TenKeyView.vue'),
+    },
+    {
+      path: '/check-transfer',
+      name: 'check-transfer',
+      component: () => import('../views/CheckTransferView.vue'),
+    },
+    {
+      path: '/check-account',
+      name: 'check-account',
+      component: () => import('../views/CheckAccountView.vue'),
+    },
+    {
+      path: '/input-account',
+      name: 'input-account',
+      component: () => import('../views/InputAccountView.vue'),
+    },
+    {
+      path: '/check-amount',
+      name: 'check-amount',
+      component: () => import('../views/CheckAmountView.vue'),
+    },
+    {
+      path: '/select-bills',
+      name: 'select-bills',
+      component: () => import('../views/SelectBillsView.vue'),
+    },
+    {
+      path: '/select-bank',
+      name: 'select-bank',
+      component: () => import('../views/SelectBankView.vue'),
     },
     {
       path: '/get-cash',
@@ -65,15 +95,20 @@ const router = createRouter({
       component: () => import('../views/UndoTransactionView.vue'),
     },
     {
-      path:'/suggest-door-phone',
-      name:'suggest-door-phone',
+      path: '/suggest-door-phone',
+      name: 'suggest-door-phone',
       component: () => import('../views/SuggestDoorPhoneView.vue'),
     },
     {
-      path:'/error',
-      name:'error',
+      path: '/error',
+      name: 'error',
       component: () => import('../views/ErrorView.vue'),
-    }
+    },
+    {
+      path: '/check-no',
+      name: 'check-no',
+      component: () => import('../views/CheckNoView.vue'),
+    },
   ],
 });
 

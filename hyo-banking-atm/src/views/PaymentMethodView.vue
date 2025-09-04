@@ -36,8 +36,8 @@
       {{ task }}
     </div>
     <p class="text-center text-5xl leading-relaxed font-bold">카드나 통장을 가져오셨나요?</p>
-    <img src="" alt="" />
-    <div class="w-screen flex flex-row justify-center pb-10 gap-10 px-10">
+    <img src="" alt="카드나 통장사진" />
+    <div class="w-screen h-32 flex flex-row justify-center pb-10 gap-10 px-10">
       <TaskButton text="카드" class="w-full max-w-sm" @click="handleCardClick" />
       <TaskButton text="통장" class="w-full max-w-sm" @click="handleBankbookClick" />
     </div>

@@ -1,18 +1,11 @@
 <script setup>
-  import { onMounted, onUnmounted, ref, computed } from 'vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import KeyPad from '@/components/KeyPad.vue';
 
   const route = useRoute();
   const router = useRouter();
-  const amount = ref('100');
-  const task = ref(route.query.task);
-
-  const title = computed(() => {
-    // route.query.task가 'TRANSFER'이면 "얼마를 보내실 건가요?"를,
-    // 그렇지 않으면 "얼마를 찾으실 건가요?"를 반환합니다.
-    return task.value === 'TRANSFER' ? '얼마를 보내실 건가요?' : '얼마를 찾으실 건가요?';
-  });
+  const amount = ref('100-3524-54154');
 
   const onKeyClick = key => {
     if (key === '지움') {
@@ -25,14 +18,8 @@
   };
 
   const handleEnter = () => {
-    if (task.value === 'TRANSFER')
-      router.push({
-        name: 'check-transfer',
-        query: { task: route.query.task, payment: route.query.payment },
-      });
-    else
     router.push({
-      name: 'input-password',
+      name: 'check-account',
       query: { task: route.query.task, payment: route.query.payment },
     });
   };
@@ -57,13 +44,13 @@
     <div class="flex flex-row w-full h-full bg-white rounded-lg shadow p-10">
       <!-- 질문 -->
       <div class="w-1/2 flex flex-col justify-center p-10 space-y-10">
-        <h1 class="text-3xl font-bold text-black">{{ title }}</h1>
+        <h1 class="text-3xl font-bold text-black">받는 분의 계좌번호를 눌러주세요</h1>
         <!-- 입력창 -->
         <div class="text-3xl font-extrabold rounded items-center">
           <span class="items-center text-blue-500 border-r-4 border-blue-500 pr-1">{{
             amount
           }}</span
-          ><span>만원</span>
+          >
         </div>
       </div>
       <!-- 키패드 -->

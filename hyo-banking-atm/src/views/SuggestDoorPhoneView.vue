@@ -1,4 +1,15 @@
-<script setup></script>
+<script setup>
+  import { onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+
+  onMounted(() => {
+    setTimeout(() => {
+      router.push({ name: 'home' });
+    }, 3000);
+  });
+</script>
 
 <template>
   <main class="relative h-screen bg-gray-100 flex flex-col justify-between">

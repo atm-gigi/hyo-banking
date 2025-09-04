@@ -4,7 +4,7 @@
   const router = useRouter();
 
   const handleAssistBtn = () => {
-    router.push('/choose-task');
+    router.push('/select-task');
   };
 </script>
 
