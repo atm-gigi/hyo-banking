@@ -1,5 +1,6 @@
 package org.atmgigi.hyobankingbe.macro.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.atmgigi.hyobankingbe.macro.domain.MacroStatus;
 import org.atmgigi.hyobankingbe.macro.dto.MacroDtos;
 import org.atmgigi.hyobankingbe.macro.entity.Macro;
@@ -20,15 +21,11 @@ import java.util.List;
 // 매크로 + 스텝 API
 @RestController
 @RequestMapping("/macros")
+@RequiredArgsConstructor
 public class MacroController {
 
     private final MacroService service;
     private final MacroRepository repo;
-
-    public MacroController(MacroService service, MacroRepository repo) {
-        this.service = service;
-        this.repo = repo;
-    }
 
     // 매크로 생성
     @PostMapping

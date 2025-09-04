@@ -1,5 +1,6 @@
 package org.atmgigi.hyobankingbe.macro.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.atmgigi.hyobankingbe.macro.domain.ExecutionStatus;
 import org.atmgigi.hyobankingbe.macro.domain.MacroStatus;
 import org.atmgigi.hyobankingbe.macro.dto.ExecutionDtos;
@@ -20,15 +21,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/executions")
+@RequiredArgsConstructor
 public class ExecutionController {
 
     private final ExecutionService service;
     private final MacroExecutionRepository repo;
-
-    public ExecutionController(ExecutionService service, MacroExecutionRepository repo) {
-        this.service = service;
-        this.repo = repo;
-    }
 
     // 실행 시작
     @PostMapping

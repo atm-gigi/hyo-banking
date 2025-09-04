@@ -1,0 +1,3 @@
+DB_URL=jdbc:mysql://localhost:3306/hyo_banking_db?autoReconnect=true
+DB_USERNAME=hyo
+DB_PASSWORD=1234

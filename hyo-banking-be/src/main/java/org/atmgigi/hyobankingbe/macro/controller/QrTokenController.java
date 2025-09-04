@@ -1,5 +1,6 @@
 package org.atmgigi.hyobankingbe.macro.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.atmgigi.hyobankingbe.macro.entity.MacroQrToken;
 import org.atmgigi.hyobankingbe.macro.service.QrTokenService;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,10 @@ import java.time.Duration;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 public class QrTokenController {
 
     private final QrTokenService service;
-
-    public QrTokenController(QrTokenService service) {
-        this.service = service;
-    }
 
     // QR 토큰 생성
     @PostMapping("/macros/{id}/qr-tokens")
