@@ -8,8 +8,6 @@ import org.atmgigi.hyobankingbe.account.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
@@ -41,4 +39,5 @@ public class AccountController {
     public ResponseEntity<AccountInfoResponseDTO> updateBalance(@RequestBody BalanceUpdateRequestDTO updateDTO) {
         return ResponseEntity.ok(accountService.updateBalance(updateDTO));
     }
+
 }

@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @Table(
         name = "account",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"bankCode", "accountNo"})
+                @UniqueConstraint(columnNames = {"bankCode", "accountNo"}),
+                @UniqueConstraint(columnNames = {"accoundNo", "currencyCode"})
         }
 )
 @NoArgsConstructor

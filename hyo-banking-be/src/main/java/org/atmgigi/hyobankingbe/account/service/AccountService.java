@@ -15,4 +15,5 @@ public interface AccountService {
     AccountInfoResponseDTO getAccount(long userId, long accountId);
 
     AccountInfoResponseDTO updateBalance(BalanceUpdateRequestDTO dto);
+
 }
