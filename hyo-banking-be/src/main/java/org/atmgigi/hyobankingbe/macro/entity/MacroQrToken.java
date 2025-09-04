@@ -2,6 +2,8 @@ package org.atmgigi.hyobankingbe.macro.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,9 +33,11 @@ public class MacroQrToken {
     private LocalDateTime usedAt; // 사용된 시각 (한 번 쓰면 채움)
 
     @Column(nullable = false, insertable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt; // DB에서 자동 세팅
 
     @Column(nullable = false, insertable = false, updatable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt; // DB에서 자동 세팅
 
 }

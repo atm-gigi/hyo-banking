@@ -3,6 +3,8 @@ package org.atmgigi.hyobankingbe.macro.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.atmgigi.hyobankingbe.macro.domain.ExecutionStatus;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -39,9 +41,11 @@ public class MacroExecution {
     private LocalDateTime finishedAt;
 
     @Column(nullable = false, insertable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false, updatable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
 }
