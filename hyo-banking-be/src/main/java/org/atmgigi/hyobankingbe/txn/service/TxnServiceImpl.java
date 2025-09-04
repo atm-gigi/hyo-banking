@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.atmgigi.hyobankingbe.account.domain.Account;
 import org.atmgigi.hyobankingbe.account.domain.AccountType;
 import org.atmgigi.hyobankingbe.account.repository.AccountRepository;
+import org.atmgigi.hyobankingbe.account.service.SystemAccountService;
 import org.atmgigi.hyobankingbe.common.exception.DomainException;
 import org.atmgigi.hyobankingbe.common.exception.ErrorCode;
 import org.atmgigi.hyobankingbe.txn.dto.TxnCreatedResponseDTO;
@@ -15,7 +16,8 @@ import org.atmgigi.hyobankingbe.txn.entity.TxnEntry;
 import org.atmgigi.hyobankingbe.txn.enums.EntryType;
 import org.atmgigi.hyobankingbe.txn.repository.TxnRepository;
 import org.atmgigi.hyobankingbe.user.domain.User;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.atmgigi.hyobankingbe.user.repository.UserRepository;
+import org.atmgigi.hyobankingbe.user.service.SystemUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,10 @@ import java.util.List;
 public class TxnServiceImpl implements TxnService {
 
     private final TxnRepository txnRepository;
+    private final UserRepository userRepository;
+    private final SystemAccountService systemAccountService;
     private final AccountRepository accountRepository;
+    private final SystemUserService systemUserService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -43,14 +48,14 @@ public class TxnServiceImpl implements TxnService {
         switch (txnRequestDTO.txnType()) {
             case DEPOSIT -> {
                 Account target = findAccountOrThrow(txnRequestDTO.targetBankCode(), txnRequestDTO.targetAccountNo());
-                Account cash   = getOrCreateSystem(AccountType.ATM_CASH, txnRequestDTO.currencyCode());
+                Account cash   = systemAccountService.getOrCreateSystem(AccountType.ATM_CASH, txnRequestDTO.currencyCode());
                 debit  = cash;
                 credit = target;
                 actor  = target.getUser();
             }
             case WITHDRAW -> {
                 Account source = findAccountOrThrow(txnRequestDTO.sourceBankCode(), txnRequestDTO.sourceAccountNo());
-                Account cash   = getOrCreateSystem(AccountType.ATM_CASH, txnRequestDTO.currencyCode());
+                Account cash   = systemAccountService.getOrCreateSystem(AccountType.ATM_CASH, txnRequestDTO.currencyCode());
                 debit  = source;
                 credit = cash;
                 actor  = source.getUser();
@@ -58,7 +63,7 @@ public class TxnServiceImpl implements TxnService {
             case TRANSFER -> {
                 // 무통장입금 : 내부정산 계정 -> 받는이
                 Account target = findAccountOrThrow(txnRequestDTO.targetBankCode(), txnRequestDTO.targetAccountNo());
-                Account internal = getOrCreateSystem(AccountType.BANK_INTERNAL, txnRequestDTO.currencyCode());
+                Account internal = systemAccountService.getOrCreateSystem(AccountType.BANK_INTERNAL, txnRequestDTO.currencyCode());
                 debit  = internal;
                 credit = target;
                 actor  = target.getUser();
@@ -165,24 +170,5 @@ public class TxnServiceImpl implements TxnService {
         if (sum.compareTo(BigDecimal.ZERO) != 0) {
             throw new DomainException(ErrorCode.VALIDATION_FAILED, "분개 합계가 0이 아닙니다.");
         }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Account getOrCreateSystem(AccountType type, String currencyCode) {
-        return accountRepository.findByAccountTypeAndCurrencyCode(type, currencyCode)
-                .orElseGet(() -> {
-                    try {
-                        Account a = Account.builder()
-                                .accountType(type)
-                                .currencyCode(currencyCode)
-                                .accountNo("SYS-%s-%s".formatted(type.name().substring(0,3), currencyCode))
-                                .build();
-                        return accountRepository.save(a);
-                    } catch (DataIntegrityViolationException e) {
-                        return accountRepository.findByAccountTypeAndCurrencyCode(type, currencyCode)
-                                .orElseThrow(() -> new DomainException(
-                                        ErrorCode.ACCOUNT_NOT_FOUND, "시스템 계정이 소실되었습니다."));
-                    }
-                });
     }
 }
