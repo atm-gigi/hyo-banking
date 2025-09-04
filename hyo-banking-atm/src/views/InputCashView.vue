@@ -55,16 +55,16 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col p-4">
-    <p class="text-lg text-gray-400 font-semibold text-center mb-4">총 금액 확인</p>
+  <main class="relative w-screen h-screen bg-gray-100 flex flex-col">
+    <p class="text-5xl text-black font-semibold text-center py-10">총 금액 확인</p>
 
-    <div class="rounded-xl shadow bg-white p-6 space-y-6 flex-1 flex flex-col">
+    <div class="rounded-xl p-6 space-y-6 flex-1 flex flex-col">
       <div class="text-center space-y-2">
-        <div class="bg-yellow-100 text-2xl font-bold py-2 rounded-lg">{{ formattedAmount }}원</div>
-        <div class="text-xl font-semibold">입금하신 금액이 맞으신가요?</div>
+
+        <div class="text-3xl font-semibold">입금하신 금액이  <p class="text-3xl font-bold">{{ formattedAmount }}원</p> 맞으신가요?</div>
       </div>
 
-      <div class="grid grid-cols-2 gap-x-4 gap-y-5 justify-items-center items-center my-4">
+      <div class="grid grid-cols-2 gap-x-4 gap-y-5 justify-items-center items-center my-5">
         <div
           v-for="bill in billDenominations"
           :key="bill.denomination"
@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="w-screen h-32 flex justify-center pb-10 gap-10 px-10 mt-auto">
+      <div class="w-screen flex justify-center gap-x-5 mt-auto">
         <TaskButton
           text="아니오"
           class="w-full max-w-sm"

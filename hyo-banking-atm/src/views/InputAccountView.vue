@@ -40,21 +40,20 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-100 p-10">
-    <div class="flex flex-row w-full h-full bg-white rounded-lg shadow p-10">
+  <main class="w-screen h-screen bg-gray-100">
+    <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->
-      <div class="w-1/2 flex flex-col justify-center p-10 space-y-10">
-        <h1 class="text-3xl font-bold text-black">받는 분의 계좌번호를 눌러주세요</h1>
+      <div class="w-1/2 flex flex-col justify-center">
+        <h1 class="text-5xl font-bold text-black mb-5">받는 분의 계좌번호를 눌러주세요</h1>
         <!-- 입력창 -->
-        <div class="text-3xl font-extrabold rounded items-center">
+        <div class="text-4xl font-extrabold rounded items-center text-center">
           <span class="items-center text-blue-500 border-r-4 border-blue-500 pr-1">{{
             amount
-          }}</span
-          >
+          }}</span>
         </div>
       </div>
       <!-- 키패드 -->
-      <div class="w-1/2 flex items-center justify-center p-10">
+      <div class="w-1/2 flex items-center justify-center">
         <KeyPad @keyClick="onKeyClick" />
       </div>
     </div>

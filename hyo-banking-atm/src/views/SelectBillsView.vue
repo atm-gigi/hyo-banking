@@ -26,10 +26,9 @@
 
 <template>
   <main class="relative h-screen bg-gray-100 flex flex-col">
-    <div
-      class="w-full h-full flex flex-row justify-between">
+    <div class="w-full h-full flex flex-row justify-between">
       <div class="w-full h-full flex flex-col justify-center items-center">
-        <p class="text-center text-5xl leading-relaxed font-bold">어떤 지폐로 드릴까요?</p>
+        <p class="text-center text-5xl font-bold">어떤 지폐로 드릴까요?</p>
         <img src="" alt="캐릭터" />
       </div>
 
@@ -38,6 +37,7 @@
           v-for="option in withdrawalOptions"
           :key="option.billType"
           :text="option.text"
+          class="py-16"
           @click="handleOptionClick(option)"
         />
       </div>

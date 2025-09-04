@@ -26,6 +26,6 @@
       {{ task }}가 끝났습니다. <br />
       카드와 명세서를 꼭 챙겨가세요.
     </p>
-    <img src="" alt="카드와 명세서 챙기는 곰돌이" />
+    <img src="" alt="카드와 명세서 챙기는 곰돌이" class="m-auto" />
   </main>
 </template>

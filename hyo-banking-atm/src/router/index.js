@@ -65,8 +65,8 @@ const router = createRouter({
       component: () => import('../views/SelectBankView.vue'),
     },
     {
-      path: '/get-cash',
-      name: 'get-cash',
+      path: '/input-cash',
+      name: 'input-cash',
       component: () => import('../views/InputCashView.vue'),
     },
     {

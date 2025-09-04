@@ -41,13 +41,13 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col justify-between">
-    <p class="py-10 text-center text-5xl leading-relaxed font-bold">
+  <div class="relative h-screen flex flex-col justify-between">
+    <p class="text-center text-5xl py-10 font-bold">
       {{ title }}
     </p>
-    <img src="" alt="곰돌이" />
+    <img src="" alt="곰돌이" class="m-auto" />
     <form @submit.prevent="handleEnter">
       <button type="submit"></button>
     </form>
-  </main>
+  </div>
 </template>

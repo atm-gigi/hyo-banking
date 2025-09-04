@@ -18,22 +18,22 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col">
-    <div class="flex flex-col items-center justify-between h-screen py-16 bg-white">
+  <main class="relative h-screen bg-gray-100 justify-between flex flex-col">
+    <div class="flex flex-col items-center text-center py-10">
       <!-- 질문 텍스트 -->
-      <h1 class="text-3xl font-bold text-black">10만원을 찾으시겠어요?</h1>
-      <div class="w-full h-32 flex flex-row justify-center px-10 gap-x-5">
-        <TaskButton
-          text="아니요"
-          class="w-full max-w-sm"
-          @click="handleGoBackClick"
-        />
-        <TaskButton
-          text="네 찾을거에요"
-          class="w-full max-w-sm bg-kb-yellow-200"
-          @click="handleWithdrawalClick"
-        />
-      </div>
+      <h1 class="text-5xl font-bold text-black">10만원을 찾으시겠어요?</h1>
+    </div>
+    <div class="w-full flex flex-row justify-center mt-auto gap-x-5">
+      <TaskButton
+        text="아니요"
+        class="w-full max-w-sm"
+        @click="handleGoBackClick"
+      />
+      <TaskButton
+        text="네"
+        class="w-full max-w-sm bg-kb-yellow-200"
+        @click="handleWithdrawalClick"
+      />
     </div>
   </main>
 </template>

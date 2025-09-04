@@ -57,9 +57,9 @@
         <img src="" alt="캐릭터" />
       </div>
       <div class="w-full h-full flex flex-col px-10 justify-around">
-        <TaskButton text="돈 넣기" :disabled="isShowAssistantView" @click="handleDepositClick" />
-        <TaskButton text="돈 찾기" :disabled="isShowAssistantView" @click="handleWithdrawalClick" />
-        <TaskButton text="돈 보내기" :disabled="isShowAssistantView" @click="handleTransferClick" />
+        <TaskButton text="돈 넣기" :disabled="isShowAssistantView" class="py-16" @click="handleDepositClick" />
+        <TaskButton text="돈 찾기" :disabled="isShowAssistantView" class="py-16" @click="handleWithdrawalClick" />
+        <TaskButton text="돈 보내기" :disabled="isShowAssistantView" class="py-16" @click="handleTransferClick" />
       </div>
     </div>
   </main>

@@ -54,13 +54,11 @@
   });
 </script>
 <template>
-  <main class="w-screen h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div
-      class="w-full max-w-2xl h-auto bg-white rounded-lg shadow-xl flex flex-col items-center p-10"
-    >
-      <div class="flex flex-col items-center justify-center space-y-8 mb-10">
+  <main class="w-screen h-screen flex items-center justify-center">
+    <div class="flex flex-col justify-between mt-5 mb-12">
+      <div class="flex flex-col items-center justify-center">
         <h1 class="text-4xl font-bold text-black">비밀번호를 입력해주세요</h1>
-        <div class="text-5xl font-extrabold tracking-widest text-gray-800">
+        <div class="text-5xl  mt-2 mb-4 font-extrabold tracking-widest text-gray-800">
           {{ '*'.repeat(password.length) || '----' }}
         </div>
       </div>

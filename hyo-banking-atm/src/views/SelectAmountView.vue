@@ -20,14 +20,14 @@
       type: 'action',
       label: '직접 입력',
       action: 'manualInput',
-      customClass: 'bg-green-600 active:bg-green-800',
+      customClass: 'bg-kb-yellow-200 active:bg-green-800',
     },
     { type: 'amount', label: '30만원', value: 300000 },
     {
       type: 'action',
       label: '거래 취소',
       action: 'cancel',
-      customClass: 'bg-red-600 active:bg-red-800',
+      customClass: 'bg-red-500 active:bg-red-800',
     },
   ]);
 
