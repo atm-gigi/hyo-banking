@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class SystemAccountService {
@@ -28,6 +30,8 @@ public class SystemAccountService {
                         Account a = Account.builder()
                                 .accountType(type)
                                 .user(user)
+                                .bankCode("KB")
+                                .balanceCache(BigDecimal.valueOf(1000000))
                                 .currencyCode(currencyCode)
                                 .accountNo("SYS-%s-%s".formatted(type.name().substring(0,3), currencyCode))
                                 .build();

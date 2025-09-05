@@ -2,11 +2,13 @@ package org.atmgigi.hyobankingbe.txn.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import org.atmgigi.hyobankingbe.txn.enums.OperationType;
 
 import java.math.BigDecimal;
 
 @Schema(description = "트랜잭션(전표) 등록 DTO")
+@Builder
 public record TxnRequestDTO (
         @Schema(description = "트랜잭션 타입", example = "DEPOSIT")
         @NotNull

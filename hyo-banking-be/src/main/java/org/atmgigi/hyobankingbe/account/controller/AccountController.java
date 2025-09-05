@@ -8,8 +8,10 @@ import org.atmgigi.hyobankingbe.account.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/account")
 @RequiredArgsConstructor
 public class AccountController {
 
@@ -22,7 +24,7 @@ public class AccountController {
     }
 
     // 내 계좌 조회
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<AccountInfoResponseDTO>> getAccounts(@RequestParam("userId") long userId) {
         return ResponseEntity.ok(accountService.getUserAccounts(userId));
     }

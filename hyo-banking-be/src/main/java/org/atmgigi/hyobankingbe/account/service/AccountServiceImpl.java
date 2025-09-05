@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
                 .accountNo(dto.accountNo())
                 .accountType(AccountType.valueOf(dto.accountType()))
                 .currencyCode(dto.currencyCode())
-                .balanceCache(0)
+                .balanceCache(BigDecimal.valueOf(0))
                 .user(user)
                 .build();
 

@@ -1,8 +1,11 @@
 package org.atmgigi.hyobankingbe.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.atmgigi.hyobankingbe.account.domain.Account;
+import org.atmgigi.hyobankingbe.account.repository.AccountRepository;
+import org.atmgigi.hyobankingbe.common.exception.DomainException;
+import org.atmgigi.hyobankingbe.common.exception.ErrorCode;
 import org.atmgigi.hyobankingbe.user.dto.UserResponseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,16 +15,14 @@ import org.atmgigi.hyobankingbe.user.dto.UserJoinRequestDTO;
 import org.atmgigi.hyobankingbe.user.dto.UserLoginRequestDTO;
 import org.atmgigi.hyobankingbe.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public UserResponseDTO createUser(UserJoinRequestDTO dto) {
@@ -55,6 +56,19 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
 
+        return UserResponseDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO getUserByAccount(final String accountNo, final String bankCode) {
+        Account account = accountRepository.findByAccountNoAndBankCode(accountNo, bankCode)
+                .orElseThrow(() -> new DomainException(ErrorCode.ACCOUNT_NOT_FOUND, "계좌 정보가 없습니다"));
+
+        User user = account.getUser();
         return UserResponseDTO.builder()
                 .userId(user.getId())
                 .name(user.getName())

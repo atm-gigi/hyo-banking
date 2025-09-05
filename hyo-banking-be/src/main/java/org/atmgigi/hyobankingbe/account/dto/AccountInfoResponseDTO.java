@@ -2,6 +2,8 @@ package org.atmgigi.hyobankingbe.account.dto;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 @Builder
 public record AccountInfoResponseDTO(
         long userId,
@@ -10,6 +12,6 @@ public record AccountInfoResponseDTO(
         String accountNo,
         String accountType,
         String currencyCode,
-        int balanceCache
+        BigDecimal balanceCache
 ) {
 }

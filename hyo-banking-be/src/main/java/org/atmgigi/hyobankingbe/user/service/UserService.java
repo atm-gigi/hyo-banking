@@ -11,4 +11,6 @@ public interface UserService {
     boolean existUserId(String loginId);
 
     UserResponseDTO loginUser(UserLoginRequestDTO dto);
+
+    UserResponseDTO getUserByAccount(String accountNo, String bankCode);
 }

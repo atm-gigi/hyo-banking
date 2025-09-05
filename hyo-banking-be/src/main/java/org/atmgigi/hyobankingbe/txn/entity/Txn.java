@@ -31,5 +31,6 @@ public class Txn {
     private String description;
 
     @OneToMany(mappedBy = "txn", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<TxnEntry> txnEntries = new ArrayList<>();
 }

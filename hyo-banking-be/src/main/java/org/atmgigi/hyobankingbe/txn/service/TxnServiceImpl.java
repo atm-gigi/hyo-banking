@@ -16,8 +16,6 @@ import org.atmgigi.hyobankingbe.txn.entity.TxnEntry;
 import org.atmgigi.hyobankingbe.txn.enums.EntryType;
 import org.atmgigi.hyobankingbe.txn.repository.TxnRepository;
 import org.atmgigi.hyobankingbe.user.domain.User;
-import org.atmgigi.hyobankingbe.user.repository.UserRepository;
-import org.atmgigi.hyobankingbe.user.service.SystemUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +30,8 @@ import java.util.List;
 public class TxnServiceImpl implements TxnService {
 
     private final TxnRepository txnRepository;
-    private final UserRepository userRepository;
     private final SystemAccountService systemAccountService;
     private final AccountRepository accountRepository;
-    private final SystemUserService systemUserService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -70,6 +66,11 @@ public class TxnServiceImpl implements TxnService {
             }
             default -> throw new DomainException(ErrorCode.VALIDATION_FAILED, "지원하지 않는 거래 유형입니다.");
         }
+
+
+        //잔고 처리
+        debit.withdraw(txnRequestDTO.amount());
+        credit.deposit(txnRequestDTO.amount());
 
         Txn saved = saveTxnWithEntries(actor, debit, credit,
                 txnRequestDTO.amount(), txnRequestDTO.currencyCode(), txnRequestDTO.description());

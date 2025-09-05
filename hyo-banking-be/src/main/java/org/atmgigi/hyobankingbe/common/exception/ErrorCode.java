@@ -19,6 +19,7 @@ public enum ErrorCode {
     RATE_LIMITED,           // 과도한 요청(429)
 
     // --- Business (금융 도메인) ---
+    USER_NOT_FOUND,         // 유저 없음(404)
     INSUFFICIENT_FUNDS,     // 잔액 부족(422/400)
     DAILY_LIMIT_EXCEEDED,   // 1일 한도 초과(422)
     TRANSFER_LIMIT_EXCEEDED,// 거래 한도 초과(422)

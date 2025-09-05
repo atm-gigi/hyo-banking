@@ -11,7 +11,7 @@ import org.atmgigi.hyobankingbe.user.service.MessageService;
 import org.atmgigi.hyobankingbe.user.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -49,5 +49,14 @@ public class UserController {
         if(messageService.verificationMessageCode(verificationDTO))
             return ResponseEntity.ok("인증이 완료되었습니다.");
         return ResponseEntity.ok("인증에 실패하였습니다.");
+    }
+
+    //계좌번호를 통한 유저 조회
+    @GetMapping("/{accountNo}/{bankCode}")
+    public ResponseEntity<UserResponseDTO> getUserByAccount(
+            @PathVariable("accountNo") String accountNo,
+            @PathVariable("bankCode") String bankCode
+    ) {
+        return ResponseEntity.ok(userService.getUserByAccount(accountNo, bankCode));
     }
 }
