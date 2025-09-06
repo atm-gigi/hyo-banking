@@ -1,1 +1,10 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-kb-yellow-100: #ffcc00;
+  --color-kb-yellow-200: #ffbc00;
+  --color-kb-brown-100: #605850;
+  --color-kb-brown-200: #545045;
+  --color-kb-brown-300: #b8935c;
+  --color-kb-gray-100: #9b9b9b;
+}
