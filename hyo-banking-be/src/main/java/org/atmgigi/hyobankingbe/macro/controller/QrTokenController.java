@@ -1,7 +1,7 @@
 package org.atmgigi.hyobankingbe.macro.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.atmgigi.hyobankingbe.macro.entity.MacroQrToken;
+import org.atmgigi.hyobankingbe.macro.dto.MacroResponseDTOs.*;
 import org.atmgigi.hyobankingbe.macro.service.QrTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,34 +11,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 public class QrTokenController {
 
-    private final QrTokenService service;
+    private final QrTokenService QrTokenService;
 
     // QR 토큰 생성
-    @PostMapping("/macros/{id}/qr-tokens")
-    public ResponseEntity<Map<String, Object>> create(@PathVariable Long id) {
-        MacroQrToken t = service.create(id, Duration.ofMinutes(5));
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("token",t.getToken(),"expires_at",t.getExpiresAt()));
+    @PostMapping("/api/macros/{id}/qr-tokens")
+    public ResponseEntity<MacroQrTokenResponseDTO> create(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(QrTokenService.create(id, Duration.ofMinutes(5)));
     }
 
     // QR 토큰 무효화
-    @PostMapping("/qr-tokens/{token}/invalidate")
+    @PostMapping("/api/qr-tokens/{token}/invalidate")
     public ResponseEntity<Void> invalidate(@PathVariable String token) {
-        service.invalidate(token);
+        QrTokenService.invalidate(token);
         return ResponseEntity.noContent().build();
     }
 
     // QR 토큰 조회
-    @GetMapping("/qr-tokens/{token}")
-    public ResponseEntity<?> get(@PathVariable String token) {
-        return service.find(token)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/api/qr-tokens/{token}")
+    public ResponseEntity<MacroQrTokenResponseDTO> get(@PathVariable String token) {
+        return ResponseEntity.ok(QrTokenService.find(token));
     }
 
 

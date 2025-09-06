@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.atmgigi.hyobankingbe.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,7 +42,7 @@ public class Account {
     private String currencyCode;
 
     @Column(nullable = false)
-    private int balanceCache;
+    private BigDecimal balanceCache;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -51,7 +52,15 @@ public class Account {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void setBalanceCache(int balance) {
-        this.balanceCache += balance;
+    public void setBalanceCache(BigDecimal balance) {
+        this.balanceCache = this.balanceCache.add(balance);
+    }
+
+    public void deposit(BigDecimal balance) {
+        this.balanceCache = this.balanceCache.add(balance);
+    }
+
+    public void withdraw(BigDecimal balance) {
+        this.balanceCache = this.balanceCache.subtract(balance);
     }
 }
