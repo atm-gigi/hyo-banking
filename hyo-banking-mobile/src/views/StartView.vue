@@ -49,7 +49,7 @@
 </script>
 
 <template>
-  <main class="relative w-full h-full min-h-screen bg-gray-50">
+  <main class="relative w-full h-full min-h-screen">
     <!-- 첫 화면 -->
     <div
       v-if="isShowInitialView"
