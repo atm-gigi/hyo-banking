@@ -23,7 +23,7 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen flex flex-col items-center py-10">
+  <main class="w-screen h-screen flex flex-col items-center py-10 bg-white">
     <div class="space-y-10">
       <h1 class="text-5xl font-bold text-black mb-10">입력하신 계좌번호가 맞나요?</h1>
     </div>
@@ -34,7 +34,7 @@
       </p>
     </div>
 
-    <img src="" alt="계좌번호 확인하는 곰돌이" class="m-auto" />
+    <img src="@/assets/check-account.png" alt="계좌번호 확인하는 곰돌이" class="w-160" />
 
     <div class="w-full flex flex-row justify-center gap-5">
       <TaskButton text="아니오" class="w-full max-w-sm text-center" @click="handleNoClick" />

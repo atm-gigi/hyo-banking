@@ -30,16 +30,16 @@
   ]);
 </script>
 <template>
-  <div class="p-10 h-screen w-screen flex flex-col justify-between">
+  <div class="p-10 h-screen w-screen flex flex-col justify-between bg-white">
     <h1 class="text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
 
     <div class="flex items-center justify-center gap-8 mt-8 mb-12">
-      <img src="" alt="bear" class="" />
+      <img src="@/assets/pointing.png" alt="bear" class="w-88 h-auto" />
 
       <div>
-        <div class="text-3xl font-bold mb-4">{{ receiver.name }}</div>
+        <div class="text-5xl font-bold mb-4">{{ receiver.name }}</div>
 
-        <table class="text-left text-lg w-full">
+        <table class="text-left text-3xl w-full">
           <tbody>
             <tr
               v-for="detail in receiverDetails"
@@ -56,11 +56,7 @@
 
     <div class="w-full flex flex-row justify-center gap-x-5">
       <TaskButton text="아니요" class="w-full max-w-sm" @click="handleNoClick" />
-      <TaskButton
-        text="네에엥"
-        class="w-full max-w-sm bg-kb-yellow-200"
-        @click="handleYesClick"
-      />
+      <TaskButton text="네" class="w-full max-w-sm bg-kb-yellow-200" @click="handleYesClick" />
     </div>
   </div>
 </template>

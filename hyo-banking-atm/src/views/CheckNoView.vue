@@ -14,8 +14,9 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col justify-between">
-    <p class="py-10 text-center text-5xl font-bold">거래를 취소하시겠습니까?</p>
+  <main class="relative h-screen flex-col justify-between p-10 bg-white">
+    <p class="text-center text-5xl font-bold mb-5">거래를 취소하시겠습니까?</p>
+    <img src="@/assets/cancelled.png" alt="" class="w-120 m-auto" />
     <div class="w-full flex flex-row justify-center mt-auto gap-x-5">
       <TaskButton text="아니요" class="w-full max-w-sm" @click="handleGoBackClick" />
       <TaskButton

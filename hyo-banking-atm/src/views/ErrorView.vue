@@ -17,6 +17,6 @@
     <p class="py-10 text-center text-5xl leading-relaxed font-bold">
       번호 확인 후 다시 시도해주세요.
     </p>
-    <img src="" alt="" />
+    <img src="@/assets/wrong-number.png" alt="w-102 h-auto m-auto" />
   </main>
 </template>

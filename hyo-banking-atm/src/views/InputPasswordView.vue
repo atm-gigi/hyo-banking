@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="w-full max-w-sm">
+      <div class="w-full max-w-lg">
         <KeyPad @keyClick="onKeyClick" />
       </div>
     </div>

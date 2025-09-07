@@ -22,9 +22,12 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-100 flex flex-col justify-between">
+  <main class="w-screen h-screen flex flex-col justify-between">
     <p class="py-10 text-center text-5xl leading-relaxed font-bold">카드나 통장을 가져오셨나요?</p>
-    <img src="" alt="카드나 통장사진" class="m-auto" />
+    <div class="flex flex-row justify-center gap-x-5">
+      <img src="@/assets/card.png" alt="카드" class="flex w-88 h-auto" />
+      <img src="@/assets/bank-book.png" alt="통장" class="flex w-88 h-auto" />
+    </div>
     <div class="w-screen h-32 flex flex-row justify-center pb-10 gap-10 px-10">
       <TaskButton text="카드" class="w-full max-w-sm" @click="handleCardClick" />
       <TaskButton text="통장" class="w-full max-w-sm" @click="handleBankbookClick" />

@@ -25,11 +25,11 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col">
+  <main class="relative h-screen flex flex-col bg-white">
     <div class="w-full h-full flex flex-row justify-between">
       <div class="w-full h-full flex flex-col justify-center items-center">
         <p class="text-center text-5xl font-bold">어떤 지폐로 드릴까요?</p>
-        <img src="" alt="캐릭터" />
+        <img src="@/assets/select-bills.png" alt="캐릭터" class="w-full" />
       </div>
 
       <div class="w-full h-full flex flex-col px-10 justify-center gap-y-8">

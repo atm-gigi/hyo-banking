@@ -9,11 +9,15 @@
   const amount = ref(166000);
   const isShowAssistantView = ref(false);
 
+  function getImg(path) {
+    return new URL(`../assets/${path}`, import.meta.url).href;
+  }
+
   const billDenominations = [
-    { denomination: 50000, label: '5만원', img: '' },
-    { denomination: 10000, label: '1만원', img: '' },
-    { denomination: 5000, label: '5천원', img: '' },
-    { denomination: 1000, label: '1천원', img: '' },
+    { denomination: 50000, label: '5만원', img: '50000_won.jpg' },
+    { denomination: 10000, label: '1만원', img: '10000_won.jpeg' },
+    { denomination: 5000, label: '5천원', img: '5000_won.jpeg' },
+    { denomination: 1000, label: '1천원', img: '1000_won.jpeg' },
   ];
 
   const billCounts = computed(() => {
@@ -55,13 +59,16 @@
 </script>
 
 <template>
-  <main class="relative w-screen h-screen bg-gray-100 flex flex-col">
+  <main class="relative w-screen h-screen flex flex-col">
     <p class="text-5xl text-black font-semibold text-center py-10">총 금액 확인</p>
 
     <div class="rounded-xl p-6 space-y-6 flex-1 flex flex-col">
       <div class="text-center space-y-2">
-
-        <div class="text-3xl font-semibold">입금하신 금액이  <p class="text-3xl font-bold">{{ formattedAmount }}원</p> 맞으신가요?</div>
+        <div class="text-3xl font-semibold">
+          입금하신 금액이
+          <p class="text-3xl font-bold">{{ formattedAmount }}원</p>
+          맞으신가요?
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-x-4 gap-y-5 justify-items-center items-center my-5">
@@ -70,8 +77,8 @@
           :key="bill.denomination"
           class="flex items-center space-x-3 w-full justify-center"
         >
-          <img :src="bill.img" :alt="bill.label" class="w-20" />
-          <span class="text-xl font-semibold w-16 text-left">
+          <img :src="getImg(bill.img)" :alt="bill.label" class="w-64" />
+          <span class="text-3xl font-semibold w-16 text-left">
             {{ billCounts[bill.denomination] }}장
           </span>
         </div>

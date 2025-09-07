@@ -41,11 +41,11 @@
 </script>
 
 <template>
-  <div class="relative h-screen flex flex-col justify-between">
-    <p class="text-center text-5xl py-10 font-bold">
+  <div class="relative h-screen flex flex-col justify-between bg-white p-10">
+    <p class="text-center text-5xl font-bold">
       {{ title }}
     </p>
-    <img src="" alt="곰돌이" class="m-auto" />
+    <img src="@/assets/loading.png" alt="곰돌이" class="w-full m-auto" />
     <form @submit.prevent="handleEnter">
       <button type="submit"></button>
     </form>

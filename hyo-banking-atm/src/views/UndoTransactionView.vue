@@ -13,19 +13,19 @@
     return null;
   });
 
-  onMounted(() => {
-    setTimeout(() => {
-      router.push({ name: 'suggest-door-phone', query: { task: route.query.task } });
-    }, 3000);
-  });
+  // onMounted(() => {
+  //   setTimeout(() => {
+  //     router.push({ name: 'suggest-door-phone', query: { task: route.query.task } });
+  //   }, 3000);
+  // });
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 flex flex-col justify-between">
+  <main class="relative h-screen bg-white flex flex-col justify-between">
     <p class="py-10 text-center text-5xl leading-relaxed font-bold">
       {{ task }}가 취소되었습니다. <br />
       카드와 명세서를 꼭 챙겨가세요.
     </p>
-    <img src="" alt="" />
+    <img src="@/assets/take-card-bills.png" alt="" class="w-200 m-auto" />
   </main>
 </template>
