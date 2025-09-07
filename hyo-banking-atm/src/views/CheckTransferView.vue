@@ -30,7 +30,7 @@
   ]);
 </script>
 <template>
-  <div class="bg-white h-48 p-8 flex flex-col justify-between">
+  <div class="p-10 h-screen w-screen flex flex-col justify-between">
     <h1 class="text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
 
     <div class="flex items-center justify-center gap-8 mt-8 mb-12">
@@ -54,11 +54,11 @@
       </div>
     </div>
 
-    <div class="w-full space-y-12 flex flex-row justify-center px-10 gap-x-5">
+    <div class="w-full flex flex-row justify-center gap-x-5">
       <TaskButton text="아니요" class="w-full max-w-sm" @click="handleNoClick" />
       <TaskButton
-        text="네 맞습니다"
-        class="flex flex-col justify-center items-center h-full bg-kb-primary"
+        text="네에엥"
+        class="w-full max-w-sm bg-kb-yellow-200"
         @click="handleYesClick"
       />
     </div>

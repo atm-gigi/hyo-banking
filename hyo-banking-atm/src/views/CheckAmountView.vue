@@ -18,8 +18,8 @@
 </script>
 
 <template>
-  <main class="relative h-screen bg-gray-100 justify-between flex flex-col">
-    <div class="flex flex-col items-center text-center py-10">
+  <main class="relative h-screen bg-gray-100 justify-between flex flex-col p-10">
+    <div class="flex flex-col items-center text-center">
       <!-- 질문 텍스트 -->
       <h1 class="text-5xl font-bold text-black">10만원을 찾으시겠어요?</h1>
     </div>
