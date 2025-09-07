@@ -150,13 +150,12 @@
       </div>
 
       <!-- 금액 입력 -->
-      <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-3 text-gray-700">송금할 금액</h2>
+      <div class="mb-6 pt-3">
         <div @click="handleAmountClick" class="cursor-pointer flex items-center gap-3 pb-3">
           <TextInput
             class="text-xl"
             v-model="amount"
-            text="금액"
+            text="보낼 금액"
             name="amount"
             :required="true"
             type="text"
