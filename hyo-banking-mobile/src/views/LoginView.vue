@@ -4,6 +4,7 @@
   import { useAuthStore } from '@/stores/auth';
   import { validateLoginForm, createLoginAttemptManager } from '@/utils/auth';
   import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
+  import TextInput from '@/components/TextInput.vue';
 
   const router = useRouter();
   const authStore = useAuthStore();
@@ -119,20 +120,17 @@
 
     <div class="h-full px-5">
       <form @submit.prevent="handleLogin" class="space-y-6">
-        <div>
-          <label for="username" class="block text-sm font-medium text-kb-brown-200 mb-2">
-            아이디
-          </label>
-          <input
+        <div class="mb-10">
+          <TextInput
             id="username"
             v-model="credentials.username"
             type="text"
-            :class="[
-              'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-kb-yellow-200 focus:border-kb-yellow-200 outline-none transition-colors',
-              formErrors.username ? 'border-red-500' : 'border-gray-300',
-            ]"
+            name="username"
+            text="아이디"
             placeholder="아이디를 입력하세요"
-            :disabled="isLoading"
+            :required="true"
+            :readonly="isLoading"
+            :class="formErrors.username ? 'border-red-500' : ''"
           />
           <p v-if="formErrors.username" class="text-red-500 text-sm mt-1">
             {{ formErrors.username }}
@@ -140,19 +138,16 @@
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-kb-brown-200 mb-2">
-            비밀번호
-          </label>
-          <input
+          <TextInput
             id="password"
             v-model="credentials.password"
             type="password"
-            :class="[
-              'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-kb-yellow-200 focus:border-kb-yellow-200 outline-none transition-colors',
-              formErrors.password ? 'border-red-500' : 'border-gray-300',
-            ]"
+            name="password"
+            text="비밀번호"
             placeholder="비밀번호를 입력하세요"
-            :disabled="isLoading"
+            :required="true"
+            :readonly="isLoading"
+            :class="formErrors.password ? 'border-red-500' : ''"
           />
           <p v-if="formErrors.password" class="text-red-500 text-sm mt-1">
             {{ formErrors.password }}
