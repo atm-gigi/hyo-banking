@@ -95,7 +95,6 @@
 
       <div @click="handleAmountClick" class="cursor-pointer flex items-center gap-3 pb-3">
         <TextInput
-          class="text-xl"
           v-model="amount"
           text="금액"
           name="amount"
@@ -104,7 +103,7 @@
           placeholder="금액을 입력하세요"
           readonly
         />
-        <span class="w-11">만원</span>
+        <span class="w-11 font-bold text-lg">만원</span>
       </div>
 
       <div class="flex flex-row flex-wrap gap-5">
