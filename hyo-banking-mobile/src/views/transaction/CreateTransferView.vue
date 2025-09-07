@@ -114,7 +114,6 @@
 
       <!-- 계좌번호 입력 -->
       <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-3 text-gray-700">받는 계좌번호</h2>
         <div @click="handleAccountNumberClick" class="cursor-pointer flex items-center gap-3 pb-3">
           <TextInput
             v-model="accountNumber"
@@ -130,7 +129,6 @@
 
       <!-- 은행 선택 -->
       <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-3 text-gray-700">은행</h2>
         <div @click="handleBankClick" class="cursor-pointer flex items-center gap-3 pb-3">
           <TextInput
             v-model="bankName"
