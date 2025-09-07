@@ -1,23 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
-// Add Transaction Routes
+// Transaction Routes
 const addTransactionRoutes = [
   {
-    path: '/add-transaction',
-    component: () => import('../components/AddTransactionLayout.vue'),
+    path: '/transaction',
+    component: () => import('../components/layouts/TransactionLayout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'task',
-        name: 'select-task',
-        component: () => import('../views/add-transaction/SelectTaskView.vue'),
+        path: 'deposit',
+        name: 'create-deposit',
+        component: () => import('../views/transaction/CreateDepositView.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: 'payment',
-        name: 'select-payment',
-        component: () => import('../views/add-transaction/SelectPaymentView.vue'),
+        path: 'withdraw',
+        name: 'create-withdraw',
+        component: () => import('../views/transaction/CreateWithdrawView.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'transfer',
+        name: 'create-transfer',
+        component: () => import('../views/transaction/CreateTransferView.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'transfer-amount',
+        name: 'transfer-amount',
+        component: () => import('../views/transaction/TransferAmountView.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'detail/:id',
+        name: 'transaction-detail',
+        component: () => import('../views/transaction/TransactionView.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'qr/:id',
+        name: 'show-qr',
+        component: () => import('../views/transaction/ShowQrView.vue'),
         meta: { requiresAuth: true },
       },
     ],
@@ -29,32 +53,31 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue'),
-      meta: { requiresAuth: true },
+      component: () => import('../components/layouts/DefaultLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('../views/HomeView.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: 'start',
+          name: 'start',
+          component: () => import('../views/StartView.vue'),
+          meta: { requiresAuth: false },
+        },
+        {
+          path: 'login',
+          name: 'login',
+          component: () => import('../views/LoginView.vue'),
+          meta: { requiresAuth: false },
+        },
+      ],
     },
-    {
-      path: '/start',
-      name: 'start',
-      component: () => import('../views/StartView.vue'),
-      meta: { requiresAuth: false },
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue'),
-      meta: { requiresAuth: false },
-    },
-    // Add Transaction Routes
+
+    // Transaction Routes
     ...addTransactionRoutes,
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
   ],
 });
 
@@ -80,7 +103,7 @@ router.beforeEach((to, from, next) => {
     // 인증이 필요하지 않은 페이지
     if (to.name === 'login' && authStore.isAuthenticated && authStore.checkTokenExpiry()) {
       // 이미 로그인되어 있는 경우 홈으로 리다이렉트
-      next('/home');
+      next('/');
     } else {
       next();
     }
