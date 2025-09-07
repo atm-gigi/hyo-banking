@@ -2,10 +2,12 @@
   import { onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '../stores/auth';
+  import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
 
   const router = useRouter();
   const authStore = useAuthStore();
   const isStartViewAnimating = ref(false);
+  const isShowInitialView = ref(true);
 
   const handleStartClick = () => {
     router.push({
@@ -33,6 +35,7 @@
     // 에니메이션 대기
     await new Promise(resolve => {
       setTimeout(() => {
+        isShowInitialView.value = false;
         resolve();
       }, 1000);
     });
@@ -46,10 +49,11 @@
 </script>
 
 <template>
-  <main class="relative w-full min-h-screen bg-gray-50">
+  <main class="relative w-full h-full min-h-screen bg-gray-50">
     <!-- 첫 화면 -->
     <div
-      class="w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out"
+      v-if="isShowInitialView"
+      class="absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out"
       :class="{ 'opacity-0': isStartViewAnimating }"
     >
       <p class="text-center text-4xl leading-relaxed font-bold">
@@ -60,19 +64,17 @@
 
     <!-- 로그인 하러 가기 -->
     <div
-      class="w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out opacity-0 z-10"
+      class="w-full h-full flex flex-col justify-center transition-opacity duration-1000 ease-in-out opacity-0 z-10"
       :class="{ 'opacity-100': isStartViewAnimating }"
     >
-      <div class="text-center mb-8">
+      <div class="h-full flex flex-col justify-center items-center">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">KB 효뱅킹에 오신 것을 환영합니다</h2>
         <p class="text-gray-600">더 쉬운 은행 서비스를 이용해보세요</p>
+        <img src="" alt="국민은행" />
       </div>
-      <button
-        @click="handleStartClick"
-        class="border-2 border-kb-yellow-200 text-black px-8 py-4 rounded-2xl text-xl font-bold active:scale-105 transition"
-      >
-        시작하기
-      </button>
+      <div class="px-5 pb-10 w-full">
+        <PrimaryBtn @click="handleStartClick" text="시작하기" class="w-full py-3" />
+      </div>
     </div>
   </main>
 </template>
