@@ -8,3 +8,7 @@
   --color-kb-brown-300: #b8935c;
   --color-kb-gray-100: #9b9b9b;
 }
+
+#app {
+  background: #f9fafb; /* gray-50 */
+}

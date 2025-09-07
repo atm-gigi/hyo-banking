@@ -1,7 +1,6 @@
 <script setup>
   import { onMounted } from 'vue';
   import { useAuthStore } from './stores/auth';
-  import DefaultLayout from '@/components/DefaultLayout.vue';
 
   const authStore = useAuthStore();
 
@@ -12,5 +11,5 @@
 </script>
 
 <template>
-  <DefaultLayout />
+  <RouterView />
 </template>
