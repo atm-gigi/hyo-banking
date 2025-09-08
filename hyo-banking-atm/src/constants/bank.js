@@ -1,0 +1,15 @@
+export const banks = [
+  { name: '국민은행', logo: 'kb.png' },
+  { name: '신한은행', logo: 'shinhan.png' },
+  { name: '우리은행', logo: 'woori.png' },
+  { name: '하나은행', logo: 'hana.png' },
+  { name: '농협은행', logo: 'nh.png' },
+  { name: '기업은행', logo: 'ibk.png' },
+  { name: '수협은행', logo: 'sh.png' },
+  { name: '제일은행', logo: 'sc.png' },
+  { name: '부산은행', logo: 'bnk.png' },
+  { name: '대구은행', logo: 'dgb.png' },
+  { name: '광주은행', logo: 'gwangju.png' },
+  { name: '새마을금고', logo: 'mg.png' },
+  { name: '신협', logo: 'shinhyup.png' },
+];

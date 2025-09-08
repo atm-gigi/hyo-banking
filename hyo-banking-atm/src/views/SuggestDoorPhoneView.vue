@@ -1,14 +1,28 @@
 <script setup>
-  import { onMounted } from 'vue';
+  import { onMounted, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
 
   const router = useRouter();
 
-  // onMounted(() => {
-  //   setTimeout(() => {
-  //     router.push({ name: 'home' });
-  //   }, 3000);
-  // });
+  const handleEnter = () => {
+    router.push({ name: 'home' });
+  };
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleEnter();
+    } else if (event.key === 'Backspace') {
+      router.push({ name: 'home' });
+    }
+  };
+
+  onMounted(() => {
+    document.addEventListener('keydown', handleKeyPress);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyPress);
+  });
 </script>
 
 <template>
@@ -18,5 +32,6 @@
       직원의 도움을 받을 수 있습니다.
     </p>
     <img src="@/assets/call-phone.png" alt="" class="w-300 m-auto" />
+    <form class="" @onKeyClick="handleKeyClick"></form>
   </main>
 </template>

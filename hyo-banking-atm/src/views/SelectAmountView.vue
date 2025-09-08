@@ -1,9 +1,13 @@
 <script setup>
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { TASK_TYPES } from '@/constants';
+  import TransactionAPI from '@/apis/TransactionAPI';
+  import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
   const route = useRoute();
   const router = useRouter();
+  const atmStore = atmTransactionStore();
   const amount = ref(null);
 
   const buttons = ref([
@@ -31,20 +35,54 @@
     },
   ]);
 
-  const handleButtonClick = button => {
+  const handleButtonClick = async button => {
     if (button.type === 'amount') {
-      // 금액 선택 로직
       console.log(`${button.label} (${button.value}원) 선택됨`);
+      atmStore.setAmount(button.value);
       amount.value = button.value;
-      if (route.query.task === 'transfer') {
+
+      try {
+        if (route.query.task === 'transfer') {
+          // Use 'await' to wait for the API call to finish
+          const response = await TransactionAPI.createTransaction({
+            txnType: TASK_TYPES.TRANSFER,
+            targetBankCode: 'KB',
+            targetAccountNo: '111-123-456789',
+            amount: amount.value,
+            currencyCode: 'KRW',
+            description: 'ATM 송금 - 강남지점',
+          });
+
+          // Now you can safely check the response
+          atmStore.setAmount(button.value);
+          console.log('송금 확인:', response.txnId, ' - ', amount.value, '원');
+          router.push({
+            name: 'check-transfer',
+            query: { task: route.query.task, amount: amount.value },
+          });
+        } else {
+          // Use 'await' here as well
+          const response = await TransactionAPI.createTransaction({
+            txnType: TASK_TYPES.WITHDRAW,
+            targetBankCode: 'KB',
+            targetAccountNo: '110-123-456789',
+            amount: amount.value,
+            currencyCode: 'KRW',
+            description: 'ATM 출금 - 강남지점',
+          });
+
+          console.log('출금 확인:', response.txnId, ' - ', amount.value, '원');
+          router.push({
+            name: 'input-password',
+            query: { task: route.query.task },
+          });
+        }
+      } catch (error) {
+        // If the promise rejects (like with a 500 error), it will be caught here
+        console.error('Transaction error:', error);
         router.push({
-          name: 'check-transfer',
-          query: { task: route.query.task, amount: amount.value },
-        });
-      } else {
-        router.push({
-          name: 'input-password',
-          query: { task: route.query.task },
+          name: 'error',
+          query: { message: 'Transaction failed. Please try again.' },
         });
       }
     } else if (button.type === 'action') {

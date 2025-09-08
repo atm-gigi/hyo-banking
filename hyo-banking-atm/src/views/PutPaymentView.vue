@@ -61,41 +61,41 @@
     <div class="w-full max-w-4xl bg-white rounded-2xl p-5">
       <div class="grid grid-cols-2 gap-x-8 text-center">
         <div class="border-4 border-green-400 rounded-xl p-4">
-          <h2 class="text-2xl font-bold text-green-600 mb-2">✅ 정상 투입구</h2>
+          <h2 class="text-5xl font-bold text-green-600 mb-2">✅ 정상 투입구</h2>
           <img
             src="@/assets/atm-true.png"
             alt="정상 투입구 예시"
-            class="w-full h-48 object-contain rounded-md"
+            class="w-full h-48 object-contain"
           />
         </div>
 
-        <div class="border-4 border-red-400 rounded-xl p-4 bg-red-50">
-          <h2 class="text-2xl font-bold text-red-600 mb-2">⚠️ 의심되는 투입구</h2>
+        <div class="border-4 border-red-400 rounded-xl p-5 bg-red-50">
+          <h2 class="text-5xl font-bold text-red-600 mb-2">⚠️ 의심되는 투입구</h2>
           <div class="flex flex-row justify-center gap-x-2 mb-4">
             <img
               src="@/assets/atm-false.png"
               alt="비정상 투입구 예시"
-              class="flex w-full h-48 object-contain rounded-md"
+              class="flex w-full h-48 object-contain"
             />
             <img
               src="@/assets/prevent-card-copy.png"
               alt="비정상 투입구 예시"
-              class="flex w-full h-48 object-contain rounded-md"
+              class="flex w-full h-48 object-contain"
             />
           </div>
         </div>
       </div>
 
       <div class="mt-6 bg-yellow-100 border-l-8 border-yellow-400 p-4 rounded-md">
-        <p class="text-xl font-semibold">
-          <span class="font-bold">뭔가 이상한가요?</span> 절대 카드를 넣지 마시고, 바로 옆
+        <p class="text-3xl font-semibold">
+          <span class="font-bold">뭔가 이상한가요?</span> <br/> 절대 카드를 넣지 마시고, 바로 옆
           인터폰(📞)으로 직원을 불러주세요.
         </p>
       </div>
     </div>
 
-    <div class="w-full max-w-4xl text-center">
-      <p class="text-4xl font-bold transition-opacity duration-1000 ease-in-out">
+    <div class="w-full text-center m-auto">
+      <p class="text-5xl font-bold transition-opacity duration-1000 ease-in-out">
         확인하셨다면, 투입구에 {{ payment }}을(를) 넣어주세요
       </p>
     </div>

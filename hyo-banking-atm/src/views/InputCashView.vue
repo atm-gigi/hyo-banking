@@ -1,103 +1,43 @@
 <script setup>
-  import TaskButton from '@/components/TaskButton.vue';
-  import { ref, computed } from 'vue';
+  import { onMounted, onUnmounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
   const route = useRoute();
   const router = useRouter();
 
-  const amount = ref(166000);
-  const isShowAssistantView = ref(false);
-
-  function getImg(path) {
-    return new URL(`../assets/${path}`, import.meta.url).href;
-  }
-
-  const billDenominations = [
-    { denomination: 50000, label: '5만원', img: '50000_won.jpg' },
-    { denomination: 10000, label: '1만원', img: '10000_won.jpeg' },
-    { denomination: 5000, label: '5천원', img: '5000_won.jpeg' },
-    { denomination: 1000, label: '1천원', img: '1000_won.jpeg' },
-  ];
-
-  const billCounts = computed(() => {
-    const counts = {};
-    let remainingAmount = amount.value;
-
-    for (const bill of billDenominations) {
-      const denomination = bill.denomination;
-      if (remainingAmount >= denomination) {
-        counts[denomination] = Math.floor(remainingAmount / denomination);
-        remainingAmount %= denomination;
-      } else {
-        counts[denomination] = 0;
-      }
-    }
-    return counts;
-  });
-
-  // 금액을 통화 형식(e.g., 166,000)으로 변환
-  const formattedAmount = computed(() => {
-    return amount.value.toLocaleString('ko-KR');
-  });
-
-  // '예 맞아요' 버튼 클릭 시 실행될 함수
-  const handleDepositClick = () => {
-    console.log('입금 확인:', amount.value, '원');
+  const handleEnter = () => {
     router.push({
-      name: 'loading',
-      query: { task: route.query.task, payment: route.query.payment },
+      name: 'check-amount',
+      query: { task: route.query.task },
     });
   };
 
-  // '아니오' 버튼 클릭 시 실행될 함수
-  const handleGoBackClick = () => {
-    console.log('입금 취소');
-    // 이전 페이지로 이동하거나 초기 화면으로 돌아가는 로직 추가
-    router.go(-1);
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleEnter();
+    }
   };
+
+  onMounted(() => {
+    document.addEventListener('keydown', handleKeyPress);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyPress);
+  });
 </script>
 
 <template>
   <main class="relative w-screen h-screen flex flex-col">
-    <p class="text-5xl text-black font-semibold text-center py-10">총 금액 확인</p>
-
-    <div class="rounded-xl p-6 space-y-6 flex-1 flex flex-col">
-      <div class="text-center space-y-2">
-        <div class="text-3xl font-semibold">
-          입금하신 금액이
-          <p class="text-3xl font-bold">{{ formattedAmount }}원</p>
-          맞으신가요?
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-x-4 gap-y-5 justify-items-center items-center my-5">
-        <div
-          v-for="bill in billDenominations"
-          :key="bill.denomination"
-          class="flex items-center space-x-3 w-full justify-center"
-        >
-          <img :src="getImg(bill.img)" :alt="bill.label" class="w-64" />
-          <span class="text-3xl font-semibold w-16 text-left">
-            {{ billCounts[bill.denomination] }}장
-          </span>
-        </div>
-      </div>
-
-      <div class="w-screen flex justify-center gap-x-5 mt-auto">
-        <TaskButton
-          text="아니오"
-          class="w-full max-w-sm"
-          :disabled="isShowAssistantView"
-          @click="handleGoBackClick"
-        />
-        <TaskButton
-          text="예 맞아요"
-          class="w-full max-w-sm bg-kb-yellow-200"
-          :disabled="isShowAssistantView"
-          @click="handleDepositClick"
-        />
-      </div>
+    <div class="w-full h-full flex flex-col gap-5 justify-center items-center p-10">
+      <p class="flex text-5xl text-black font-bold text-center">돈 넣는 곳이 열립니다.</p>
+      <span class="flex text-5xl text-black font-bold text-center"
+        >지폐를 쫙 펴서 넣어주세요.
+      </span>
+      <img src="@/assets/put-cash.png" alt="돈 넣는 곳이 열립니다." class="w-full m-auto flex" />
     </div>
+    <form @submit.prevent="handleEnter">
+      <button type="submit"></button>
+    </form>
   </main>
 </template>
