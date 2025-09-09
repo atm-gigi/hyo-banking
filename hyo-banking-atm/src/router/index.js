@@ -114,6 +114,11 @@ const router = createRouter({
       name: 'use-qr-token',
       component: () => import('../views/UseQrView/UseQrTokenView.vue'),
     },
+    {
+      path: '/handle-macro-step',
+      name: 'handle-macro-step',
+      component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
+    },
   ],
 });
 
