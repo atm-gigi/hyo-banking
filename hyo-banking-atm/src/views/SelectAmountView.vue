@@ -46,8 +46,10 @@
           // Use 'await' to wait for the API call to finish
           const response = await TransactionAPI.createTransaction({
             txnType: TASK_TYPES.TRANSFER,
-            targetBankCode: 'KB',
-            targetAccountNo: '111-123-456789',
+            sourceBankCode: atmStore.bankCode || 'KB',
+            sourceAccountNo: atmStore.accountNo || '110-123-456789',
+            targetBankCode: atmStore.targetBankCode || 'SH',
+            targetAccountNo: atmStore.targetAccountNo || '111-123-456789',
             amount: amount.value,
             currencyCode: 'KRW',
             description: 'ATM 송금 - 강남지점',
@@ -64,10 +66,10 @@
           // Use 'await' here as well
           const response = await TransactionAPI.createTransaction({
             txnType: TASK_TYPES.WITHDRAW,
-            targetBankCode: 'KB',
-            targetAccountNo: '110-123-456789',
+            sourceBankCode: atmStore.bankCode || 'KB',
+            sourceAccountNo: atmStore.accountNo || '110-123-456789',
             amount: amount.value,
-            currencyCode: 'KRW',
+            currencyCode: atmStore.currencyCode || 'KRW',
             description: 'ATM 출금 - 강남지점',
           });
 
@@ -106,7 +108,7 @@
 </script>
 
 <template>
-  <main class="relative w-screen h-screen bg-gray-100 grid grid-cols-2 gap-5 p-10">
+  <main class="relative w-screen h-screen grid grid-cols-2 gap-5 p-10">
     <button
       v-for="button in buttons"
       :key="button.label"

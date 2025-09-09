@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
 const apiClient = axios.create({
@@ -17,28 +18,43 @@ const TransactionAPI = {
    * @returns {Promise<any>}
    */
   async createTransaction(transactionData) {
-    const { txnType, targetBankCode, targetAccountNo, amount, currencyCode, description } =
-      transactionData;
-
-    atmStore.setAmount(amount);
+    const {
+      txnType,
+      sourceBankCode,
+      sourceAccountNo,
+      targetBankCode,
+      targetAccountNo,
+      amount,
+      currencyCode,
+      description,
+    } = transactionData;
 
     try {
-      const response = await apiClient.post('/transactions', {
-        txnType,
-        targetBankCode,
-        targetAccountNo,
-        amount,
-        currencyCode,
-        description,
-      });
+      // 요청을 보내기 직전에 고유한 멱등성 키를 생성합니다.
+      const idempotencyKey = uuidv4();
+      console.log('Generated Idempotency-Key:', idempotencyKey); // 확인용 로그
 
-      if (response.data.status !== 'SUCCESS') {
-        return { error: 'Transaction failed', details: response.data };
-      }
-
+      const response = await apiClient.post(
+        '/transactions',
+        {
+          txnType: txnType.toUpperCase(),
+          sourceBankCode,
+          sourceAccountNo,
+          targetBankCode,
+          targetAccountNo,
+          amount,
+          currencyCode,
+          description,
+        },
+        {
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+          },
+        }
+      );
       atmStore.setTxnId(response.data.txnId);
 
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Error creating transaction:', error);
       throw error;

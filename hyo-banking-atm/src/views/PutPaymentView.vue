@@ -55,7 +55,7 @@
 </script>
 
 <template>
-  <main class="bg-white w-screen h-screen flex flex-col items-center p-10">
+  <main class="w-screen h-screen flex flex-col items-center p-10">
     <h1 class="text-5xl font-bold text-center mb-6">투입구를 확인해주세요</h1>
 
     <div class="w-full max-w-4xl bg-white rounded-2xl p-5">

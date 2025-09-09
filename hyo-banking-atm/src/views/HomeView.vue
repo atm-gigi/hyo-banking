@@ -1,12 +1,12 @@
 <script setup>
-  import { onMounted} from 'vue';
+  import { onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
   const router = useRouter();
   const atmStore = atmTransactionStore();
 
-onMounted(() => {
+  onMounted(() => {
     // Reset the store when arriving at the home view
     atmStore.resetTransaction();
   });
@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="relative h-full min-h-screen bg-gray-100 flex flex-col">
+  <main class="relative h-full min-h-screen flex flex-col">
     <!-- 메인 버튼 그리드 -->
     <div class="pt-10 pb-32 px-10 grid grid-cols-2 gap-4 w-full max-w-7xl mx-auto flex-1">
       <!-- QR 사용 버튼 -->

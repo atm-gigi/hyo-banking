@@ -20,7 +20,8 @@ export const atmTransactionStore = defineStore('atmTransactionInfo', () => {
   // 2. getters -> computed()
   // getters는 computed()를 사용하여 계산된 값을 만듭니다.
   const formattedBalance = computed(() => {
-    return balance.value.toLocaleString('ko-KR') + '원';
+    const currentBalance = balance.value ?? 0;
+    return currentBalance.toLocaleString('ko-KR') + '원';
   });
 
   const formattedAmount = computed(() => {
@@ -65,6 +66,10 @@ export const atmTransactionStore = defineStore('atmTransactionInfo', () => {
     targetUserName.value = newUserName;
   }
 
+  function setBalance(newBalance) {
+    balance.value = newBalance;
+  }
+
   function resetTransaction() {
     txnId.value = null;
     amount.value = 0;
@@ -103,5 +108,6 @@ export const atmTransactionStore = defineStore('atmTransactionInfo', () => {
     resetTransaction,
     setTargetUserId,
     setTargetBankCode,
+    setBalance,
   };
 });

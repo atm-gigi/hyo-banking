@@ -45,7 +45,7 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-100">
+  <main class="w-screen h-screen">
     <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->
       <div class="w-1/2 flex flex-col justify-center">

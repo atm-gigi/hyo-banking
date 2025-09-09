@@ -52,14 +52,14 @@
       txnType: atmStore.taskType || TASK_TYPES.DEPOSIT,
       targetBankCode: atmStore.bankCode || 'KB',
       targetAccountNo: atmStore.accountNo || '110-123-456789',
-      amount: 166000,
+      amount: amount.value || 166000,
       currencyCode: atmStore.currencyCode || 'KRW',
       description: 'ATM 입금 - 강남지점',
     });
 
     atmStore.setDescription('ATM 입금 - 강남지점');
 
-    console.log('입금 확인:', response.txnId, ' - ', amount.value, '원');
+    console.log('입금 확인:', response.data.txnId, ' - ', amount.value, '원');
     if (response.error) {
       console.error('Transaction error:', response.error, response.details);
       atmStore.setDescription(response.error);

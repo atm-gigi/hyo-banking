@@ -1,14 +1,14 @@
 <script setup>
-  import { computed, onMounted } from 'vue';
+  import { computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { TASK_TYPES } from '@/constants';
   import TaskButton from '@/components/TaskButton.vue';
   import TransactionAPI from '@/apis/TransactionAPI';
-  import UserAPI from '@/apis/UserAPI';
-  import { atmTranactionStore } from '@/stores/atmTransactionStore';
+  import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
   const route = useRoute();
   const router = useRouter();
-  const atmStore = atmTranactionStore();
+  const atmStore = atmTransactionStore();
 
   const bankCodeMapping = {
     국민은행: 'KB',
@@ -27,29 +27,9 @@
   };
 
   const receiverName = computed(() => atmStore.targetUserName || '정보 없음');
-  const receiverBank = computed(() => atmStore.targetBank || '은행 정보 없음');
+  const receiverBank = computed(() => atmStore.targetBankCode || '은행 정보 없음');
   const receiverAccount = computed(() => atmStore.targetAccountNo || '계좌 정보 없음');
-  const receiverAmount = computed(
-    () => atmStore.amount?.toLocaleString('ko-KR') + '원' || '금액 정보 없음'
-  );
-
-  onMounted(async () => {
-    if (!atmStore.targetAccountNo || !atmStore.targetBankCode) {
-      console.error('조회할 계좌 정보가 없습니다.');
-      return;
-    }
-
-    try {
-      const bankCode = bankCodeMapping[atmStore.targetBank];
-      const response = await UserAPI.getUserInfo(atmStore.targetAccountNo, bankCode);
-      const { userId, name } = response.data;
-      atmStore.setTargetUserId(userId);
-      atmStore.setTargetUserName(name);
-    } catch (error) {
-      console.error('계좌 정보 조회 실패:', error);
-      atmStore.setTargetUserName('조회 실패');
-    }
-  });
+  const receiverAmount = computed(() => atmStore.formattedAmount || '금액 정보 없음');
 
   const handleNoClick = () => {
     console.log('Transaction canceled.');
@@ -57,25 +37,20 @@
   };
 
   const handleYesClick = async () => {
-    console.log('Transaction confirmed.');
-    router.push({ name: 'loading' });
-
     try {
-      const transactionData = {
-        txnType: atmStore.task,
-        targetBankCode: bankCodeMapping[atmStore.targetBank], // Map bank name to code
-        targetAccountNo: atmStore.targetAccountNo,
-        amount: atmStore.amount, // Use the raw number from the store
+      // Transfer API call
+      const response = await TransactionAPI.createTransaction({
+        txnType: TASK_TYPES.TRANSFER,
+        sourceBankCode: atmStore.bankCode || 'KB',
+        sourceAccountNo: atmStore.accountNo || '110-123-456789',
+        targetBankCode: atmStore.targetBankCode || 'SH',
+        targetAccountNo: atmStore.targetAccountNo || '111-123-456789',
+        amount: atmStore.amount || 166000,
         currencyCode: 'KRW',
-        description: 'ATM 이체',
-      };
-
-      await TransactionAPI.createTransaction(transactionData);
-
-      router.push({
-        name: 'end-transaction',
-        query: { task: route.query.task },
+        description: 'ATM 송금 - 강남지점',
       });
+
+      router.push({ name: 'loading', query: { task: route.query.task } });
     } catch (error) {
       console.error('Transaction failed:', error);
       router.push({ name: 'error' });
@@ -90,7 +65,7 @@
   ]);
 </script>
 <template>
-  <div class="p-10 h-screen w-screen flex flex-col justify-between bg-white">
+  <div class="p-10 h-screen w-screen flex flex-col justify-between">
     <h1 class="text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
 
     <div class="flex items-center justify-center gap-8 mt-8 mb-12">
