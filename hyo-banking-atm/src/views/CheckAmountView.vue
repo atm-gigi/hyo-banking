@@ -59,7 +59,6 @@
 
     atmStore.setDescription('ATM 입금 - 강남지점');
 
-    console.log('입금 확인:', response.data.txnId, ' - ', amount.value, '원');
     if (response.error) {
       console.error('Transaction error:', response.error, response.details);
       atmStore.setDescription(response.error);
