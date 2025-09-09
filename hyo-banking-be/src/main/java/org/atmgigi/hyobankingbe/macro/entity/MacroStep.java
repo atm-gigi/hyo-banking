@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.atmgigi.hyobankingbe.account.domain.Account;
 import org.atmgigi.hyobankingbe.txn.enums.OperationType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -22,6 +24,7 @@ public class MacroStep {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "macro_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Macro macro; // 어느 매크로에 속하는 단계인지 (FK)
 
     @Column(nullable = false)

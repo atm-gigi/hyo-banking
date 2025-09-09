@@ -6,6 +6,8 @@ import org.atmgigi.hyobankingbe.common.exception.DomainException;
 import org.atmgigi.hyobankingbe.common.exception.ErrorCode;
 import org.atmgigi.hyobankingbe.macro.domain.ExecutionStatus;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -25,10 +27,12 @@ public class MacroExecution {
 
     @ManyToOne(fetch = FetchType.LAZY) // 어떤 매크로 실행인지
     @JoinColumn(name = "macro_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Macro macro;
 
     @OneToOne(fetch = FetchType.LAZY) // 토큰은 1회용 -> 실행과 1:1
     @JoinColumn(name = "qr_token_id" , nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MacroQrToken qrToken;
 
     @Enumerated(EnumType.STRING)
