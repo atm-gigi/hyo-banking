@@ -6,7 +6,7 @@
   const router = useRouter();
 
   const isShowNav = computed(() => {
-    return !['start', 'login'].includes(route.name);
+    return !['start', 'login', 'join'].includes(route.name);
   });
 
   const handleHomeClick = () => {

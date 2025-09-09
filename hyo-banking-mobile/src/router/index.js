@@ -73,6 +73,12 @@ const router = createRouter({
           component: () => import('../views/LoginView.vue'),
           meta: { requiresAuth: false },
         },
+        {
+          path: 'join',
+          name: 'join',
+          component: () => import('../views/JoinView.vue'),
+          meta: { requiresAuth: false },
+        },
       ],
     },
 
@@ -92,16 +98,18 @@ router.beforeEach((to, from, next) => {
 
   // 인증이 필요한 페이지인지 확인
   if (to.meta.requiresAuth) {
-    if (authStore.isAuthenticated && authStore.checkTokenExpiry()) {
-      // 로그인되어 있고 토큰이 유효한 경우
+    if (authStore.isAuthenticated) {
+      // 로그인되어 있는 경우
       next();
     } else {
-      // 로그인되지 않았거나 토큰이 만료된 경우 StartView로 리다이렉트
+      // 로그인되지 않은 경우 StartView로 리다이렉트
       next('/start');
     }
   } else {
     // 인증이 필요하지 않은 페이지
-    if (to.name === 'login' && authStore.isAuthenticated && authStore.checkTokenExpiry()) {
+    const publicPages = ['start', 'login', 'join'];
+
+    if (publicPages.includes(to.name) && authStore.isAuthenticated) {
       // 이미 로그인되어 있는 경우 홈으로 리다이렉트
       next('/');
     } else {

@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, reactive } from 'vue';
+  import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '@/stores/auth';
   import { validateLoginForm, createLoginAttemptManager } from '@/utils/auth';
@@ -13,7 +13,7 @@
   // 반응형 데이터
   const isLoading = ref(false);
   const credentials = reactive({
-    username: '',
+    loginId: '',
     password: '',
     rememberMe: false,
   });
@@ -21,31 +21,43 @@
   const loginMessage = ref(null);
 
   // 계산된 속성
-  const isFormValid = computed(() => {
-    const validation = validateLoginForm(credentials);
-    return validation.isValid;
-  });
 
   const lockoutTimeRemaining = ref(0);
 
   // 메서드
   const handleLogin = async () => {
-    // 폼 유효성 검사
-    const validation = validateLoginForm(credentials);
-    if (!validation.isValid) {
-      Object.assign(formErrors, validation.errors);
-      return;
-    }
-
-    // 로그인 시도 제한 확인
-    if (loginAttemptManager.isLockedOut()) {
-      lockoutTimeRemaining.value = loginAttemptManager.getLockoutTimeRemaining();
-      return;
-    }
-
     // 폼 에러 초기화
     Object.keys(formErrors).forEach(key => delete formErrors[key]);
     loginMessage.value = null;
+
+    // 단계별 검증
+    const validationErrors = [];
+
+    // 1. 로그인 시도 제한 확인
+    if (loginAttemptManager.isLockedOut()) {
+      lockoutTimeRemaining.value = loginAttemptManager.getLockoutTimeRemaining();
+      validationErrors.push('로그인 시도 횟수를 초과했습니다. 잠시 후 다시 시도해주세요.');
+    }
+
+    // 2. 폼 유효성 검사
+    const validation = validateLoginForm(credentials);
+    if (!validation.isValid) {
+      Object.assign(formErrors, validation.errors);
+
+      // 구체적인 필드별 에러 메시지 추가
+      if (validation.errors.loginId) validationErrors.push('아이디: ' + validation.errors.loginId);
+      if (validation.errors.password)
+        validationErrors.push('비밀번호: ' + validation.errors.password);
+    }
+
+    // 검증 실패 시 에러 메시지 표시
+    if (validationErrors.length > 0) {
+      loginMessage.value = {
+        type: 'error',
+        text: validationErrors.join('\n'),
+      };
+      return;
+    }
 
     isLoading.value = true;
 
@@ -79,7 +91,7 @@
       console.error('Login error:', error);
       loginMessage.value = {
         type: 'error',
-        text: '로그인 중 오류가 발생했습니다.',
+        text: error.message || '로그인 중 오류가 발생했습니다.',
       };
     } finally {
       isLoading.value = false;
@@ -122,18 +134,18 @@
       <form @submit.prevent="handleLogin" class="space-y-6">
         <div class="mb-10">
           <TextInput
-            id="username"
-            v-model="credentials.username"
+            id="loginId"
+            v-model="credentials.loginId"
             type="text"
-            name="username"
+            name="loginId"
             text="아이디"
             placeholder="아이디를 입력하세요"
             :required="true"
             :readonly="isLoading"
-            :class="formErrors.username ? 'border-red-500' : ''"
+            :class="formErrors.loginId ? 'border-red-500' : ''"
           />
-          <p v-if="formErrors.username" class="text-red-500 text-sm mt-1">
-            {{ formErrors.username }}
+          <p v-if="formErrors.loginId" class="text-red-500 text-sm mt-1">
+            {{ formErrors.loginId }}
           </p>
         </div>
 
@@ -163,7 +175,7 @@
         <div
           v-if="loginMessage"
           :class="[
-            'text-center text-sm p-3 rounded-lg',
+            'text-center text-sm p-3 rounded-lg whitespace-pre-line',
             loginMessage.type === 'error'
               ? 'bg-red-100 text-red-700'
               : 'bg-green-100 text-green-700',
@@ -185,7 +197,7 @@
     <div class="px-5 pb-10 w-full">
       <PrimaryBtn
         text="로그인"
-        :disabled="isLoading || !isFormValid"
+        :disabled="isLoading"
         :isLoading="isLoading"
         @click="handleLogin"
         class="w-full py-3"
