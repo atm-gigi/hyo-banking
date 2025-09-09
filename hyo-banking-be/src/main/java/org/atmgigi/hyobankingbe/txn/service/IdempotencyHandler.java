@@ -1,0 +1,115 @@
+package org.atmgigi.hyobankingbe.txn.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.atmgigi.hyobankingbe.account.domain.Account;
+import org.atmgigi.hyobankingbe.account.repository.AccountRepository;
+import org.atmgigi.hyobankingbe.common.exception.*;
+import org.atmgigi.hyobankingbe.common.util.DigestUtil;
+import org.atmgigi.hyobankingbe.common.util.JsonUtil;
+import org.atmgigi.hyobankingbe.txn.dto.TxnCreatedResponseDTO;
+import org.atmgigi.hyobankingbe.txn.dto.TxnRequestDTO;
+import org.atmgigi.hyobankingbe.txn.entity.IdempotencyKey;
+import org.atmgigi.hyobankingbe.txn.enums.IdemStatus;
+import org.atmgigi.hyobankingbe.txn.repository.IdempotencyKeyRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Service
+@RequiredArgsConstructor
+public class IdempotencyHandler {
+
+    private final IdempotencyKeyRepository idempotencyKeyRepository;
+    private final AccountRepository accountRepository;
+    private final TxnService txnService;
+    private final IdemLogService idemLogService;
+
+    private final ObjectMapper objectMapper;
+
+    @Transactional
+    public ResponseEntity<TxnCreatedResponseDTO> handle(final TxnRequestDTO txnRequestDTO, final String idempotencyKey) {
+
+        //0. 계좌 정보로 유저 찾기
+        String userAccountNo;
+        String userBankCode;
+        switch(txnRequestDTO.txnType()) {
+            case DEPOSIT, TRANSFER -> {
+                userAccountNo = txnRequestDTO.targetAccountNo();
+                userBankCode = txnRequestDTO.targetBankCode();
+            }
+            case WITHDRAW -> {
+                userAccountNo = txnRequestDTO.sourceAccountNo();
+                userBankCode = txnRequestDTO.sourceBankCode();
+            }
+            default -> throw new DomainException(ErrorCode.VALIDATION_FAILED, "지원하지 않는 거래 유형입니다.");
+        }
+        Account account = accountRepository.findByAccountNoAndBankCode(userAccountNo, userBankCode)
+                .orElseThrow(() -> new DomainException(ErrorCode.ACCOUNT_NOT_FOUND, "해당 계좌가 존재하지 않습니다."));
+
+
+        //1. 멱등키 저장 및 확인
+        final String requestJSON = JsonUtil.toCanonicalJson(objectMapper, txnRequestDTO);
+        final String requestHash = DigestUtil.toSha256Hex(requestJSON);
+
+        IdempotencyKey data = IdempotencyKey.builder()
+                .idemKey(idempotencyKey)
+                .user(account.getUser())
+                .expiresAt(LocalDateTime.now().plusDays(1))
+                .operation(txnRequestDTO.txnType())
+                .status(IdemStatus.PROCESSING)
+                .requestHash(requestHash)
+                .responseCode(0)
+                .build();
+
+        try {
+            data = idempotencyKeyRepository.saveAndFlush(data);
+        }catch (DataIntegrityViolationException ex) { // 유니크 키 그런 것들로 인해 실패했을때 ( 이미 키값이 존재함 )
+            // 2. 중복된 정보 가져오기
+            IdempotencyKey existing = idempotencyKeyRepository.lockByUserAndIdemKey(account.getUser(), idempotencyKey)
+                    .orElseThrow(() -> new IdempotencyKeyNotFoundException(account.getUser().getId(), idempotencyKey));
+
+            if(!Objects.equals(existing.getRequestHash(), requestHash)) {
+                throw new IdempotencyConflictException("멱등키 충돌");
+            }
+
+            if(existing.getStatus() == IdemStatus.SUCCEEDED) {
+                // 이미 처리 완료된 작업이면 똑같은 응답
+                TxnCreatedResponseDTO result = JsonUtil.toObject(objectMapper, existing.getResponseBody(), TxnCreatedResponseDTO.class);
+                return ResponseEntity.status(existing.getResponseCode())
+                        .body(result);
+            }
+
+            if (existing.getStatus() == IdemStatus.PROCESSING) {
+                // 409 + Retry-After 헤더로 응답
+                throw new IdempotencyProcessingException("거래 트랜잭션 동작중", 2);
+            }
+
+            // FAILED인 경우
+            throw new IdempotencyFailedPreviouslyException("트랜잭션은 이미 실패했습니다.");
+        }
+
+        // 3. 실제 비즈니스 처리
+        try {
+            TxnCreatedResponseDTO result = txnService.createTxn(txnRequestDTO); // 계좌 처리 등 도메인 로직
+
+            idemLogService.markSucceeded(data, 201, JsonUtil.toCanonicalJson(objectMapper,result));
+
+            URI uri = URI.create("/api/transactions/" + result.txnId());
+            return ResponseEntity.status(201).location(uri).body(result);
+
+        } catch (DomainException ex) {
+
+            idemLogService.markFailed(data, ex, JsonUtil.toCanonicalJson(objectMapper,ex));
+
+            throw ex;
+        }
+
+    }
+
+}

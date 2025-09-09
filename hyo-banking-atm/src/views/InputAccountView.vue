@@ -2,10 +2,12 @@
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import KeyPad from '@/components/KeyPad.vue';
+  import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
   const route = useRoute();
   const router = useRouter();
-  const amount = ref('100-3524-54154');
+  const atmStore = atmTransactionStore();
+  const amount = ref('111-123-456789');
 
   const onKeyClick = key => {
     if (key === '지움') {
@@ -20,12 +22,15 @@
   const handleEnter = () => {
     router.push({
       name: 'check-account',
-      query: { task: route.query.task, payment: route.query.payment },
+      query: {
+        task: route.query.task,
+      },
     });
   };
 
   const handleKeyPress = event => {
     if (event.key === 'Enter') {
+      atmStore.setTargetAccountNo(amount.value);
       handleEnter();
     }
   };
@@ -40,7 +45,7 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-100">
+  <main class="w-screen h-screen">
     <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->
       <div class="w-1/2 flex flex-col justify-center">

@@ -2,16 +2,21 @@
   import { onMounted, onUnmounted, ref, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import KeyPad from '@/components/KeyPad.vue';
+  import { TASK_TYPES } from '@/constants';
+  import TransactionAPI from '@/apis/TransactionAPI';
+  import { atmTransactionStore } from '@/stores/atmTransactionStore';
 
   const route = useRoute();
   const router = useRouter();
-  const amount = ref('100');
-  const task = ref(route.query.task);
+  const atmStore = atmTransactionStore();
+
+  const amount = ref('');
+  const task = computed(() => route.query.task);
 
   const title = computed(() => {
     // route.query.task가 'TRANSFER'이면 "얼마를 보내실 건가요?"를,
     // 그렇지 않으면 "얼마를 찾으실 건가요?"를 반환합니다.
-    return task.value === 'TRANSFER' ? '얼마를 보내실 건가요?' : '얼마를 찾으실 건가요?';
+    return task.value === TASK_TYPES.TRANSFER ? '얼마를 보내실 건가요?' : '얼마를 찾으실 건가요?';
   });
 
   const onKeyClick = key => {
@@ -24,17 +29,45 @@
     }
   };
 
-  const handleEnter = () => {
-    if (task.value === 'TRANSFER')
-      router.push({
-        name: 'check-transfer',
-        query: { task: route.query.task, payment: route.query.payment },
-      });
-    else
+  const handleEnter = async () => {
+    if (!amount.value) {
+      console.log('금액을 입력해주세요.');
+      return;
+    }
+    const transactionAmount = parseInt(amount.value) * 10000;
+    atmStore.setAmount(transactionAmount); // Update store
+
+    if (task.value === TASK_TYPES.TRANSFER) {
+      try {
+        // 5. Use await to wait for the API call to complete
+        const response = await TransactionAPI.createTransaction({
+          txnType: TASK_TYPES.TRANSFER,
+          targetBankCode: atmStore.targetBankCode, // Use data from store
+          targetAccountNo: atmStore.targetAccountNo, // Use data from store
+          amount: transactionAmount,
+          currencyCode: 'KRW',
+          description: 'ATM 송금 - 강남지점',
+        });
+
+        console.log('송금 확인:', response.txnId, ' - ', amount.value, '만원');
+        router.push({
+          name: 'check-transfer',
+          query: { ...route.query },
+        });
+      } catch (error) {
+        console.error('Transaction error:', error);
+        router.push({
+          name: 'error',
+          query: { message: '거래에 실패했습니다. 다시 시도해주세요.' },
+        });
+      }
+    } else {
+      // For withdrawals, just navigate to the next step
       router.push({
         name: 'input-password',
-        query: { task: route.query.task, payment: route.query.payment },
+        query: { ...route.query },
       });
+    }
   };
 
   const handleKeyPress = event => {
@@ -53,7 +86,7 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-100">
+  <main class="w-screen h-screen">
     <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->
       <div class="w-1/2 flex flex-col space-y-5 justify-center">
