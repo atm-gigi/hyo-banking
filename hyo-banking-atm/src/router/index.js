@@ -109,6 +109,11 @@ const router = createRouter({
       name: 'check-no',
       component: () => import('../views/CheckNoView.vue'),
     },
+    {
+      path: '/use-qr-token',
+      name: 'use-qr-token',
+      component: () => import('../views/UseQrView/UseQrTokenView.vue'),
+    },
   ],
 });
 
