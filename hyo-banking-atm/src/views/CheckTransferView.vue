@@ -27,7 +27,7 @@
   };
 
   const receiverName = computed(() => atmStore.targetUserName || '정보 없음');
-  const receiverBank = computed(() => atmStore.targetBankCode || '은행 정보 없음');
+  const receiverBank = computed(() => bankCodeMapping[atmStore.targetBankCode] || '은행 정보 없음');
   const receiverAccount = computed(() => atmStore.targetAccountNo || '계좌 정보 없음');
   const receiverAmount = computed(() => atmStore.formattedAmount || '금액 정보 없음');
 
