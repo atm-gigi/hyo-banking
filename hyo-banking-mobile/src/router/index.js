@@ -44,6 +44,12 @@ const addTransactionRoutes = [
         component: () => import('../views/transaction/ShowQrView.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: 'add-step/:id',
+        name: 'add-step',
+        component: () => import('../views/transaction/AddStepView.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ];
@@ -78,6 +84,12 @@ const router = createRouter({
           name: 'join',
           component: () => import('../views/JoinView.vue'),
           meta: { requiresAuth: false },
+        },
+        {
+          path: 'qr-example',
+          name: 'qr-example',
+          component: () => import('../views/QrExampleView.vue'),
+          meta: { requiresAuth: true },
         },
       ],
     },
