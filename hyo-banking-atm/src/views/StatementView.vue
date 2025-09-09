@@ -11,6 +11,22 @@
   console.log('atmStore in StatementView:', atmStore);
   console.log('atmStore.task in StatementView:', atmStore.task);
 
+  const bankNameMapping = {
+    KB: '국민은행',
+    SHINHAN: '신한은행',
+    WOORI: '우리은행',
+    HANA: '하나은행',
+    NH: '농협은행',
+    IBK: '기업은행',
+    SH: '수협은행',
+    SC: '제일은행',
+    BNK: '부산은행',
+    DGB: '대구은행',
+    GWANGJU: '광주은행',
+    MG: '새마을금고',
+    SHINHYUP: '신협',
+  };
+
   // 거래 유형을 한글로 변환
   const transactionTypeDisplay = computed(() => {
     const taskMap = {
@@ -85,7 +101,7 @@
         <h2 class="text-xl font-bold mb-2">받는 분 정보</h2>
         <div class="flex justify-between">
           <span class="font-semibold">입금은행:</span>
-          <span>{{ atmStore.targetBank }}</span>
+          <span>{{ bankNameMapping[atmStore.targetBankCode] }}</span>
         </div>
         <div class="flex justify-between">
           <span class="font-semibold">입금계좌:</span>

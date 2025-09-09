@@ -47,7 +47,7 @@ export const atmTransactionStore = defineStore('atmTransactionInfo', () => {
   }
 
   function setTaskType(newTask) {
-    task.value = newTask;
+    task.value = newTask.toUpperCase();
   }
 
   function setAmount(newAmount) {
