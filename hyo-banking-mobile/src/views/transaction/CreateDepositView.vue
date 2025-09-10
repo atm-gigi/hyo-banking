@@ -5,14 +5,18 @@
   import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
   import BackButton from '@/components/buttons/GoBackBtn.vue';
   import Modal from '@/components/Modal.vue';
-  import { TASK_TYPES, STORAGE_KEYS } from '@/constants';
   import { useRouter } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import { createMacro, addMacroStep } from '@/apis';
 
   const router = useRouter();
+  const authStore = useAuthStore();
   const amount = ref('');
   const showNumberPad = ref(false);
   const showModal = ref(false);
   const showAmountError = ref(false);
+  const macroName = ref('');
+  const showMacroNameInput = ref(false);
   const modalConfig = ref({
     title: '',
     message: '',
@@ -34,6 +38,9 @@
 
   const handleAmountSelect = value => {
     amount.value = value;
+    if (!showMacroNameInput.value) {
+      macroName.value = `${value}만원 입금`;
+    }
   };
 
   const showAlert = (title, message, showCancel = false) => {
@@ -41,42 +48,53 @@
     showModal.value = true;
   };
 
-  const handleAddTransaction = () => {
+  const toggleMacroNameInput = () => {
+    showMacroNameInput.value = !showMacroNameInput.value;
+    if (!showMacroNameInput.value && amount.value) {
+      macroName.value = `${amount.value}만원 입금`;
+    }
+  };
+
+  const handleAddTransaction = async () => {
     if (!amount.value || amount.value === '0') {
       showAmountError.value = true;
-      // 3초 후 에러 메시지 숨기기
       setTimeout(() => {
         showAmountError.value = false;
       }, 3000);
       return;
     }
 
-    // 거래 정보 생성
-    const transaction = {
-      id: Date.now().toString(),
-      type: TASK_TYPES.DEPOSIT,
-      amount: parseInt(amount.value) * 10000, // 만원을 원으로 변환
-      createdAt: new Date().toISOString(),
-    };
+    if (!macroName.value.trim()) {
+      macroName.value = `${amount.value}만원 입금`;
+    }
 
-    // 기존 거래 목록 가져오기
-    const existingTransactions = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '[]'
-    );
+    try {
+      const macro = await createMacro(authStore.userId, macroName.value.trim());
+      const stepData = {
+        stepOrder: 1,
+        stepType: 'DEPOSIT',
+        amount: parseInt(amount.value) * 10000,
+        currencyCode: 'KRW',
+        sourceAccountNo: null,
+        sourceBankCode: null,
+        targetAccountNo: null,
+        targetBankCode: null,
+        note: `입금 매크로 - ${amount.value}만원`,
+      };
+      await addMacroStep(macro.id, stepData);
 
-    // 새 거래 추가
-    existingTransactions.unshift(transaction);
-
-    // 로컬스토리지에 저장
-    localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(existingTransactions));
-
-    showAlert('거래 완료', '입금 거래가 추가되었습니다.');
+      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+      amount.value = '';
+      macroName.value = '';
+    } catch (error) {
+      console.error('매크로 생성 오류:', error);
+      showAlert('오류', error.message || '매크로 생성 중 오류가 발생했습니다.');
+    }
   };
 
   const handleModalConfirm = () => {
     showModal.value = false;
-    // 홈으로 이동
-    window.history.back();
+    router.push({ name: 'home' });
   };
 
   const handleModalCancel = () => {
@@ -92,6 +110,35 @@
       </div>
 
       <h1 class="text-2xl font-bold mb-10">얼마를 넣으시겠어요?</h1>
+
+      <!-- 매크로 이름 설정 -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
+          <button
+            @click="toggleMacroNameInput"
+            class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          >
+            {{ showMacroNameInput ? '기본값 사용' : '직접 설정' }}
+          </button>
+        </div>
+        <div v-if="showMacroNameInput" class="mb-3">
+          <TextInput
+            v-model="macroName"
+            text=""
+            name="macroName"
+            :required="true"
+            type="text"
+            placeholder="예: 월말 입금, 급여 입금"
+          />
+        </div>
+        <div v-else class="bg-gray-50 rounded-lg p-3">
+          <p class="text-sm text-gray-600">
+            {{ macroName || '금액을 선택하면 자동으로 설정됩니다' }}
+          </p>
+        </div>
+      </div>
+
       <div @click="handleAmountClick" class="cursor-pointer flex items-center gap-3 pb-3">
         <TextInput
           class="text-xl"
@@ -127,7 +174,7 @@
         금액을 입력해주세요
       </div>
 
-      <PrimaryBtn class="w-full py-2" text="거래 추가" @click="handleAddTransaction" />
+      <PrimaryBtn class="w-full py-2" text="매크로 생성" @click="handleAddTransaction" />
     </div>
 
     <!-- Number Pad -->

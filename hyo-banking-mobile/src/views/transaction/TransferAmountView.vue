@@ -5,16 +5,21 @@
   import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
   import GoBackBtn from '@/components/buttons/GoBackBtn.vue';
   import Modal from '@/components/Modal.vue';
-  import { TASK_TYPES, STORAGE_KEYS } from '@/constants';
+  import { MACRO_STEP_TYPES, CURRENCY_CODES } from '@/constants';
   import { useRouter, useRoute } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import { createMacro, addMacroStep } from '@/apis';
 
   const router = useRouter();
   const route = useRoute();
+  const authStore = useAuthStore();
 
   const amount = ref('');
   const accountNumber = ref('');
   const bankName = ref('');
   const recipientName = ref('');
+  const macroName = ref('');
+  const showMacroNameInput = ref(false);
   const showNumberPad = ref(false);
   const showModal = ref(false);
   const showAmountError = ref(false);
@@ -81,6 +86,9 @@
 
   const handleAmountSelect = value => {
     amount.value = value;
+    if (!showMacroNameInput.value) {
+      macroName.value = `${recipientName.value}으로 ${value}만원 송금`;
+    }
   };
 
   const showAlert = (title, message, showCancel = false) => {
@@ -88,7 +96,14 @@
     showModal.value = true;
   };
 
-  const handleTransferClick = () => {
+  const toggleMacroNameInput = () => {
+    showMacroNameInput.value = !showMacroNameInput.value;
+    if (!showMacroNameInput.value && amount.value) {
+      macroName.value = `${recipientName.value}으로 ${amount.value}만원 송금`;
+    }
+  };
+
+  const handleTransferClick = async () => {
     if (!amount.value || amount.value === '0') {
       showAmountError.value = true;
       setTimeout(() => {
@@ -97,35 +112,37 @@
       return;
     }
 
-    // 거래 정보 생성
-    const transaction = {
-      id: Date.now().toString(),
-      type: TASK_TYPES.TRANSFER,
-      amount: parseInt(amount.value) * 10000, // 만원을 원으로 변환
-      accountNumber: accountNumber.value,
-      bankName: bankName.value,
-      recipientName: recipientName.value,
-      createdAt: new Date().toISOString(),
-    };
+    if (!macroName.value.trim()) {
+      macroName.value = `${recipientName.value}으로 ${amount.value}만원 송금`;
+    }
 
-    // 기존 거래 목록 가져오기
-    const existingTransactions = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '[]'
-    );
+    try {
+      const macro = await createMacro(authStore.userId, macroName.value.trim());
+      const stepData = {
+        stepOrder: 1,
+        stepType: MACRO_STEP_TYPES.TRANSFER,
+        amount: parseInt(amount.value) * 10000,
+        currencyCode: CURRENCY_CODES.KRW,
+        sourceAccountNo: null,
+        sourceBankCode: null,
+        targetAccountNo: accountNumber.value,
+        targetBankCode: route.query.bankCode || null,
+        note: `송금 매크로 - ${amount.value}만원 (${recipientName.value})`,
+      };
+      await addMacroStep(macro.id, stepData);
 
-    // 새 거래 추가
-    existingTransactions.unshift(transaction);
-
-    // 로컬스토리지에 저장
-    localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(existingTransactions));
-
-    showAlert('거래 완료', '송금 거래가 추가되었습니다.');
+      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+      amount.value = '';
+      macroName.value = '';
+    } catch (error) {
+      console.error('매크로 생성 오류:', error);
+      showAlert('오류', error.message || '매크로 생성 중 오류가 발생했습니다.');
+    }
   };
 
   const handleModalConfirm = () => {
     showModal.value = false;
-    // 홈으로 이동
-    router.push('/');
+    router.push({ name: 'home' });
   };
 
   const handleModalCancel = () => {
@@ -140,6 +157,34 @@
         <GoBackBtn :handleGoBack="handleBack" />
       </div>
       <h1 class="text-2xl font-bold mb-10">얼마를 송금하시겠어요?</h1>
+
+      <!-- 매크로 이름 설정 -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
+          <button
+            @click="toggleMacroNameInput"
+            class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          >
+            {{ showMacroNameInput ? '기본값 사용' : '직접 설정' }}
+          </button>
+        </div>
+        <div v-if="showMacroNameInput" class="mb-3">
+          <TextInput
+            v-model="macroName"
+            text=""
+            name="macroName"
+            :required="true"
+            type="text"
+            placeholder="예: 월말 송금, 용돈 송금"
+          />
+        </div>
+        <div v-else class="bg-gray-50 rounded-lg p-3">
+          <p class="text-sm text-gray-600">
+            {{ macroName || '금액을 선택하면 자동으로 설정됩니다' }}
+          </p>
+        </div>
+      </div>
 
       <!-- 계좌 정보 표시 -->
       <div class="mb-6 p-4 bg-gray-50 rounded-xl">
@@ -187,7 +232,7 @@
         금액을 입력해주세요
       </div>
 
-      <PrimaryBtn class="w-full py-2" text="거래 추가" @click="handleTransferClick" />
+      <PrimaryBtn class="w-full py-2" text="매크로 생성" @click="handleTransferClick" />
     </div>
 
     <!-- Number Pad -->

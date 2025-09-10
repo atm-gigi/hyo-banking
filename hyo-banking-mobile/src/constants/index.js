@@ -4,6 +4,22 @@ export const TASK_TYPES = {
   TRANSFER: 'transfer', // 송금,
 };
 
+// 매크로 단계 타입 (서버와 동일)
+export const MACRO_STEP_TYPES = {
+  BALANCE_CHECK: 'BALANCE_CHECK', // 잔액 조회
+  WITHDRAW: 'WITHDRAW', // 출금
+  DEPOSIT: 'DEPOSIT', // 입금
+  TRANSFER: 'TRANSFER', // 이체
+};
+
+// 통화 코드
+export const CURRENCY_CODES = {
+  KRW: 'KRW', // 한국 원
+  USD: 'USD', // 미국 달러
+  EUR: 'EUR', // 유로
+  JPY: 'JPY', // 일본 엔
+};
+
 export const PAYMENT_TYPES = {
   CARD: 'card',
   BANKBOOK: 'bankbook',
