@@ -30,11 +30,6 @@ const router = createRouter({
       component: () => import('../views/SelectAmountView.vue'),
     },
     {
-      path: '/ten-key',
-      name: 'ten-key',
-      component: () => import('../views/TenKeyView.vue'),
-    },
-    {
       path: '/check-transfer',
       name: 'check-transfer',
       component: () => import('../views/CheckTransferView.vue'),
@@ -119,6 +114,10 @@ const router = createRouter({
       name: 'handle-macro-step',
       component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
     },
+      path: '/statement',
+      name: 'statement',
+      component: () => import('../views/StatementView.vue'),
+    }
   ],
 });
 
