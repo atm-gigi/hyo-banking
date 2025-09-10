@@ -7,12 +7,15 @@
   import IconBtn from '@/components/buttons/IconBtn.vue';
   import { ref, onMounted } from 'vue';
   import { ICON_URLS } from '@/constants';
-  import { getMacros } from '@/apis';
+  import { getMacros, getAccounts } from '@/apis';
+  import { getBankNameByCode } from '@/constants';
 
   const authStore = useAuthStore();
   const router = useRouter();
   const macros = ref([]);
   const isLoadingMacros = ref(false);
+  const primaryAccount = ref(null);
+  const isLoadingAccount = ref(false);
 
   const handleDepositeClick = () => {
     router.push({ name: 'create-deposit' });
@@ -42,6 +45,26 @@
     }
   };
 
+  const loadPrimaryAccount = async () => {
+    if (!authStore.userId) return;
+
+    try {
+      isLoadingAccount.value = true;
+      const response = await getAccounts(authStore.userId);
+      const accounts = response.content || response;
+
+      if (accounts && accounts.length > 0) {
+        // 첫 번째 계좌를 주계좌로 설정
+        primaryAccount.value = accounts[0];
+      }
+    } catch (error) {
+      console.error('계좌 로드 오류:', error);
+      primaryAccount.value = null;
+    } finally {
+      isLoadingAccount.value = false;
+    }
+  };
+
   const handleMacroClick = macro => {
     // TransactionView로 이동
     router.push({
@@ -59,6 +82,7 @@
 
   onMounted(() => {
     loadMacros();
+    loadPrimaryAccount();
   });
 
   const menuItems = [
@@ -106,15 +130,17 @@
         <!-- 계좌 정보 -->
         <div class="rounded-lg p-4">
           <div class="text-sm text-kb-brown-200 mb-1">주계좌</div>
-          <div class="font-bold text-kb-brown-200">
-            {{ maskSensitiveInfo(authStore.userInfo?.accountNumber, 'account') }}
+          <div v-if="isLoadingAccount" class="text-kb-gray-100">계좌 정보를 불러오는 중...</div>
+          <div v-else-if="primaryAccount" class="font-bold text-kb-brown-200">
+            {{ maskSensitiveInfo(primaryAccount.accountNo, 'account') }}
           </div>
-          <div class="text-sm text-kb-gray-100">
-            {{ authStore.userInfo?.bankName || '국민은행' }}
+          <div v-else class="text-kb-gray-100">등록된 계좌가 없습니다</div>
+          <div v-if="primaryAccount" class="text-sm text-kb-gray-100">
+            {{ getBankNameByCode(primaryAccount.bankCode) || primaryAccount.bankName }}
           </div>
         </div>
         <div>
-          <PrimaryBtn class="w-full py-2" text="주 계좌 변경하기" />
+          <PrimaryBtn class="w-full py-2" text="계좌번호 추가하기" />
         </div>
       </div>
 
@@ -122,12 +148,6 @@
       <div class="flex flex-col gap-3 bg-white p-6 rounded-2xl shadow-sm mb-6">
         <div class="flex items-center justify-between">
           <h2 class="font-bold text-lg">저장된 매크로</h2>
-          <button
-            @click="handleMacroManageClick"
-            class="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            관리
-          </button>
         </div>
         <hr class="border-gray-200" />
 
@@ -158,25 +178,6 @@
                 </p>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span
-                class="text-xs px-2 py-1 rounded-full"
-                :class="{
-                  'bg-green-100 text-green-700': macro.status === 'ACTIVE',
-                  'bg-yellow-100 text-yellow-700': macro.status === 'DRAFT',
-                  'bg-gray-100 text-gray-700': macro.status === 'INACTIVE',
-                }"
-              >
-                {{
-                  macro.status === 'DRAFT'
-                    ? '작성중'
-                    : macro.status === 'ACTIVE'
-                      ? '활성'
-                      : '비활성'
-                }}
-              </span>
-              <img class="size-4" width="30" height="30" :src="ICON_URLS.FORWARD" alt="forward" />
-            </div>
           </div>
         </div>
       </div>
@@ -197,7 +198,7 @@
       </div>
 
       <!-- QR 예제 버튼 -->
-      <div class="bg-white rounded-2xl shadow-sm p-6">
+      <!-- <div class="bg-white rounded-2xl shadow-sm p-6">
         <h2 class="font-bold text-lg mb-4">개발자 도구</h2>
         <button
           @click="() => router.push({ name: 'qr-example' })"
@@ -206,7 +207,7 @@
           <span>📱</span>
           QR 코드 생성/스캔 예제
         </button>
-      </div>
+      </div> -->
     </div>
   </main>
 </template>
