@@ -5,6 +5,14 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 4        # 프리티어에서는 10개 정도가 안정적
+      minimum-idle: 2              # 유휴 커넥션 최소 유지 개수
+      idle-timeout: 30000          # 30초간 유휴면 반납
+      max-lifetime: 1800000        # 30분마다 커넥션 재생성
+      connection-timeout: 30000    # 커넥션 얻을 때 최대 대기 30초
+      pool-name: HyoBankingPool
+
   jpa:
     hibernate:
       ddl-auto: update
