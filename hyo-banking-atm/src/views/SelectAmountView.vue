@@ -1,14 +1,20 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { TASK_TYPES } from '@/constants';
   import TransactionAPI from '@/apis/TransactionAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import selectAmountAudio from '@/assets/audio/select-amount.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
   const amount = ref(null);
+  const audio = ref(new Audio(selectAmountAudio));
+  const audioStore = useAudioStore();
 
   const buttons = ref([
     { type: 'amount', label: '3만원', value: 30000 },
@@ -105,9 +111,16 @@
       }
     }
   };
+
+  onMounted(() => {
+    audioStore.initAudio(selectAmountAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 
 <template>
+  <ReplayAudioButton :src="selectAmountAudio" />
+  <StopAudioButton />
   <main class="relative w-screen h-screen grid grid-cols-2 gap-5 p-10">
     <button
       v-for="button in buttons"

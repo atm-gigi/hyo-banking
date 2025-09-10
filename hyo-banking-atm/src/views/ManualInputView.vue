@@ -5,6 +5,10 @@
   import { TASK_TYPES } from '@/constants';
   import TransactionAPI from '@/apis/TransactionAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import manualInputAudio from '@/assets/audio/manual-input.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
@@ -12,6 +16,8 @@
 
   const amount = ref('');
   const task = computed(() => route.query.task);
+  const audio = ref(new Audio(manualInputAudio));
+  const audioStore = useAudioStore();
 
   const title = computed(() => {
     // route.query.task가 'TRANSFER'이면 "얼마를 보내실 건가요?"를,
@@ -90,6 +96,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(manualInputAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -98,6 +106,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="manualInputAudio" />
+  <StopAudioButton />
   <main class="w-screen h-screen">
     <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->

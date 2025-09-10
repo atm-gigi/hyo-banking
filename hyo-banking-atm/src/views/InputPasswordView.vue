@@ -2,11 +2,17 @@
   import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import KeyPad from '@/components/KeyPad.vue';
+  import inputPasswordAudio from '@/assets/audio/input-password.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
 
   const password = ref('');
+  const audio = ref(new Audio(inputPasswordAudio));
+  const audioStore = useAudioStore();
 
   watchEffect(() => {
     if (password.value.length == 4) {
@@ -47,6 +53,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(inputPasswordAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -54,6 +62,8 @@
   });
 </script>
 <template>
+  <ReplayAudioButton :src="inputPasswordAudio" />
+  <StopAudioButton />
   <main class="w-screen h-screen flex items-center justify-center">
     <div class="flex flex-col justify-between mt-5 mb-12">
       <div class="flex flex-col items-center justify-center">

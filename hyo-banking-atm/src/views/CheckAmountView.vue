@@ -1,10 +1,14 @@
 <script setup>
   import TaskButton from '@/components/TaskButton.vue';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { TASK_TYPES } from '@/constants';
   import TransactionAPI from '@/apis/TransactionAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import checkAmountAudio from '@/assets/audio/check-amount.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
@@ -13,6 +17,9 @@
   const amount = ref(166000);
   atmStore.setAmount(amount.value);
   const isShowAssistantView = ref(false);
+
+  const audio = ref(new Audio(checkAmountAudio));
+  const audioStore = useAudioStore();
 
   function getImg(path) {
     return new URL(`../assets/${path}`, import.meta.url).href;
@@ -76,9 +83,15 @@
     console.log('입금 취소');
     router.push({ name: 'undo-transaction', query: { task: route.query.task } });
   };
+  onMounted(() => {
+    audioStore.initAudio(checkAmountAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 
 <template>
+  <ReplayAudioButton :src="checkAmountAudio" />
+  <StopAudioButton />
   <main class="relative w-screen h-screen flex flex-col">
     <div class="rounded-xl text-center text-5xl font-semibold text-black p-10">
       <p class="py-3">입금하신 금액이</p>

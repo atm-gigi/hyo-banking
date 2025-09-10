@@ -4,6 +4,10 @@
   import TaskButton from '@/components/TaskButton.vue';
   import UserAPI from '@/apis/UserAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import checkAccountAudio from '@/assets/audio/check-account.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
@@ -13,18 +17,21 @@
   const bankName = computed(() => atmStore.targetBankCode);
   const receiverName = computed(() => atmStore.targetUserName);
   console.log('receiverName:', receiverName.value);
+  const audio = ref(new Audio(checkAccountAudio));
+  const audioStore = useAudioStore();
 
   onMounted(async () => {
     try {
       // 4. 스토어에 저장된 계좌 정보로 사용자 이름을 조회합니다.
       const userId = await UserAPI.getUserId(accountNumber.value, bankName.value);
       console.log('수취인 정보 조회 성공:', userId);
+      audioStore.initAudio(checkAccountAudio);
+      if (audioStore.stopAudioOn) audioStore.playAudio();
     } catch (error) {
       console.error('수취인 정보 조회에 실패했습니다:', error);
       atmStore.setTargetUserName('조회 실패'); // 에러 발생 시 피드백
     }
   });
-
   const handleNoClick = () => {
     console.log("'아니요' 버튼 클릭: 계좌번호 재입력 또는 이전 단계로 이동");
     router.push({ name: 'undo-transaction', query: { task: route.query.task } });
@@ -37,6 +44,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="checkAccountAudio" />
+  <StopAudioButton />
   <main class="w-screen h-screen flex flex-col items-center p-10 bg-white">
     <div class="text-center">
       <div class="mt-8 flex items-baseline justify-center gap-x-4">
