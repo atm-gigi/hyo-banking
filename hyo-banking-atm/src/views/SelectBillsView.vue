@@ -1,10 +1,16 @@
 <script setup>
   import TaskButton from '@/components/TaskButton.vue';
   import { TASK_TYPES } from '@/constants';
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import selectBillsAudio from '@/assets/audio/select-bills.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const router = useRouter();
+  const audio = ref(new Audio(selectBillsAudio));
+  const audioStore = useAudioStore();
 
   const withdrawalOptions = ref([
     { text: '만원권으로만', billType: 'TEN_THOUSAND' },
@@ -22,9 +28,15 @@
       },
     });
   };
+  onMounted(() => {
+    audioStore.initAudio(selectBillsAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 
 <template>
+  <ReplayAudioButton :src="selectBillsAudio" />
+  <StopAudioButton />
   <main class="relative h-screen flex flex-col bg-white">
     <div class="w-full h-full flex flex-row justify-between">
       <div class="w-full h-full flex flex-col justify-center items-center">

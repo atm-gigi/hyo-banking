@@ -1,12 +1,17 @@
 <script setup>
   import { TASK_TYPES } from '@/constants';
-  import { computed, onMounted, onUnmounted } from 'vue';
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import undoTransactionAudio from '@/assets/audio/undo-transaction.mp3';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
+  const audio = ref(new Audio(undoTransactionAudio));
+  const audioStore = useAudioStore();
 
   const task = computed(() => {
     if ((route.query.task || atmStore.task) === TASK_TYPES.DEPOSIT) return '돈 넣기';
@@ -33,6 +38,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(undoTransactionAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -41,6 +48,7 @@
 </script>
 
 <template>
+  <StopAudioButton />
   <main class="relative h-screen bg-white flex flex-col justify-between">
     <p class="py-10 text-center text-5xl leading-relaxed font-bold">
       {{ task }}가 취소되었습니다. <br />

@@ -2,10 +2,16 @@
   import { useRoute, useRouter } from 'vue-router';
   import { banks } from '@/constants/bank.js';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import { ref, onMounted } from 'vue';
+  import selectBankAudio from '@/assets/audio/select-bank.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
+  const audioStore = useAudioStore();
 
   function getImg(path) {
     return new URL(`../assets/banks/${path}`, import.meta.url).href;
@@ -49,8 +55,15 @@
       query: { ...route.query },
     });
   };
+  // 오디오 초기화
+  onMounted(() => {
+    audioStore.initAudio(selectBankAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 <template>
+  <ReplayAudioButton :src="selectBankAudio" />
+  <StopAudioButton />
   <main class="flex flex-col h-screen p-10 bg-gray-100">
     <div class="flex-shrink-0 text-center mb-5">
       <p class="text-5xl text-center font-bold text-black">돈 받으실 분의 은행을 골라주세요</p>

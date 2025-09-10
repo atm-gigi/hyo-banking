@@ -1,9 +1,17 @@
 <script setup>
-  import { onMounted, onUnmounted } from 'vue';
+  import { ref, computed, onMounted, onUnmounted } from 'vue';
+  import TaskButton from '@/components/TaskButton.vue';
+  import { ref, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import inputCashAudio from '@/assets/audio/input-cash.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
+  const audio = ref(new Audio(inputCashAudio));
+  const audioStore = useAudioStore();
 
   const handleEnter = () => {
     router.push({
@@ -20,6 +28,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(inputCashAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -28,6 +38,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="inputCashAudio" />
+  <StopAudioButton />
   <main class="relative w-screen h-screen flex flex-col">
     <div class="w-full h-full flex flex-col gap-5 justify-center items-center p-10">
       <p class="flex text-5xl text-black font-bold text-center">돈 넣는 곳이 열립니다.</p>

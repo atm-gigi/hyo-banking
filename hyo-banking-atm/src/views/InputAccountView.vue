@@ -3,11 +3,17 @@
   import { useRoute, useRouter } from 'vue-router';
   import KeyPad from '@/components/KeyPad.vue';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import inputAccountAudio from '@/assets/audio/input-account.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
   const amount = ref('111-123-456789');
+  const audio = ref(new Audio(inputAccountAudio));
+  const audioStore = useAudioStore();
 
   const onKeyClick = key => {
     if (key === '지움') {
@@ -37,6 +43,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(inputAccountAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -45,6 +53,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="inputAccountAudio" />
+  <StopAudioButton />
   <main class="w-screen h-screen">
     <div class="flex flex-row w-full h-full rounded-lg p-5">
       <!-- 질문 -->

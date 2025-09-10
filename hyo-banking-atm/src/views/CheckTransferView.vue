@@ -1,14 +1,20 @@
 <script setup>
-  import { computed } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { TASK_TYPES } from '@/constants';
   import TaskButton from '@/components/TaskButton.vue';
   import TransactionAPI from '@/apis/TransactionAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import checkTransferAudio from '@/assets/audio/check-transfer.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
+  const audio = ref(new Audio(checkTransferAudio));
+  const audioStore = useAudioStore();
 
   const bankCodeMapping = {
     국민은행: 'KB',
@@ -63,8 +69,15 @@
     { label: '예금주', value: receiverName.value },
     { label: '금액', value: receiverAmount },
   ]);
+
+  onMounted(() => {
+    audioStore.initAudio(checkTransferAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 <template>
+  <ReplayAudioButton :src="checkTransferAudio" />
+  <StopAudioButton />
   <div class="p-10 h-screen w-screen flex flex-col justify-between">
     <h1 class="text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
 

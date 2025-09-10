@@ -4,10 +4,17 @@
   import { onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import selectTaskAudio from '@/assets/audio/select-task.mp3';
+  import selectTaskAudio2 from '@/assets/audio/select-task2.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const router = useRouter();
   const atmStore = atmTransactionStore();
   const isShowAssistantView = ref(true);
+  const audio = ref(new Audio(selectTaskAudio));
+  const audioStore = useAudioStore();
 
   const handleDepositClick = () => {
     atmStore.setTaskType(TASK_TYPES.DEPOSIT);
@@ -34,10 +41,14 @@
     setTimeout(() => {
       isShowAssistantView.value = false;
     }, 1000);
+    audioStore.initAudio(selectTaskAudio2);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 </script>
 
 <template>
+  <ReplayAudioButton :src="selectTaskAudio" />
+  <StopAudioButton />
   <main class="relative h-screen flex flex-col bg-white">
     <!-- 첫 화면 -->
     <div

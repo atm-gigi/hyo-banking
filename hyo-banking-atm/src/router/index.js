@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import { useAudioStore } from '@/stores/audio';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -119,6 +120,12 @@ const router = createRouter({
       component: () => import('../views/StatementView.vue'),
     }
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const audioStore = useAudioStore();
+  audioStore.stopAudio();
+  next();
 });
 
 export default router;

@@ -2,6 +2,7 @@
   import { onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
 
   const router = useRouter();
   const atmStore = atmTransactionStore();
@@ -20,6 +21,7 @@
 </script>
 
 <template>
+  <StopAudioButton />
   <main class="relative h-full min-h-screen flex flex-col">
     <!-- 메인 버튼 그리드 -->
     <div class="pt-10 pb-32 px-10 grid grid-cols-2 gap-4 w-full max-w-7xl mx-auto flex-1">

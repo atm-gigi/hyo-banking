@@ -3,12 +3,18 @@
   import { useRoute, useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
   import UserAPI from '@/apis/UserAPI';
+  import loadingAudio from '@/assets/audio/loading.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
 
   const task = ref(route.query.task);
+  const audio = ref(new Audio(loadingAudio));
+  const audioStore = useAudioStore();
 
   const title = computed(() => {
     if (task.value === 'transfer') {
@@ -43,6 +49,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(loadingAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -51,6 +59,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="loadingAudio" />
+  <StopAudioButton />
   <div class="relative h-screen flex flex-col justify-between p-10">
     <p class="text-center text-5xl font-bold">
       {{ title }}

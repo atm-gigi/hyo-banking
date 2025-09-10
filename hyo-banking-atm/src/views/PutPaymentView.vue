@@ -2,10 +2,16 @@
   import { PAYMENT_TYPES, TASK_TYPES } from '@/constants';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import putPaymentAudio from '@/assets/audio/put-payment.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const isShowAssistantView = ref(true);
+  const audio = ref(new Audio(putPaymentAudio));
+  const audioStore = useAudioStore();
 
   const task = computed(() => {
     if (route.query.task === TASK_TYPES.DEPOSIT) return '입금';
@@ -41,6 +47,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(putPaymentAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
@@ -55,6 +63,8 @@
 </script>
 
 <template>
+  <ReplayAudioButton :src="putPaymentAudio" />
+  <StopAudioButton />
   <main class="w-screen h-screen flex flex-col items-center p-10">
     <h1 class="text-5xl font-bold text-center mb-6">투입구를 확인해주세요</h1>
 
@@ -88,8 +98,8 @@
 
       <div class="mt-6 bg-yellow-100 border-l-8 border-yellow-400 p-4 rounded-md">
         <p class="text-3xl font-semibold">
-          <span class="font-bold">뭔가 이상한가요?</span> <br/> 절대 카드를 넣지 마시고, 바로 옆
-          인터폰(📞)으로 직원을 불러주세요.
+          <span class="font-bold">뭔가 이상한가요?</span> <br />
+          절대 카드를 넣지 마시고, 바로 옆 인터폰(📞)으로 직원을 불러주세요.
         </p>
       </div>
     </div>
