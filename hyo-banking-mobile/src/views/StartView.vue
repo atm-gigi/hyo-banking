@@ -15,6 +15,12 @@
     });
   };
 
+  const handleSignInClick = () => {
+    router.push({
+      name: 'join',
+    });
+  };
+
   const play = async () => {
     authStore.initializeAuth();
 
@@ -72,8 +78,9 @@
         <p class="text-gray-600">더 쉬운 은행 서비스를 이용해보세요</p>
         <img src="" alt="국민은행" />
       </div>
-      <div class="px-5 pb-10 w-full">
+      <div class="px-5 pb-10 w-full flex flex-col gap-5">
         <PrimaryBtn @click="handleStartClick" text="시작하기" class="w-full py-3" />
+        <PrimaryBtn @click="handleSignInClick" text="회원가입" class="w-full py-3" />
       </div>
     </div>
   </main>

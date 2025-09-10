@@ -20,10 +20,10 @@ export const validateLoginState = authStore => {
 export const validateLoginForm = credentials => {
   const errors = {};
 
-  if (!credentials.username || credentials.username.trim() === '') {
-    errors.username = '아이디를 입력해주세요.';
-  } else if (credentials.username.length < 3) {
-    errors.username = '아이디는 3자 이상 입력해주세요.';
+  if (!credentials.loginId || credentials.loginId.trim() === '') {
+    errors.loginId = '아이디를 입력해주세요.';
+  } else if (credentials.loginId.length < 3) {
+    errors.loginId = '아이디는 3자 이상 입력해주세요.';
   }
 
   if (!credentials.password || credentials.password.trim() === '') {
@@ -40,7 +40,7 @@ export const validateLoginForm = credentials => {
 
 // 로그인 정보 암호화 (간단한 Base64 인코딩)
 export const encodeCredentials = credentials => {
-  const credentialsString = `${credentials.username}:${credentials.password}`;
+  const credentialsString = `${credentials.loginId}:${credentials.password}`;
   return btoa(credentialsString);
 };
 
@@ -48,48 +48,11 @@ export const encodeCredentials = credentials => {
 export const decodeCredentials = encodedCredentials => {
   try {
     const decoded = atob(encodedCredentials);
-    const [username, password] = decoded.split(':');
-    return { username, password };
+    const [loginId, password] = decoded.split(':');
+    return { loginId, password };
   } catch (error) {
     console.error('Failed to decode credentials:', error);
     return null;
-  }
-};
-
-// 토큰 만료 시간 계산
-export const calculateTokenExpiry = (loginTime, expiresIn = 3600) => {
-  const loginDate = new Date(loginTime);
-  const expiryDate = new Date(loginDate.getTime() + expiresIn * 1000);
-  return expiryDate;
-};
-
-// 토큰 만료까지 남은 시간 (분)
-export const getTokenTimeRemaining = (loginTime, expiresIn = 3600) => {
-  const expiryDate = calculateTokenExpiry(loginTime, expiresIn);
-  const now = new Date();
-  const timeRemaining = expiryDate.getTime() - now.getTime();
-
-  if (timeRemaining <= 0) {
-    return 0;
-  }
-
-  return Math.floor(timeRemaining / (1000 * 60)); // 분 단위로 반환
-};
-
-// 로그인 세션 유지 시간 포맷팅
-export const formatSessionTime = loginTime => {
-  if (!loginTime) return '알 수 없음';
-
-  const loginDate = new Date(loginTime);
-  const now = new Date();
-  const diffMs = now.getTime() - loginDate.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-  if (diffHours > 0) {
-    return `${diffHours}시간 ${diffMinutes}분`;
-  } else {
-    return `${diffMinutes}분`;
   }
 };
 
@@ -102,11 +65,12 @@ export const maskSensitiveInfo = (info, type = 'default') => {
       return info.replace(/(\d{3})\d{4}(\d{4})/, '$1-****-$2');
     case 'account':
       return info.replace(/(\d{3})\d{3}(\d{6})/, '$1-***-$2');
-    case 'email':
+    case 'email': {
       const [username, domain] = info.split('@');
       const maskedUsername =
         username.length > 2 ? username.substring(0, 2) + '*'.repeat(username.length - 2) : username;
       return `${maskedUsername}@${domain}`;
+    }
     case 'name':
       if (info.length <= 2) return info;
       return info.substring(0, 1) + '*'.repeat(info.length - 2) + info.substring(info.length - 1);
