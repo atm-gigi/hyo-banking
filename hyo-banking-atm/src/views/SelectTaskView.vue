@@ -99,22 +99,23 @@
 <template>
   <ReplayAudioButton :src="selectTaskAudio2" />
   <StopAudioButton />
-  <main class="relative h-screen flex flex-col bg-white">
+  <main class="w-full h-full flex item-center justify-center">
     <!-- 첫 화면 -->
     <div
-      class="p-10 absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out"
+      class="absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-3000 ease-in-out"
       :class="{ 'opacity-0': !isShowAssistantView }"
     >
-      <p class="text-center text-5xl leading-relaxed font-bold">
+      <p class="text-center text-5xl font-bold">
         안녕하세요. <br />고객님의 ATM 이용 도우미 <br />000 입니다.
       </p>
+
       <img src="@/assets/introduce.png" alt="캐릭터" class="w-100 m-auto" />
       <img :src="flyBear" alt="캐릭터" class="w-48 mt-8 opacity-70" />
     </div>
 
     <!-- 거래 선택 화면 -->
     <div
-      class="w-full h-full flex flex-row justify-between opacity-0 transition-opacity duration-1000 ease-in-out z-10"
+      class="w-full h-full flex flex-row opacity-0 transition-opacity duration-3000 ease-in-out z-10"
       :class="{ 'opacity-100': !isShowAssistantView }"
     >
       <div class="relative w-full h-full flex flex-col justify-center items-center">

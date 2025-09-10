@@ -64,8 +64,8 @@
 <template>
   <ReplayAudioButton :src="selectBankAudio" />
   <StopAudioButton />
-  <main class="flex flex-col h-screen p-10 bg-gray-100">
-    <div class="flex-shrink-0 text-center mb-5">
+  <main class="w-full h-full flex flex-col">
+    <div class="flex-shrink-0 text-center p-10">
       <p class="text-5xl text-center font-bold text-black">돈 받으실 분의 은행을 골라주세요</p>
     </div>
     <div class="flex-1 overflow-y-auto relative">
@@ -74,7 +74,7 @@
           v-for="bank in banks"
           :key="bank.name"
           @click="handleClick(bank)"
-          class="bg-white py-6 active:scale-95 active:bg-gray-200 rounded-lg shadow flex items-center justify-center gap-x-3 transition-all"
+          class="bg-gray-100 py-6 active:scale-95 active:bg-gray-200 rounded-lg shadow-md flex items-center justify-center gap-x-3 transition-all"
         >
           <img :src="getImg(bank.logo)" :alt="`${bank.name} 로고`" class="w-10 h-10" />
           <p class="font-semibold text-3xl">{{ bank.name }}</p>
