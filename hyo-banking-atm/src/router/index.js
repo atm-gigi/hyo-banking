@@ -105,6 +105,15 @@ const router = createRouter({
       component: () => import('../views/CheckNoView.vue'),
     },
     {
+      path: '/use-qr-token',
+      name: 'use-qr-token',
+      component: () => import('../views/UseQrView/UseQrTokenView.vue'),
+    },
+    {
+      path: '/handle-macro-step',
+      name: 'handle-macro-step',
+      component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
+    },
       path: '/statement',
       name: 'statement',
       component: () => import('../views/StatementView.vue'),

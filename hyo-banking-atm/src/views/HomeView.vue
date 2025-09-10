@@ -14,6 +14,9 @@
   const handleAssistBtn = () => {
     router.push('/select-task');
   };
+  const toUseQrToken = () => {
+    router.push('/use-qr-token');
+  };
 </script>
 
 <template>
@@ -22,6 +25,7 @@
     <div class="pt-10 pb-32 px-10 grid grid-cols-2 gap-4 w-full max-w-7xl mx-auto flex-1">
       <!-- QR 사용 버튼 -->
       <button
+        @click="toUseQrToken"
         class="bg-kb-brown-100 active:bg-kb-brown-300 active:scale-105 text-white font-bold rounded-xl text-6xl transition duration-300 flex items-center justify-center cursor-pointer"
       >
         QR 사용

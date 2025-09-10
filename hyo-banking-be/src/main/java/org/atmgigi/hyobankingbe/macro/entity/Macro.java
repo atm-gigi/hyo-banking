@@ -5,6 +5,8 @@ import lombok.*;
 import org.atmgigi.hyobankingbe.macro.domain.MacroStatus;
 import org.atmgigi.hyobankingbe.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class Macro {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user; //어떤 사용자의 매크로인지
 
     @Column(nullable = false)
