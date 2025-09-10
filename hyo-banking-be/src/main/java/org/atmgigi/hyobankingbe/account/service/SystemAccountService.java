@@ -31,6 +31,7 @@ public class SystemAccountService {
                                 .accountType(type)
                                 .user(user)
                                 .bankCode("KB")
+                                .pinHash("1234")
                                 .balanceCache(BigDecimal.valueOf(1000000))
                                 .currencyCode(currencyCode)
                                 .accountNo("SYS-%s-%s".formatted(type.name().substring(0,3), currencyCode))
