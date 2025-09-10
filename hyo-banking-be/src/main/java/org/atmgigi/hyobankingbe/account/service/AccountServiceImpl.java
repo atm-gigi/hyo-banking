@@ -36,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
                 .accountType(AccountType.valueOf(dto.accountType()))
                 .currencyCode(dto.currencyCode())
                 .balanceCache(BigDecimal.valueOf(0))
+                .pinHash(dto.pinHash())
                 .user(user)
                 .build();
 
@@ -81,6 +82,17 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
 
         return convertDTO(account, dto.userId());
+    }
+
+    @Override
+    public boolean checkPassword(String accountNo, String password) {
+        Account account = accountRepository.findByAccountNo(accountNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 계좌입니다."));
+
+        if(account.getPinHash().equals(password)) {
+            return true;
+        }
+        return false;
     }
 
     private AccountInfoResponseDTO convertDTO(Account account, long userId) {
