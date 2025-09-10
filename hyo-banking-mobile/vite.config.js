@@ -7,6 +7,12 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    cssMinify: 'esbuild', // lightningcss 대신 esbuild로 CSS 압축
+  },
+  optimizeDeps: {
+    exclude: ['lightningcss', 'fsevents'], // 네이티브 모듈 사전제외
+  },
   plugins: [vue(), vueDevTools(), tailwindcss()],
   resolve: {
     alias: {
