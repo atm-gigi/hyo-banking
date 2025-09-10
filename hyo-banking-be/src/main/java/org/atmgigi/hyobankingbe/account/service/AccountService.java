@@ -16,4 +16,6 @@ public interface AccountService {
 
     AccountInfoResponseDTO updateBalance(BalanceUpdateRequestDTO dto);
 
+    boolean checkPassword(String accountNo, String password);
+
 }

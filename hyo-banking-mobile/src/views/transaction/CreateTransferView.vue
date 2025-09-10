@@ -1,175 +1,216 @@
 <script setup lang="ts">
-  import TextInput from '@/components/TextInput.vue';
-  import NumberPad from '@/components/NumberPad.vue';
-  import BankSelector from '@/components/BankSelector.vue';
-  import { ref, onMounted } from 'vue';
-  import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
+  import { ref, reactive } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import BackButton from '@/components/buttons/GoBackBtn.vue';
+  import TransferStep1 from '@/components/transfer/TransferStep1.vue';
+  import TransferStep2 from '@/components/transfer/TransferStep2.vue';
+  import TransferStep3 from '@/components/transfer/TransferStep3.vue';
+  import Modal from '@/components/Modal.vue';
+  import { createMacro, addMacroStep } from '@/apis';
 
   const router = useRouter();
   const route = useRoute();
-  const accountNumber = ref('');
-  const bankName = ref('');
-  const selectedBank = ref(null);
-  const showAccountError = ref(false);
-  const showNumberPad = ref(false);
-  const showBankSelector = ref(false);
+  const authStore = useAuthStore();
 
-  onMounted(() => {
-    // 쿼리 파라미터에서 계좌 정보 초기화
+  // 반응형 데이터
+  const isLoading = ref(false);
+  const currentStep = ref(1); // 1: 계좌선택, 2: 금액, 3: 매크로이름
+  const transferData = reactive({
+    accountNumber: '',
+    bankName: '',
+    selectedBank: null,
+    amount: '',
+    macroName: '',
+    showMacroNameInput: false,
+  });
+  const foundUser = ref(null);
+  const transferMessage = ref(null);
+  const showModal = ref(false);
+  const modalConfig = ref({
+    title: '',
+    message: '',
+    showCancel: false,
+  });
+
+  // 쿼리 파라미터에서 계좌 정보 초기화
+  const initializeFromQuery = () => {
     if (route.query.accountNumber) {
-      accountNumber.value = Array.isArray(route.query.accountNumber)
+      transferData.accountNumber = Array.isArray(route.query.accountNumber)
         ? route.query.accountNumber[0]
         : route.query.accountNumber;
     }
     if (route.query.bankName) {
-      bankName.value = Array.isArray(route.query.bankName)
+      transferData.bankName = Array.isArray(route.query.bankName)
         ? route.query.bankName[0]
         : route.query.bankName;
     }
     if (route.query.bankCode) {
-      // 은행 코드로 selectedBank 설정
       const bankCode = Array.isArray(route.query.bankCode)
         ? route.query.bankCode[0]
         : route.query.bankCode;
-      selectedBank.value = { code: bankCode, name: bankName.value };
+      transferData.selectedBank = { code: bankCode, name: transferData.bankName };
     }
-  });
+  };
 
-  const handleBackClick = () => {
+  // 3단계 처리 (매크로 생성)
+  const handleStep3 = async () => {
+    isLoading.value = true;
+    transferMessage.value = null;
+
+    try {
+      // 매크로 생성
+      const macro = await createMacro(authStore.userId, transferData.macroName.trim());
+      const stepData = {
+        stepOrder: 1,
+        stepType: 'TRANSFER',
+        amount: parseInt(transferData.amount) * 10000,
+        currencyCode: 'KRW',
+        sourceAccountNo: null, // 송금자의 계좌는 매크로 실행 시 선택
+        sourceBankCode: null,
+        targetAccountNo: transferData.accountNumber,
+        targetBankCode: transferData.selectedBank.code,
+        note: `송금 매크로 - ${transferData.amount}만원 (${foundUser.value?.name || '알 수 없음'}님에게)`,
+      };
+      await addMacroStep(macro.id, stepData);
+
+      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+    } catch (error) {
+      console.error('매크로 생성 오류:', error);
+      transferMessage.value = {
+        type: 'error',
+        text: error.message || '매크로 생성 중 오류가 발생했습니다.',
+      };
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  // 다음 단계로 이동
+  const handleNext = () => {
+    currentStep.value++;
+  };
+
+  // 이전 단계로 이동
+  const handleBack = () => {
+    currentStep.value--;
+    transferMessage.value = null;
+  };
+
+  // 폼 데이터 업데이트
+  const updateFormData = newData => {
+    Object.assign(transferData, newData);
+  };
+
+  // 찾은 사용자 업데이트
+  const updateFoundUser = user => {
+    foundUser.value = user;
+  };
+
+  // 모달 표시
+  const showAlert = (title, message, showCancel = false) => {
+    modalConfig.value = { title, message, showCancel };
+    showModal.value = true;
+  };
+
+  // 모달 확인
+  const handleModalConfirm = () => {
+    showModal.value = false;
     router.push({ name: 'home' });
   };
 
-  const handleAccountNumberClick = () => {
-    showNumberPad.value = true;
+  // 모달 취소
+  const handleModalCancel = () => {
+    showModal.value = false;
   };
 
-  const handleNumberPadConfirm = value => {
-    accountNumber.value = value;
-    showNumberPad.value = false;
-  };
-
-  const handleNumberPadCancel = () => {
-    showNumberPad.value = false;
-  };
-
-  const handleBankClick = () => {
-    showBankSelector.value = true;
-  };
-
-  const handleBankConfirm = bank => {
-    selectedBank.value = bank;
-    bankName.value = bank.name;
-    showBankSelector.value = false;
-  };
-
-  const handleBankCancel = () => {
-    showBankSelector.value = false;
-  };
-
-  const handleNext = () => {
-    if (!accountNumber.value.trim()) {
-      showAccountError.value = true;
-      setTimeout(() => {
-        showAccountError.value = false;
-      }, 3000);
-      return;
+  // 뒤로가기 핸들러
+  const handleGoBack = () => {
+    if (currentStep.value > 1) {
+      handleBack();
+    } else {
+      router.push({ name: 'home' });
     }
-
-    // 계좌 정보를 다음 페이지로 전달
-    router.push({
-      name: 'transfer-amount',
-      query: {
-        accountNumber: accountNumber.value,
-        bankName: bankName.value || '국민은행',
-        bankCode: selectedBank.value?.code || '001',
-      },
-    });
   };
+
+  // 초기화
+  initializeFromQuery();
 </script>
 
 <template>
   <main class="w-full h-full flex flex-col justify-between">
-    <div class="px-5">
-      <div class="pt-10">
-        <button
-          @click="handleBackClick"
-          class="flex items-center hover:bg-gray-100 rounded-full transition-colors py-2 px-3"
-        >
-          <div class="mr-4">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              ></path>
-            </svg>
-          </div>
-          <span>뒤로가기</span>
-        </button>
+    <div class="px-5 h-full flex flex-col">
+      <div class="pt-10 pb-8">
+        <BackButton :handle-go-back="handleGoBack" />
       </div>
 
-      <h1 class="text-2xl font-bold pt-10 mb-10">누구에게 돈을 보내나요?</h1>
+      <h1 class="text-2xl font-bold mb-10">
+        {{
+          currentStep === 1
+            ? '누구에게 돈을 보내나요? (1/3)'
+            : currentStep === 2
+              ? '얼마를 보내시겠어요? (2/3)'
+              : '매크로 이름을 설정하세요 (3/3)'
+        }}
+      </h1>
 
-      <!-- 계좌번호 입력 -->
-      <div class="mb-6">
-        <div @click="handleAccountNumberClick" class="cursor-pointer flex items-center gap-3 pb-3">
-          <TextInput
-            v-model="accountNumber"
-            text="계좌번호"
-            name="accountNumber"
-            :required="true"
-            type="text"
-            placeholder="계좌번호를 입력하세요"
-            readonly
-          />
-        </div>
-      </div>
+      <!-- 1단계: 계좌 선택 -->
+      <TransferStep1
+        v-if="currentStep === 1"
+        :form-data="transferData"
+        :is-loading="isLoading"
+        @next="handleNext"
+        @update:form-data="updateFormData"
+        @update:found-user="updateFoundUser"
+        class="flex-1"
+      />
 
-      <!-- 은행 선택 -->
-      <div class="mb-6">
-        <div @click="handleBankClick" class="cursor-pointer flex items-center gap-3 pb-3">
-          <TextInput
-            v-model="bankName"
-            text="은행명"
-            name="bankName"
-            :required="false"
-            type="text"
-            placeholder="은행을 선택하세요"
-            readonly
-          />
-        </div>
-      </div>
+      <!-- 2단계: 금액 입력 -->
+      <TransferStep2
+        v-if="currentStep === 2"
+        :form-data="transferData"
+        :is-loading="isLoading"
+        @next="handleNext"
+        @back="handleBack"
+        @update:form-data="updateFormData"
+        class="flex-1"
+      />
+
+      <!-- 3단계: 매크로 이름 설정 및 생성 -->
+      <TransferStep3
+        v-if="currentStep === 3"
+        :form-data="transferData"
+        :found-user="foundUser"
+        :is-loading="isLoading"
+        @create="handleStep3"
+        @back="handleBack"
+        @update:form-data="updateFormData"
+        class="flex-1"
+      />
     </div>
 
-    <div class="px-5 pb-10">
-      <!-- 에러 메시지 -->
+    <!-- 메시지 표시 -->
+    <div v-if="transferMessage" class="px-5">
       <div
-        v-if="showAccountError"
-        class="mb-3 p-3 bg-red-100 border border-red-300 rounded-xl text-red-700 text-center text-sm"
+        :class="[
+          'text-center text-sm p-3 rounded-lg whitespace-pre-line',
+          transferMessage.type === 'error'
+            ? 'bg-red-100 text-red-700'
+            : 'bg-green-100 text-green-700',
+        ]"
       >
-        계좌번호를 입력해주세요
+        {{ transferMessage.text }}
       </div>
-
-      <PrimaryBtn class="w-full py-2" text="다음" @click="handleNext" />
     </div>
 
-    <!-- NumberPad -->
-    <NumberPad
-      v-model="accountNumber"
-      :isVisible="showNumberPad"
-      currency=""
-      @confirm="handleNumberPadConfirm"
-      @cancel="handleNumberPadCancel"
-    />
-
-    <!-- BankSelector -->
-    <BankSelector
-      :isVisible="showBankSelector"
-      :selectedBank="selectedBank"
-      @confirm="handleBankConfirm"
-      @cancel="handleBankCancel"
+    <!-- Modal -->
+    <Modal
+      :isVisible="showModal"
+      :title="modalConfig.title"
+      :message="modalConfig.message"
+      :showCancel="modalConfig.showCancel"
+      @confirm="handleModalConfirm"
+      @cancel="handleModalCancel"
     />
   </main>
 </template>

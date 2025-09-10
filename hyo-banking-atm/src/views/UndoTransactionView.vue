@@ -17,6 +17,7 @@
     if ((route.query.task || atmStore.task) === TASK_TYPES.DEPOSIT) return '돈 넣기';
     if ((route.query.task || atmStore.task) === TASK_TYPES.WITHDRAW) return '돈 찾기';
     if ((route.query.task || atmStore.task) === TASK_TYPES.TRANSFER) return '돈 보내기';
+    if ((route.query.task || atmStore.task) === TASK_TYPES.MACRO) return '매크로';
 
     return null;
   });

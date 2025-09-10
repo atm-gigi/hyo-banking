@@ -27,7 +27,7 @@ public class ExecutionController {
                 startExecutionRequestDTO.macroId(),
                 startExecutionRequestDTO.qrToken());
 
-        executionService.runExecution(startExecutionRequestDTO.macroId());
+        executionService.runExecution(ex.id());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ex);

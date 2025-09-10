@@ -2,6 +2,7 @@
   import { ref, onMounted, nextTick } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { formatDate } from '@/utils/formatters';
+  import { getBankNameByCode } from '@/constants';
   import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
   import BackButton from '@/components/buttons/GoBackBtn.vue';
   import Modal from '@/components/Modal.vue';
@@ -13,6 +14,7 @@
     deleteMacroStep,
     upsertMacroStep,
     updateMacro,
+    getUserByAccount,
   } from '@/apis';
 
   const router = useRouter();
@@ -23,6 +25,34 @@
   const showDeleteModal = ref(false);
   const showStepDeleteModal = ref(false);
   const stepToDelete = ref(null);
+
+  // 계좌 소유자 정보 캐시
+  const accountOwners = ref(new Map());
+
+  // 계좌 소유자 정보 가져오기
+  const getAccountOwner = async (accountNo, bankCode) => {
+    const key = `${accountNo}-${bankCode}`;
+
+    if (accountOwners.value.has(key)) {
+      return accountOwners.value.get(key);
+    }
+
+    try {
+      const user = await getUserByAccount(accountNo, bankCode);
+      accountOwners.value.set(key, user.name);
+      return user.name;
+    } catch (error) {
+      console.error('계좌 소유자 조회 실패:', error);
+      accountOwners.value.set(key, '알 수 없음');
+      return '알 수 없음';
+    }
+  };
+
+  // 계좌 소유자 정보를 가져오는 함수 (템플릿에서 사용)
+  const getAccountOwnerName = (accountNo, bankCode) => {
+    const key = `${accountNo}-${bankCode}`;
+    return accountOwners.value.get(key) || '조회 중...';
+  };
 
   // 매크로 이름 편집 관련
   const isEditingName = ref(false);
@@ -63,6 +93,19 @@
       const [macroData, stepsData] = await Promise.all([getMacro(macroId), getMacroSteps(macroId)]);
       macro.value = macroData;
       macroSteps.value = stepsData;
+
+      // 계좌 소유자 정보 가져오기
+      const accountPromises = [];
+      stepsData.forEach(step => {
+        if (step.sourceAccountNo && step.sourceBankCode) {
+          accountPromises.push(getAccountOwner(step.sourceAccountNo, step.sourceBankCode));
+        }
+        if (step.targetAccountNo && step.targetBankCode) {
+          accountPromises.push(getAccountOwner(step.targetAccountNo, step.targetBankCode));
+        }
+      });
+
+      await Promise.all(accountPromises);
     } catch (error) {
       console.error('매크로 로드 오류:', error);
     } finally {
@@ -130,8 +173,6 @@
 
       // 삭제 후 단계 순서 재정렬
       await reorderSteps();
-
-      alert('단계가 삭제되었습니다.');
     } catch (error) {
       console.error('단계 삭제 오류:', error);
       alert('단계 삭제 중 오류가 발생했습니다.');
@@ -272,7 +313,7 @@
       case 'DEPOSIT':
         return '입금';
       case 'TRANSFER':
-        return '이체';
+        return '송금';
       default:
         return '거래';
     }
@@ -367,20 +408,6 @@
             <p class="text-sm text-gray-500">{{ formatDate(macro.createdAt) }}</p>
           </div>
         </div>
-        <div class="text-center">
-          <span
-            class="text-xs px-3 py-1 rounded-full"
-            :class="{
-              'bg-green-100 text-green-700': macro.status === 'ACTIVE',
-              'bg-yellow-100 text-yellow-700': macro.status === 'DRAFT',
-              'bg-gray-100 text-gray-700': macro.status === 'INACTIVE',
-            }"
-          >
-            {{
-              macro.status === 'DRAFT' ? '작성중' : macro.status === 'ACTIVE' ? '활성' : '비활성'
-            }}
-          </span>
-        </div>
       </div>
 
       <!-- 매크로 단계들 -->
@@ -408,8 +435,13 @@
               <div v-if="step.amount" class="text-sm text-gray-600">
                 금액: {{ formatAmount(step.amount) }}
               </div>
-              <div v-if="step.note" class="text-sm text-gray-500">
-                {{ step.note }}
+              <div v-if="step.sourceAccountNo" class="text-sm text-gray-500">
+                출금계좌: {{ step.sourceAccountNo }} ({{ getBankNameByCode(step.sourceBankCode) }})
+                - {{ getAccountOwnerName(step.sourceAccountNo, step.sourceBankCode) }}
+              </div>
+              <div v-if="step.targetAccountNo" class="text-sm text-gray-500">
+                입금계좌: {{ step.targetAccountNo }} ({{ getBankNameByCode(step.targetBankCode) }})
+                - {{ getAccountOwnerName(step.targetAccountNo, step.targetBankCode) }}
               </div>
             </div>
             <button

@@ -39,6 +39,8 @@ public class MacroExecution {
     @Column(nullable = false)
     private ExecutionStatus status; // Pending, RUNNING, SUCCEEDED, FAILED
 
+    private int currentStep;
+
     private String errorMessage;
     private String errorCode;
 

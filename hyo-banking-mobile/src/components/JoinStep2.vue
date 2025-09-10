@@ -50,8 +50,6 @@
       errors.password = '비밀번호를 입력해주세요.';
     } else if (data.password.length < 4) {
       errors.password = '비밀번호는 4자 이상 입력해주세요.';
-    } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(data.password)) {
-      errors.password = '비밀번호는 영문과 숫자를 포함해야 합니다.';
     }
 
     // 비밀번호 확인 검증
