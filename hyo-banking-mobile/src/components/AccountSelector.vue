@@ -54,9 +54,6 @@
           </div>
           <div class="text-md font-bold">계좌번호 {{ props.selectedAccount.accountNo }}</div>
         </div>
-        <div class="text-right">
-          <div class="font-semibold">{{ props.selectedAccount.balance?.toLocaleString() }}원</div>
-        </div>
       </div>
     </div>
 
@@ -115,9 +112,6 @@
                 {{ getBankNameByCode(account.bankCode) || account.bankName }}
               </div>
               <div class="text-sm text-gray-600">{{ account.accountNo }}</div>
-            </div>
-            <div class="text-right">
-              <div class="font-medium">{{ account.balance?.toLocaleString() }}원</div>
             </div>
           </div>
         </label>
