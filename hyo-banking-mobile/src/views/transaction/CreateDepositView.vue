@@ -1,190 +1,177 @@
 <script setup lang="ts">
-  import TextInput from '@/components/TextInput.vue';
-  import NumberPad from '@/components/NumberPad.vue';
-  import { ref } from 'vue';
-  import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
-  import BackButton from '@/components/buttons/GoBackBtn.vue';
-  import Modal from '@/components/Modal.vue';
+  import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '@/stores/auth';
+  import BackButton from '@/components/buttons/GoBackBtn.vue';
+  import DepositStep1 from '@/components/deposit/DepositStep1.vue';
+  import DepositStep2 from '@/components/deposit/DepositStep2.vue';
+  import DepositStep3 from '@/components/deposit/DepositStep3.vue';
+  import Modal from '@/components/Modal.vue';
   import { createMacro, addMacroStep } from '@/apis';
 
   const router = useRouter();
   const authStore = useAuthStore();
-  const amount = ref('');
-  const showNumberPad = ref(false);
+
+  // 반응형 데이터
+  const isLoading = ref(false);
+  const currentStep = ref(1); // 1: 계좌정보, 2: 금액, 3: 매크로이름
+  const depositData = reactive({
+    targetAccount: '',
+    bankName: '',
+    selectedBank: null,
+    selectedAccount: null,
+    amount: '',
+    macroName: '',
+    showMacroNameInput: false,
+  });
+  const depositMessage = ref(null);
   const showModal = ref(false);
-  const showAmountError = ref(false);
-  const macroName = ref('');
-  const showMacroNameInput = ref(false);
   const modalConfig = ref({
     title: '',
     message: '',
     showCancel: false,
   });
 
-  const handleAmountClick = () => {
-    showNumberPad.value = true;
-  };
+  // 3단계 처리 (매크로 생성)
+  const handleStep3 = async () => {
+    isLoading.value = true;
+    depositMessage.value = null;
 
-  const handleNumberPadConfirm = value => {
-    amount.value = value;
-    showNumberPad.value = false;
-  };
+    try {
+      // 매크로 생성
+      const macro = await createMacro(authStore.userId, depositData.macroName.trim());
+      const stepData = {
+        stepOrder: 1,
+        stepType: 'DEPOSIT',
+        amount: parseInt(depositData.amount) * 10000,
+        currencyCode: 'KRW',
+        sourceAccountNo: null,
+        sourceBankCode: null,
+        targetAccountNo: depositData.targetAccount,
+        targetBankCode: depositData.selectedBank.code,
+        note: `입금 매크로 - ${depositData.amount}만원 (${depositData.selectedBank.name} ${depositData.targetAccount})`,
+      };
+      await addMacroStep(macro.id, stepData);
 
-  const handleNumberPadCancel = () => {
-    showNumberPad.value = false;
-  };
-
-  const handleAmountSelect = value => {
-    amount.value = value;
-    if (!showMacroNameInput.value) {
-      macroName.value = `${value}만원 입금`;
+      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+    } catch (error) {
+      console.error('매크로 생성 오류:', error);
+      depositMessage.value = {
+        type: 'error',
+        text: error.message || '매크로 생성 중 오류가 발생했습니다.',
+      };
+    } finally {
+      isLoading.value = false;
     }
   };
 
+  // 다음 단계로 이동
+  const handleNext = () => {
+    currentStep.value++;
+  };
+
+  // 이전 단계로 이동
+  const handleBack = () => {
+    currentStep.value--;
+    depositMessage.value = null;
+  };
+
+  // 폼 데이터 업데이트
+  const updateFormData = newData => {
+    Object.assign(depositData, newData);
+  };
+
+  // 모달 표시
   const showAlert = (title, message, showCancel = false) => {
     modalConfig.value = { title, message, showCancel };
     showModal.value = true;
   };
 
-  const toggleMacroNameInput = () => {
-    showMacroNameInput.value = !showMacroNameInput.value;
-    if (!showMacroNameInput.value && amount.value) {
-      macroName.value = `${amount.value}만원 입금`;
-    }
-  };
-
-  const handleAddTransaction = async () => {
-    if (!amount.value || amount.value === '0') {
-      showAmountError.value = true;
-      setTimeout(() => {
-        showAmountError.value = false;
-      }, 3000);
-      return;
-    }
-
-    if (!macroName.value.trim()) {
-      macroName.value = `${amount.value}만원 입금`;
-    }
-
-    try {
-      const macro = await createMacro(authStore.userId, macroName.value.trim());
-      const stepData = {
-        stepOrder: 1,
-        stepType: 'DEPOSIT',
-        amount: parseInt(amount.value) * 10000,
-        currencyCode: 'KRW',
-        sourceAccountNo: null,
-        sourceBankCode: null,
-        targetAccountNo: null,
-        targetBankCode: null,
-        note: `입금 매크로 - ${amount.value}만원`,
-      };
-      await addMacroStep(macro.id, stepData);
-
-      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
-      amount.value = '';
-      macroName.value = '';
-    } catch (error) {
-      console.error('매크로 생성 오류:', error);
-      showAlert('오류', error.message || '매크로 생성 중 오류가 발생했습니다.');
-    }
-  };
-
+  // 모달 확인
   const handleModalConfirm = () => {
     showModal.value = false;
     router.push({ name: 'home' });
   };
 
+  // 모달 취소
   const handleModalCancel = () => {
     showModal.value = false;
+  };
+
+  // 뒤로가기 핸들러
+  const handleGoBack = () => {
+    if (currentStep.value > 1) {
+      handleBack();
+    } else {
+      router.push({ name: 'home' });
+    }
   };
 </script>
 
 <template>
   <main class="w-full h-full flex flex-col justify-between">
-    <div class="px-5">
+    <div class="px-5 h-full flex flex-col">
       <div class="pt-10 pb-8">
-        <BackButton />
+        <BackButton :handle-go-back="handleGoBack" />
       </div>
 
-      <h1 class="text-2xl font-bold mb-10">얼마를 넣으시겠어요?</h1>
+      <h1 class="text-2xl font-bold mb-10">
+        {{
+          currentStep === 1
+            ? '어디로 입금하시겠어요? (1/3)'
+            : currentStep === 2
+              ? '얼마를 넣으시겠어요? (2/3)'
+              : '매크로 이름을 설정하세요 (3/3)'
+        }}
+      </h1>
 
-      <!-- 매크로 이름 설정 -->
-      <div class="mb-10">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
-          <button
-            @click="toggleMacroNameInput"
-            class="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            {{ showMacroNameInput ? '기본값 사용' : '직접 설정' }}
-          </button>
-        </div>
-        <div v-if="showMacroNameInput" class="mb-3">
-          <TextInput
-            v-model="macroName"
-            text=""
-            name="macroName"
-            :required="true"
-            type="text"
-            placeholder="예: 월말 입금, 급여 입금"
-          />
-        </div>
-        <div v-else class="bg-gray-50 rounded-lg p-3">
-          <p class="text-sm text-gray-600">
-            {{ macroName || '금액을 선택하면 자동으로 설정됩니다' }}
-          </p>
-        </div>
-      </div>
+      <!-- 1단계: 계좌 정보 입력 -->
+      <DepositStep1
+        v-if="currentStep === 1"
+        :form-data="depositData"
+        :is-loading="isLoading"
+        :user-id="authStore.userId"
+        @next="handleNext"
+        @update:form-data="updateFormData"
+        class="flex-1"
+      />
 
-      <div @click="handleAmountClick" class="cursor-pointer flex items-center gap-3 pb-3">
-        <TextInput
-          class="text-xl"
-          v-model="amount"
-          text="금액"
-          name="amount"
-          :required="true"
-          type="text"
-          placeholder="금액을 입력하세요"
-          readonly
-        />
-        <span class="w-11 font-bold text-lg">만원</span>
-      </div>
+      <!-- 2단계: 금액 입력 -->
+      <DepositStep2
+        v-if="currentStep === 2"
+        :form-data="depositData"
+        :is-loading="isLoading"
+        @next="handleNext"
+        @back="handleBack"
+        @update:form-data="updateFormData"
+        class="flex-1"
+      />
 
-      <div class="flex flex-row flex-wrap gap-5">
-        <button
-          v-for="m in [1, 3, 5, 7, 10, 15, 20]"
-          :key="`amount-${m}`"
-          @click="handleAmountSelect(m)"
-          class="w-20 py-3 bg-gray-200 rounded-2xl cursor-pointer hover:scale-105 active:scale-95 active:brightness-75 transition"
-        >
-          {{ m }} 만원
-        </button>
-      </div>
+      <!-- 3단계: 매크로 이름 설정 및 생성 -->
+      <DepositStep3
+        v-if="currentStep === 3"
+        :form-data="depositData"
+        :is-loading="isLoading"
+        @create="handleStep3"
+        @back="handleBack"
+        @update:form-data="updateFormData"
+        class="flex-1"
+      />
     </div>
 
-    <div class="px-5 pb-10">
-      <!-- 에러 메시지 -->
+    <!-- 메시지 표시 -->
+    <div v-if="depositMessage" class="px-5">
       <div
-        v-if="showAmountError"
-        class="mb-3 p-3 bg-red-100 border border-red-300 rounded-xl text-red-700 text-center text-sm"
+        :class="[
+          'text-center text-sm p-3 rounded-lg whitespace-pre-line',
+          depositMessage.type === 'error'
+            ? 'bg-red-100 text-red-700'
+            : 'bg-green-100 text-green-700',
+        ]"
       >
-        금액을 입력해주세요
+        {{ depositMessage.text }}
       </div>
-
-      <PrimaryBtn class="w-full py-2" text="매크로 생성" @click="handleAddTransaction" />
     </div>
-
-    <!-- Number Pad -->
-    <NumberPad
-      v-model="amount"
-      :isVisible="showNumberPad"
-      currency="만원"
-      @confirm="handleNumberPadConfirm"
-      @cancel="handleNumberPadCancel"
-    />
 
     <!-- Modal -->
     <Modal

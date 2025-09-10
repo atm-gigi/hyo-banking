@@ -85,10 +85,7 @@
       // 기존 토큰이 있는지 확인
       if (route.query.token) {
         // URL에서 토큰을 받은 경우
-        qrData.value = {
-          macroId: parseInt(macroId.value),
-          qrToken: route.query.token,
-        };
+        qrData.value = route.query.token;
         await generateQRCode(qrData.value);
       } else {
         // 서버에서 새 토큰 생성
@@ -132,8 +129,7 @@
         <BackButton />
       </div>
 
-      <h1 class="text-2xl font-bold mb-2 text-center">매크로 실행</h1>
-      <p class="text-gray-600 text-center mb-8">{{ macroName }}</p>
+      <h1 class="text-2xl font-bold mb-2 text-center">{{ macroName }}</h1>
 
       <!-- 로딩 상태 -->
       <div v-if="isLoading" class="bg-white rounded-2xl p-8 shadow-sm mb-6">
@@ -158,27 +154,6 @@
           </div>
 
           <p class="text-sm text-gray-600 mb-4">ATM에서 이 QR 코드를 스캔하세요</p>
-
-          <div class="bg-gray-50 rounded-lg p-3 mb-4">
-            <p class="text-xs text-gray-500 mb-1">QR 코드 데이터 (JSON)</p>
-            <p class="text-sm font-mono break-all">{{ JSON.stringify(qrData, null, 2) }}</p>
-          </div>
-
-          <div class="flex gap-2">
-            <button
-              @click="handleCopyToken"
-              class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium text-sm"
-            >
-              JSON 복사
-            </button>
-            <button
-              @click="handleRefreshQr"
-              :disabled="isLoading"
-              class="flex-1 py-2 bg-blue-100 text-blue-700 rounded-xl font-medium text-sm disabled:opacity-50"
-            >
-              새로고침
-            </button>
-          </div>
         </div>
       </div>
 

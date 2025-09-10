@@ -2,4 +2,5 @@
 export * from './user.js';
 export * from './message.js';
 export * from './macro.js';
+export * from './account.js';
 export { default as apiClient } from './client.js';

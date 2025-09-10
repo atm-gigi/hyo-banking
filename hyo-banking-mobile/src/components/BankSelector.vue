@@ -76,6 +76,7 @@
 
 <script setup>
   import { ref, watch } from 'vue';
+  import { BANKS } from '@/constants';
 
   const props = defineProps({
     isVisible: { type: Boolean, default: false },
@@ -84,38 +85,7 @@
 
   const emit = defineEmits(['confirm', 'cancel', 'update:selectedBank']);
 
-  const banks = ref([
-    { code: '001', name: '국민은행' },
-    { code: '002', name: '신한은행' },
-    { code: '003', name: '우리은행' },
-    { code: '004', name: '하나은행' },
-    { code: '005', name: '농협은행' },
-    { code: '006', name: '기업은행' },
-    { code: '007', name: '수협은행' },
-    { code: '008', name: '새마을금고' },
-    { code: '009', name: '신협' },
-    { code: '010', name: '우체국' },
-    { code: '011', name: '카카오뱅크' },
-    { code: '012', name: '토스뱅크' },
-    { code: '013', name: '케이뱅크' },
-    { code: '014', name: '대구은행' },
-    { code: '015', name: '부산은행' },
-    { code: '016', name: '경남은행' },
-    { code: '017', name: '광주은행' },
-    { code: '018', name: '전북은행' },
-    { code: '019', name: '제주은행' },
-    { code: '020', name: 'SC제일은행' },
-    { code: '021', name: '씨티은행' },
-    { code: '022', name: 'HSBC은행' },
-    { code: '023', name: '도이치은행' },
-    { code: '024', name: 'JP모건체이스' },
-    { code: '025', name: '미즈호은행' },
-    { code: '026', name: 'BNP파리바은행' },
-    { code: '027', name: '중국은행' },
-    { code: '028', name: '중국공상은행' },
-    { code: '029', name: '산업은행' },
-    { code: '030', name: '수출입은행' },
-  ]);
+  const banks = ref(BANKS);
 
   const selectedBank = ref(props.selectedBank);
 
