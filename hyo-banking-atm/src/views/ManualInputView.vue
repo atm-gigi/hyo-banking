@@ -9,6 +9,7 @@
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
   import { useAudioStore } from '@/stores/audio';
+  import TaskButton from '@/components/TaskButton.vue';
 
   const route = useRoute();
   const router = useRouter();
@@ -18,6 +19,10 @@
   const task = computed(() => route.query.task);
   const audio = ref(new Audio(manualInputAudio));
   const audioStore = useAudioStore();
+
+  const isFull = computed(() => {
+    return amount.value.length >= 1 && amount.value != 0;
+  });
 
   const title = computed(() => {
     // route.query.task가 'TRANSFER'이면 "얼마를 보내실 건가요?"를,
@@ -108,27 +113,28 @@
 <template>
   <ReplayAudioButton :src="manualInputAudio" />
   <StopAudioButton />
-  <main class="w-screen h-screen">
-    <div class="flex flex-row w-full h-full rounded-lg p-5">
-      <!-- 질문 -->
-      <div class="w-1/2 flex flex-col space-y-5 justify-center">
-        <h1 class="text-5xl font-bold text-black">{{ title }}</h1>
+  <main class="w-full h-screen flex items-center justify-center">
+    <div class="flex flex-row w-full h-full">
+      <div class="w-1/2 flex flex-col justify-center items-center h-175">
+        <h1 class="text-5xl text-center font-bold text-black mb-5">{{ title }}</h1>
         <!-- 입력창 -->
-        <div class="text-4xl text-center font-extrabold justify-center rounded items-center mx-10">
+        <div class="text-5xl text-center font-extrabold items-center mx-10">
           <span class="items-center text-blue-500 border-r-4 border-blue-500 pr-1">{{
             amount
           }}</span>
           <span> 만원</span>
         </div>
       </div>
+
       <!-- 키패드 -->
-      <div class="w-1/2 flex items-center justify-center">
-        <KeyPad @keyClick="onKeyClick" />
+      <div class="flex w-1/2 h-full pb-50">
+        <KeyPad @keyClick="onKeyClick" class="w-full h-[450px]" />
       </div>
     </div>
-    <form @submit.prevent="handleEnter">
-      <button type="submit"></button>
-    </form>
+
+    <div class="fixed bottom-10" :class="{ 'opacity-50 cursor-not-allowed': !isFull }">
+      <TaskButton class="w-80 h-18 bg-kb-yellow-200" text="확인"> </TaskButton>
+    </div>
   </main>
 </template>
 

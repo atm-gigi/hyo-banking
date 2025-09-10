@@ -3,8 +3,8 @@
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-white">
-    <div class="aspect-[4/3] w-full min-w-[768px]">
+  <div class="bg-white">
+    <div class="aspect-[4/3] mx-auto w-[808px] ">
       <RouterView />
     </div>
   </div>

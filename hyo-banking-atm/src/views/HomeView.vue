@@ -28,14 +28,14 @@
       <!-- QR 사용 버튼 -->
       <button
         @click="toUseQrToken"
-        class="bg-kb-brown-100 active:bg-kb-brown-300 active:scale-105 text-white font-bold rounded-xl text-6xl transition duration-300 flex items-center justify-center cursor-pointer"
+        class="bg-kb-brown-100 shadow-md hover:shadow-lg active:bg-kb-brown-300 active:shadow-inner active:scale-95 text-white font-bold rounded-xl text-6xl transition duration-300 flex items-center justify-center cursor-pointer"
       >
         QR 사용
       </button>
 
       <button
         @click="handleAssistBtn"
-        class="bg-kb-brown-100 active:bg-kb-brown-300 active:scale-105 text-white font-bold rounded-xl text-6xl transition duration-300 flex items-center justify-center cursor-pointer"
+        class="bg-kb-brown-100 active:bg-kb-brown-300 shadow-md hover:shadow-lg active:shadow-inner active:scale-95 text-white font-bold rounded-xl text-6xl transition duration-300 flex items-center justify-center cursor-pointer"
       >
         혼자 하기
       </button>

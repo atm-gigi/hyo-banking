@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, onMounted } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import TaskButton from '@/components/TaskButton.vue';
   import UserAPI from '@/apis/UserAPI';
@@ -50,7 +50,7 @@
     <div class="text-center">
       <div class="mt-8 flex items-baseline justify-center gap-x-4">
         <p class="text-5xl font-bold">{{ bankName }}</p>
-        <p class="text-5xl font-bold bg-yellow-100 px-4 py-2 rounded-lg tracking-wider">
+        <p class="text-5xl font-bold px-4 py-2 rounded-lg tracking-wider">
           {{ accountNumber }}
         </p>
       </div>

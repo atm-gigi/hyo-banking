@@ -22,7 +22,7 @@
       return `${targetName}님께 돈을 보내고 있어요`;
     } else if (task.value === 'withdraw') {
       const amount = atmStore.formattedAmount || '금액 정보 없음';
-      return `${amount}를 찾고 있어요`;
+      return `손을 넣어 ${amount}을 ATM 기기에서 꺼내주세요`;
     } else {
       // 'DEPOSIT' 또는 그 외의 경우
       const amount = atmStore.formattedAmount || '금액 정보 없음';

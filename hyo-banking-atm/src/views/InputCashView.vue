@@ -1,7 +1,5 @@
 <script setup>
   import { ref, computed, onMounted, onUnmounted } from 'vue';
-  import TaskButton from '@/components/TaskButton.vue';
-  import { ref, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import inputCashAudio from '@/assets/audio/input-cash.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';

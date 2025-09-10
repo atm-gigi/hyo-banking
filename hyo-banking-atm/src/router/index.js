@@ -115,6 +115,7 @@ const router = createRouter({
       name: 'handle-macro-step',
       component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
     },
+    {
       path: '/statement',
       name: 'statement',
       component: () => import('../views/StatementView.vue'),

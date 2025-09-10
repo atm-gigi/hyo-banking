@@ -49,13 +49,13 @@
 <template>
   <ReplayAudioButton :src="selectTaskAudio" />
   <StopAudioButton />
-  <main class="relative h-screen flex flex-col bg-white">
+  <main class=" w-full h-full flex item-center justify-center">
     <!-- 첫 화면 -->
     <div
-      class="p-10 absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out"
+      class="p-10 absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-3000 ease-in-out"
       :class="{ 'opacity-0': !isShowAssistantView }"
     >
-      <p class="text-center text-5xl leading-relaxed font-bold">
+      <p class="text-center text-5xl font-bold">
         안녕하세요. <br />고객님의 ATM 이용 도우미 <br />000 입니다.
       </p>
       <img src="@/assets/introduce.png" alt="캐릭터" class="w-100 m-auto" />
@@ -63,14 +63,14 @@
 
     <!-- 거래 선택 화면 -->
     <div
-      class="w-full h-full flex flex-row justify-between opacity-0 transition-opacity duration-1000 ease-in-out z-10"
+      class="w-full h-full flex flex-row opacity-0 transition-opacity duration-3000 ease-in-out z-10"
       :class="{ 'opacity-100': !isShowAssistantView }"
     >
-      <div class="w-full h-full flex flex-col justify-center items-center">
-        <p class="text-center text-5xl leading-relaxed font-bold">
+      <div class="w-full flex flex-col justify-center items-center">
+        <p class="text-center text-5xl font-bold">
           이용하고 싶은<br />거래를 눌러주세요
         </p>
-        <img src="@/assets/hello.png" alt="캐릭터" class="w-100 h-auto" />
+        <img src="@/assets/hello.png" alt="캐릭터" class="w-100 h-auto flex" />
       </div>
       <div class="w-full h-full flex flex-col px-10 justify-around">
         <TaskButton

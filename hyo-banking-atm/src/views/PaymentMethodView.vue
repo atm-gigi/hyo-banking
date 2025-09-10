@@ -38,9 +38,8 @@
   <StopAudioButton />
   <main class="w-screen h-screen flex flex-col justify-between">
     <p class="py-10 text-center text-5xl leading-relaxed font-bold">카드나 통장을 가져오셨나요?</p>
-    <div class="flex flex-row justify-center gap-x-5">
-      <img src="@/assets/card.png" alt="카드" class="flex w-88 h-auto" />
-      <img src="@/assets/bank-book.png" alt="통장" class="flex w-88 h-auto" />
+    <div class="justify-center gap-x-5">
+      <img src="@/assets/bank-card.png" alt="카드나 통장" class="w-102 h-auto m-auto" />
     </div>
     <div class="w-screen h-32 flex flex-row justify-center pb-10 gap-10 px-10">
       <TaskButton text="카드" class="w-full max-w-sm" @click="handleCardClick" />
