@@ -126,11 +126,6 @@ const router = createRouter({
       component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
     },
     {
-      path: '/handle-withdraw',
-      name: 'handle-withdraw',
-      component: () => import('@/views/UseQrView/HandleWithdrawView.vue'),
-    },
-    {
       path: '/statement',
       name: 'statement',
       component: () => import('../views/StatementView.vue'),

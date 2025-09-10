@@ -32,7 +32,9 @@
 
     steps.value = await getMacroSteps(token.macroId);
     steps.value.forEach(step => {
-      totalCash.value += step.amount;
+      if (step.stepType === 'DEPOSIT' || step.stepType === 'TRANSFER')
+        totalCash.value += step.amount;
+      else if (step.stepType === 'WITHDRAW') totalCash.value -= step.amount;
     });
     if (totalCash.value <= 0) {
       // 입금 필요없이 바로 카드나 통장 확인으로 연결

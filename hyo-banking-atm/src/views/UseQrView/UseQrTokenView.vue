@@ -69,7 +69,6 @@
 </template>
 
 <script setup>
-  import { getQrToken } from '@/apis';
   import KeyPadBase16 from '@/components/KeyPadBase16.vue';
   import { Html5QrcodeScanner } from 'html5-qrcode';
   import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
