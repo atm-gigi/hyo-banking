@@ -9,7 +9,7 @@
 
 <template>
   <!-- 부모 컨테이너 안에서 배치 -->
-  <div class="absolute top-4 right-4 z-50">
+  <div class="absolute top-2 right-120 z-50">
     <button
       @click="handleClick"
       class="relative inline-flex items-center w-40 h-14 rounded-full px-4 transition-colors duration-300 ease-out"

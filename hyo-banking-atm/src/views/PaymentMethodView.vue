@@ -3,7 +3,7 @@
   import { PAYMENT_TYPES } from '@/constants';
   import { useRoute, useRouter } from 'vue-router';
   import { ref, onMounted } from 'vue';
-  import paymentMethodAudio from '@/assets/audio/payment-method.mp3';
+  import paymentMethodAudio from '@/assets/audio/payment-method3.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
   import { useAudioStore } from '@/stores/audio';

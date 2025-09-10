@@ -5,7 +5,7 @@
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
   import selectTaskAudio from '@/assets/audio/select-task.mp3';
-  import selectTaskAudio2 from '@/assets/audio/select-task2.mp3';
+  import selectTaskAudio2 from '@/assets/audio/select-task3.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
   import { useAudioStore } from '@/stores/audio';
