@@ -69,6 +69,7 @@
 </template>
 
 <script setup>
+  import { getQrToken } from '@/apis';
   import KeyPadBase16 from '@/components/KeyPadBase16.vue';
   import { Html5QrcodeScanner } from 'html5-qrcode';
   import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
@@ -117,12 +118,11 @@
     scanner.value.render(
       decoded => {
         console.log('결과:', decoded);
-        toMacroSteps(decoded);
+        const cleanToken = decoded.replace(/"/g, '');
+        toMacroSteps(cleanToken);
         scanner.value.clear();
       },
-      err => {
-        console.log('qr 에러 : ' + err);
-      }
+      err => {}
     );
   });
   onBeforeUnmount(async () => {
@@ -138,7 +138,7 @@
     // 매크로에서 사용되는 통장이나 카드 확인
     // 최종적으로 POST /api/executions { "macroId": macro id,  "qrToken": code } 실행후 id값 받아서
     // GET /api/executions/{macroExecutionId} 로 처리 상태 확인(폴링방식)
-    router.push({ name: 'handle-macro-step', query: { code } });
+    router.push({ name: 'input-total-cash', query: { code } });
   };
 </script>
 <style>

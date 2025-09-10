@@ -71,6 +71,7 @@ public class ExecutionService {
     @Async
     @Transactional
     public void runExecution(Long executionId) {
+        log.info(executionId);
         MacroExecution macroExecution = macroExecutionRepository.findById(executionId)
                 .orElseThrow(() -> new DomainException(ErrorCode.RESOURCE_NOT_FOUND, "실행 세션이 소실되었습니다."));
 

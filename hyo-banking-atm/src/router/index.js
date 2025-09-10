@@ -111,14 +111,30 @@ const router = createRouter({
       component: () => import('../views/UseQrView/UseQrTokenView.vue'),
     },
     {
-      path: '/handle-macro-step',
+      path: '/input-total-cash',
+      name: 'input-total-cash',
+      component: () => import('@/views/UseQrView/InputTotalCashView.vue'),
+    },
+    {
+      path: '/input-payment/:steps',
+      name: 'input-payment',
+      component: () => import('@/views/UseQrView/InputPaymentView.vue'),
+    },
+    {
+      path: '/handle-macro-step/:steps',
       name: 'handle-macro-step',
       component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
     },
+    {
+      path: '/handle-withdraw',
+      name: 'handle-withdraw',
+      component: () => import('@/views/UseQrView/HandleWithdrawView.vue'),
+    },
+    {
       path: '/statement',
       name: 'statement',
       component: () => import('../views/StatementView.vue'),
-    }
+    },
   ],
 });
 
