@@ -1,42 +1,85 @@
 <script setup>
   import { useRoute, useRouter } from 'vue-router';
-  import { ref } from 'vue';
+  import { banks } from '@/constants/bank.js';
+  import { atmTransactionStore } from '@/stores/atmTransactionStore';
+  import { ref, onMounted } from 'vue';
+  import selectBankAudio from '@/assets/audio/select-bank.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
+  const atmStore = atmTransactionStore();
+  const audioStore = useAudioStore();
 
-  const banks = ref([
-    { name: '국민은행', logo: '' },
-    { name: '신한은행', logo: '' },
-    { name: '우리은행', logo: '' },
-    { name: '부산은행', logo: '' },
-    { name: '대구은행', logo: '' },
-  ]);
+  function getImg(path) {
+    return new URL(`../assets/banks/${path}`, import.meta.url).href;
+  }
+
+  const bankCodeMapping = {
+    국민은행: 'KB',
+
+    신한은행: 'SHINHAN',
+
+    우리은행: 'WOORI',
+
+    하나은행: 'HANA',
+
+    농협은행: 'NH',
+
+    기업은행: 'IBK',
+
+    수협은행: 'SH',
+
+    제일은행: 'SC',
+
+    부산은행: 'BNK',
+
+    대구은행: 'DGB',
+
+    광주은행: 'GWANGJU',
+
+    새마을금고: 'MG',
+
+    신협: 'SHINHYUP',
+  };
+
   const handleClick = bank => {
+    const bankCode = bankCodeMapping[bank.name];
+    atmStore.setTargetBankCode(bankCode);
+    console.log('선택한 은행:', bankCode);
+
     router.push({
       name: 'input-account',
-      query: { task: route.query.task, payment: route.query.payment, bank: bank.name },
+      query: { ...route.query },
     });
   };
+  // 오디오 초기화
+  onMounted(() => {
+    audioStore.initAudio(selectBankAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 <template>
-  <main class="flex flex-row h-screen bg-gray-100 p-10 gap-x-8">
-    <div class="flex-1 flex flex-col items-start space-y-4">
-      <button
-        v-for="bank in banks"
-        :key="bank.name"
-        @click="handleClick(bank)"
-        class="w-full max-w-md bg-kb-brown-100 py-8 active:scale-95 active:bg-kb-brown-200 rounded-lg shadow flex items-center justify-center"
-      >
-        <div class="w-full h-full flex justify-center">
-          <img :src="bank.logo" :alt="심볼" class="w-10 h-10 m-1" />
-          <p class="font-semibold text-3xl">{{ bank.name }}</p>
-        </div>
-      </button>
+  <ReplayAudioButton :src="selectBankAudio" />
+  <StopAudioButton />
+  <main class="flex flex-col h-screen p-10 bg-gray-100">
+    <div class="flex-shrink-0 text-center mb-5">
+      <p class="text-5xl text-center font-bold text-black">돈 받으실 분의 은행을 골라주세요</p>
     </div>
-
-    <div class="flex flex-col items-start justify-center">
-      <p class="text-5xl font-bold text-black">돈 받으실 분의<br />은행을 골라주세요</p>
+    <div class="flex-1 overflow-y-auto relative">
+      <div class="grid grid-cols-3 gap-4">
+        <button
+          v-for="bank in banks"
+          :key="bank.name"
+          @click="handleClick(bank)"
+          class="bg-white py-6 active:scale-95 active:bg-gray-200 rounded-lg shadow flex items-center justify-center gap-x-3 transition-all"
+        >
+          <img :src="getImg(bank.logo)" :alt="`${bank.name} 로고`" class="w-10 h-10" />
+          <p class="font-semibold text-3xl">{{ bank.name }}</p>
+        </button>
+      </div>
     </div>
   </main>
 </template>

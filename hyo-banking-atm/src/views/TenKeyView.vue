@@ -1,12 +1,18 @@
 <script setup>
   import TaskButton from '@/components/TaskButton.vue';
   import { PAYMENT_TYPES, TASK_TYPES } from '@/constants';
-  import { computed, ref } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import tenKeyAudio from '@/assets/audio/ten-key.mp3';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
 
   const route = useRoute();
   const router = useRouter();
   const money = ref(0);
+  const audio = ref(new Audio(tenKeyAudio));
+  const audioStore = useAudioStore();
 
   const task = computed(() => {
     if (route.query.task === TASK_TYPES.DEPOSIT) return '입금';
@@ -40,9 +46,15 @@
     // 다음 화면으로 이동하는 로직
     console.log('입력된 금액:', money.value);
   };
+  onMounted(() => {
+    audioStore.initAudio(tenKeyAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 
 <template>
+  <ReplayAudioButton :src="tenKeyAudio" />
+  <StopAudioButton />
   <main class="relative h-screen bg-gray-100 flex flex-col">
     <div
       class="min-w-screen bottom-0 rounded-b-r-xl rounded-b-xl bg-kb-yellow-200 text-white active:bg-kb-brown-300 font-bold py-6 px-10 text-5xl w-full max-w-md transition duration-200 flex items-center justify-center"
