@@ -10,6 +10,7 @@ public record AccountCreateRequestDTO(
         String bankCode,
         String accountNo,
         String accountType,
-        String currencyCode
+        String currencyCode,
+        String pinHash
 ) {
 }

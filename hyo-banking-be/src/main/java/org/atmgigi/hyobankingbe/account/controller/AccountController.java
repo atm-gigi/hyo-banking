@@ -42,4 +42,10 @@ public class AccountController {
         return ResponseEntity.ok(accountService.updateBalance(updateDTO));
     }
 
+    // 계좌 비밀번호 확인
+    @GetMapping("/password")
+    public ResponseEntity<Boolean> checkPassword(@RequestParam("accountNo") String accountNo, @RequestParam("password") String password) {
+        return ResponseEntity.ok(accountService.checkPassword(accountNo, password));
+    }
+
 }

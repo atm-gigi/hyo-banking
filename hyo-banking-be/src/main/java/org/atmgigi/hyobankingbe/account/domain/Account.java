@@ -44,6 +44,9 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balanceCache;
 
+    @Column(nullable = false)
+    private String pinHash;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
