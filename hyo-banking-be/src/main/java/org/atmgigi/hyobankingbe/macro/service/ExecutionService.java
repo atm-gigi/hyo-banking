@@ -71,6 +71,7 @@ public class ExecutionService {
     @Async
     @Transactional
     public void runExecution(Long executionId) {
+        log.info(executionId);
         MacroExecution macroExecution = macroExecutionRepository.findById(executionId)
                 .orElseThrow(() -> new DomainException(ErrorCode.RESOURCE_NOT_FOUND, "실행 세션이 소실되었습니다."));
 
@@ -78,6 +79,7 @@ public class ExecutionService {
         macroExecutionRepository.save(macroExecution);
 
         try {
+            int i = 1;
             // 스텝들 실행
             for (MacroStep step : macroStepRepository.
                     findByMacro_IdOrderByStepOrderAsc(macroExecution.getMacro().getId())) {
@@ -96,8 +98,10 @@ public class ExecutionService {
                         .targetBankCode(targetBankCode)
                         .targetAccountNo(targetAccountNo)
                         .build();
-
+                macroExecution.setCurrentStep(i ++);
                 txnService.createTxn(txnRequestDTO);
+
+                Thread.sleep(1300); // 1.3초 보여주기식 정지
             }
             macroExecution.success(); // status = SUCCEEDED, finished_at = now
         } catch (Exception e) {
