@@ -49,8 +49,8 @@
 
 <template>
   <StopAudioButton />
-  <main class="relative h-screen bg-white flex flex-col justify-between">
-    <p class="py-10 text-center text-5xl leading-relaxed font-bold">
+  <main class="h-full w-full bg-white flex flex-col justify-between">
+    <p class="py-10 text-center text-5xl leading-relaxed font-bold leading-relaxed">
       {{ task }}가 취소되었습니다. <br />
       카드와 명세서를 꼭 챙겨가세요.
     </p>

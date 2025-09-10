@@ -76,7 +76,7 @@
       </div>
 
       <!-- 키패드 -->
-      <div class="flex w-1/2 h-full">
+      <div class="flex w-1/2 h-full p-3">
         <KeyPad @keyClick="onKeyClick" class="w-full h-[400px]" />
       </div>
     </div>

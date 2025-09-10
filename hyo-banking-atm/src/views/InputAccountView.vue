@@ -80,12 +80,13 @@
   <StopAudioButton />
   <main class="w-full h-full flex items-center justify-center">
     <div class="flex flex-row w-full h-full">
-      <div class="w-1/2 flex flex-col justify-center items-center h-175">
-        <h1 class="text-5xl text-center font-bold text-black mb-5">
-          받는 분의 계좌번호를 눌러주세요
+      <div class="w-1/2 flex flex-col justify-center items-center mb-30">
+        <h1 class="text-5xl text-center font-bold text-black py-3">
+          받는 분의 계좌번호를 <br />
+          눌러주세요
         </h1>
         <!-- 입력창 -->
-        <div class="text-5xl text-center font-extrabold items-center mx-10">
+        <div class="text-5xl text-center font-extrabold items-center">
           <span class="items-center text-blue-500 border-r-4 border-blue-500 pr-1">
             {{ amount }}
           </span>
@@ -93,7 +94,7 @@
       </div>
 
       <!-- 키패드 -->
-      <div class="flex w-1/2 h-full pb-50">
+      <div class="flex w-1/2 h-full pb-30 p-3">
         <KeyPad @keyClick="onKeyClick" class="w-full h-[400px]" />
       </div>
     </div>

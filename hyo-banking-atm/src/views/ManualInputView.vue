@@ -113,7 +113,7 @@
 <template>
   <ReplayAudioButton :src="manualInputAudio" />
   <StopAudioButton />
-  <main class="w-full h-screen flex items-center justify-center">
+  <main class="w-full h-full flex items-center justify-center">
     <div class="flex flex-row w-full h-full">
       <div class="w-1/2 flex flex-col justify-center items-center h-175">
         <h1 class="text-5xl text-center font-bold text-black mb-5">{{ title }}</h1>
@@ -127,13 +127,14 @@
       </div>
 
       <!-- 키패드 -->
-      <div class="flex w-1/2 h-full pb-50">
+      <div class="flex w-1/2 h-full pb-30 p-3">
         <KeyPad @keyClick="onKeyClick" class="w-full h-[450px]" />
       </div>
     </div>
 
     <div class="fixed bottom-10" :class="{ 'opacity-50 cursor-not-allowed': !isFull }">
-      <TaskButton class="w-80 h-18 bg-kb-yellow-200" text="확인"> </TaskButton>
+      <TaskButton class="w-100 h-20 bg-kb-yellow-200" text="확인" @click="handleEnter">
+      </TaskButton>
     </div>
   </main>
 </template>

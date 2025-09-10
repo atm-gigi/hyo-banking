@@ -78,10 +78,10 @@
 <template>
   <ReplayAudioButton :src="checkTransferAudio" />
   <StopAudioButton />
-  <div class="p-10 h-screen w-screen flex flex-col justify-between">
-    <h1 class="text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
+  <div class="w-full h-full flex flex-col justify-between">
+    <h1 class="pt-8 text-5xl font-bold text-center">이 분에게 보내는 것이 맞나요?</h1>
 
-    <div class="flex items-center justify-center gap-8 mt-8 mb-12">
+    <div class="flex items-center justify-center gap-8 mt-8 mb-8">
       <img src="@/assets/pointing.png" alt="bear" class="w-88 h-auto" />
 
       <div>

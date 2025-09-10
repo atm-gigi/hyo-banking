@@ -37,9 +37,9 @@
 <template>
   <ReplayAudioButton :src="selectBillsAudio" />
   <StopAudioButton />
-  <main class="relative h-screen flex flex-col bg-white">
+  <main class="w-full h-full flex flex-col ">
     <div class="w-full h-full flex flex-row justify-between">
-      <div class="w-full h-full flex flex-col justify-center items-center">
+      <div class="w-full h-full flex flex-col justify-center items-center pt-30">
         <p class="text-center text-5xl font-bold">어떤 지폐로 드릴까요?</p>
         <img src="@/assets/select-bills.png" alt="캐릭터" class="w-full" />
       </div>

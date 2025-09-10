@@ -121,13 +121,13 @@
 <template>
   <ReplayAudioButton :src="selectAmountAudio" />
   <StopAudioButton />
-  <main class="relative w-screen h-screen grid grid-cols-2 gap-5 p-10">
+  <main class="w-full h-full grid grid-cols-2 gap-5 p-10">
     <button
       v-for="button in buttons"
       :key="button.label"
       @click="handleButtonClick(button)"
       :class="[
-        'active:scale-105 text-white font-bold rounded-xl text-4xl transition duration-300 flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:active:scale-100 disabled:cursor-none',
+        'active:scale-95 active:shadow-inner text-white font-bold rounded-xl text-4xl transition duration-300 flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:active:scale-100 disabled:cursor-none',
         button.customClass ? button.customClass : 'bg-kb-brown-100 active:bg-kb-brown-300', // 기본 스타일 또는 커스텀 스타일 적용
       ]"
     >

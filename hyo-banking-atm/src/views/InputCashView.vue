@@ -28,6 +28,13 @@
     document.addEventListener('keydown', handleKeyPress);
     audioStore.initAudio(inputCashAudio);
     if (audioStore.stopAudioOn) audioStore.playAudio();
+
+    setTimeout(() => {
+      router.push({
+        name: 'check-amount',
+        query: { task: route.query.task },
+      });
+    }, 3000);
   });
 
   onUnmounted(() => {
@@ -38,13 +45,13 @@
 <template>
   <ReplayAudioButton :src="inputCashAudio" />
   <StopAudioButton />
-  <main class="relative w-screen h-screen flex flex-col">
-    <div class="w-full h-full flex flex-col gap-5 justify-center items-center p-10">
+  <main class="w-full h-full flex flex-col">
+    <div class="w-full h-full flex flex-col gap-y-5 justify-center items-center pt-6">
       <p class="flex text-5xl text-black font-bold text-center">돈 넣는 곳이 열립니다.</p>
       <span class="flex text-5xl text-black font-bold text-center"
         >지폐를 쫙 펴서 넣어주세요.
       </span>
-      <img src="@/assets/put-cash.png" alt="돈 넣는 곳이 열립니다." class="w-full m-auto flex" />
+      <img src="@/assets/put-cash.png" alt="돈 넣는 곳이 열립니다." class="w-full flex m-auto" />
     </div>
     <form @submit.prevent="handleEnter">
       <button type="submit"></button>

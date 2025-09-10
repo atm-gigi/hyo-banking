@@ -56,7 +56,7 @@
 </script>
 
 <template>
-  <main class="w-screen h-screen bg-gray-200 flex justify-center items-center">
+  <main class="w-full h-full flex flex-col justify-center items-center bg-gray-200">
     <div class="w-full max-w-lg bg-white p-10 shadow-lg font-mono text-lg">
       <h1 class="text-3xl font-bold text-center mb-6 border-b-2 border-black pb-4">거래명세표</h1>
 
@@ -118,8 +118,8 @@
       </div>
     </div>
 
-    <div class="fixed bottom-10">
-      <TaskButton text="확인" class="w-80 h-18 bg-kb-yellow-200" @click="handleConfirmClick" />
+    <div class="flex pt-20">
+      <TaskButton text="확인" class="w-80 h-18 bg-kb-yellow-100" @click="handleConfirmClick" />
     </div>
   </main>
 </template>

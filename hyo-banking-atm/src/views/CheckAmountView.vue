@@ -92,27 +92,27 @@
 <template>
   <ReplayAudioButton :src="checkAmountAudio" />
   <StopAudioButton />
-  <main class="relative w-screen h-screen flex flex-col">
-    <div class="rounded-xl text-center text-5xl font-semibold text-black p-10">
-      <p class="py-3">입금하신 금액이</p>
+  <main class="w-full h-full flex flex-col">
+    <div class="rounded-xl text-center text-5xl font-semibold text-black py-10">
+      <p class="leading-relaxed">입금하신 금액이</p>
       <span class="text-5xl font-bold"> {{ formattedAmount }}원 </span>
       맞으신가요?
     </div>
 
-    <div class="grid grid-cols-2 gap-x-3 gap-y-5 justify-items-center items-center my-5 space-y-10">
+    <div class="grid grid-cols-2 gap-x-10 gap-y-8 w-full mx-auto pl-20 pt-5">
       <div
         v-for="bill in billDenominations"
         :key="bill.denomination"
         class="flex items-center space-x-3 w-full justify-center"
       >
-        <img :src="getImg(bill.img)" :alt="bill.label" class="w-112" />
-        <span class="text-5xl font-semibold w-20 text-left">
+        <img :src="getImg(bill.img)" :alt="bill.label" class="w-72" />
+        <span class="text-3xl font-semibold w-20 text-left">
           {{ billCounts[bill.denomination] }}장
         </span>
       </div>
     </div>
 
-    <div class="w-screen h-screen flex justify-center gap-x-5 mt-auto">
+    <div class="mt-auto w-full flex justify-center gap-x-8 pt-5">
       <TaskButton
         text="아니오"
         class="w-full max-w-sm"

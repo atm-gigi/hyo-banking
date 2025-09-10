@@ -46,7 +46,7 @@
 <template>
   <ReplayAudioButton :src="checkAccountAudio" />
   <StopAudioButton />
-  <main class="w-screen h-screen flex flex-col items-center p-10 bg-white">
+  <main class="w-full h-full flex flex-col items-center">
     <div class="text-center">
       <div class="mt-8 flex items-baseline justify-center gap-x-4">
         <p class="text-5xl font-bold">{{ bankName }}</p>
@@ -54,15 +54,15 @@
           {{ accountNumber }}
         </p>
       </div>
-      <h1 class="text-5xl font-semibold leading-relaxed">
+      <h1 class="text-5xl font-semibold">
         의 계좌주가
         <span class="text-6xl font-bold text-blue-600">{{ receiverName }}</span> 님 맞나요?
       </h1>
     </div>
 
-    <img src="@/assets/check-account.png" alt="계좌번호 확인하는 곰돌이" class="w-92" />
+    <img src="@/assets/check-account.png" alt="계좌번호 확인하는 곰돌이" class="w-88" />
 
-    <div class="w-full flex flex-row justify-center gap-5">
+    <div class="w-full flex flex-row justify-center gap-x-5">
       <TaskButton text="아니오" class="w-full max-w-sm text-center" @click="handleNoClick" />
       <TaskButton
         text="네"
