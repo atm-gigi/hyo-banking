@@ -126,6 +126,11 @@ const router = createRouter({
       component: () => import('../views/UseQrView/HandleMacroStepView.vue'),
     },
     {
+      path: '/input-password-withdraw/:steps',
+      name: 'input-password-withdraw',
+      component: () => import('../views/UseQrView/InputPasswordWithdrawView.vue'),
+    },
+    {
       path: '/statement',
       name: 'statement',
       component: () => import('../views/StatementView.vue'),

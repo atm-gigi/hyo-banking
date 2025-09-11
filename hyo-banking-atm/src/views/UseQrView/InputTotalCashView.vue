@@ -63,14 +63,14 @@
 </script>
 
 <template>
-  <main class="relative w-screen h-screen flex flex-col">
+  <main class="w-full h-full flex flex-col">
     <div
       class="w-full h-full flex flex-col gap-5 justify-center items-center p-10"
       v-if="isLoading"
     >
-      <img src="@/assets/loading.png" class="w-200 m-auto" alt="곰돌이" />
+      <img src="@/assets/loading.png" class="w-120 m-auto" alt="곰돌이" />
       <div
-        class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+        class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin py-3"
       ></div>
       <p class="flex text-5xl text-black font-bold text-center">잠시만 기다려주세요.</p>
     </div>
