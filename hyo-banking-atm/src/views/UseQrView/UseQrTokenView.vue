@@ -1,12 +1,10 @@
 <template>
-  <main
-    class="min-h-screen w-full h-full flex bg-gray-100 overflow-hidden justify-center items-center"
-  >
+  <main class="min-h-screen w-full h-full flex overflow-hidden justify-center items-center">
     <div
       :class="[
         'mx-auto max-w-4xl px-4 py-10 transition-all duration-500 ease-out',
         keypadOpen
-          ? 'pr-[22rem] md:pr-[26rem] translate-x-[-8px]' // 오른쪽 여백 + 살짝 왼쪽 이동
+          ? 'pr-[28rem] md:pr-[28rem] translate-x-[-8px]' // 오른쪽 여백 + 살짝 왼쪽 이동
           : '',
       ]"
     >
@@ -55,7 +53,7 @@
     <!--오른쪽 슬라이드 키패드 (드로어) -->
     <aside
       :class="[
-        'fixed top-1/2 -translate-y-1/2 right-4 w-[22rem] md:w-[26rem]  bg-gray-100',
+        'fixed top-1/2 -translate-y-1/2 right-4 w-[22rem] md:w-[26rem]',
         'transition-transform duration-500 ease-out flex flex-col',
         keypadOpen ? 'translate-x-0' : 'translate-x-full',
       ]"
@@ -71,25 +69,30 @@
 <script setup>
   import KeyPadBase16 from '@/components/KeyPadBase16.vue';
   import { Html5QrcodeScanner } from 'html5-qrcode';
-  import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+  import { nextTick, onBeforeUnmount, onMounted, ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const scanner = ref(null);
   const editing = ref(false);
-  const keypadOpen = ref(false);
   const code = ref('');
   const codeRef = ref(null);
+
+  const keypadOpen = computed(() => {
+    return editing.value;
+  });
 
   const keyClick = key => {
     codeRef.value?.focus();
     if (key === '정정') {
       code.value = code.value.slice(0, -1);
     } else if (key === '결정') {
-      if (code.value.length === 36) toMacroSteps(code.value);
+      if (code.value.length === 32) toMacroSteps(code.value);
       else alert('유효한 코드가 아닙니다.');
     } else if (key === '지움') {
       code.value = '';
+    } else if (key === '닫기') {
+      editing.value = false;
     } else if (code.value.length <= 36) {
       code.value += key;
     }

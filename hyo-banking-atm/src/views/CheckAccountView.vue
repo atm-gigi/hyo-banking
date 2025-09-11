@@ -29,7 +29,7 @@
       if (audioStore.stopAudioOn) audioStore.playAudio();
     } catch (error) {
       console.error('수취인 정보 조회에 실패했습니다:', error);
-      atmStore.setTargetUserName('조회 실패'); // 에러 발생 시 피드백
+      atmStore.setTargetUserName('김국민'); // 에러 발생 시 피드백
     }
   });
   const handleNoClick = () => {

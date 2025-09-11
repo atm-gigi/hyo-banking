@@ -19,7 +19,7 @@
     '결정',
     '지움',
     '정정',
-    '',
+    '닫기',
   ];
   defineEmits(['keyClick']);
 </script>
