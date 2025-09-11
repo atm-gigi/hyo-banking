@@ -1,5 +1,16 @@
 <template>
-  <main class="w-full h-full flex overflow-hidden justify-center items-center">
+  <main class="w-full h-full flex overflow-hidden justify-center items-center mt-6">
+    <button
+      @click="goBack"
+      class="fixed top-4 left-4 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 backdrop-blur border border-gray-200 shadow hover:bg-white focus:outline-none focus:ring-4 focus:ring-gray-200"
+      aria-label="뒤로가기"
+    >
+      <!-- 아이콘: 화살표 -->
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M14 7l-5 5 5 5V7z"></path>
+      </svg>
+      <span class="text-xl font-semibold">안내 다시보기</span>
+    </button>
     <div
       :class="[
         'mx-auto max-w-4xl px-4 py-10 transition-all duration-500 ease-out',
@@ -130,6 +141,15 @@
   onBeforeUnmount(async () => {
     if (scanner.value) await scanner.value.clear();
   });
+
+  const goBack = async () => {
+    try {
+      await scanner.value?.clear();
+    } catch (e) {}
+    // 히스토리 있으면 뒤로, 없으면 원하는 라우트로
+    if (window.history.length > 1) router.back();
+    else router.push({ name: 'home' }); // ← 실제 홈/목록 라우트 이름으로 변경
+  };
 
   const toMacroSteps = code => {
     // GET /api/qr-tokens/{code} 유효성 검증

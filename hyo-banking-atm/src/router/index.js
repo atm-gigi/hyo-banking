@@ -106,6 +106,11 @@ const router = createRouter({
       component: () => import('../views/CheckNoView.vue'),
     },
     {
+      path: '/qr-guide',
+      name: 'qr-guide',
+      component: () => import('../views/UseQrView/QrGuideView.vue'),
+    },
+    {
       path: '/use-qr-token',
       name: 'use-qr-token',
       component: () => import('../views/UseQrView/UseQrTokenView.vue'),
