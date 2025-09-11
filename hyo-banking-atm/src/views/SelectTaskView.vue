@@ -4,7 +4,7 @@
   import { onMounted, ref, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
-  import selectTaskAudio2 from '@/assets/audio/select-task2.mp3';
+  import selectTaskAudio from '@/assets/audio/select-task.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
   import { useAudioStore } from '@/stores/audio';
@@ -74,13 +74,13 @@
     setTimeout(() => {
       isShowAssistantView.value = false;
       startIdleTimer();
-    }, 1000);
+    }, 3000);
     window.addEventListener('mousemove', onUserActivity, { passive: true });
     window.addEventListener('mousedown', onUserActivity, { passive: true });
     window.addEventListener('keydown', onUserActivity, { passive: true });
     window.addEventListener('touchstart', onUserActivity, { passive: true });
     window.addEventListener('click', onUserActivity, { passive: true });
-    audioStore.initAudio(selectTaskAudio2);
+    audioStore.initAudio(selectTaskAudio);
     if (audioStore.stopAudioOn) audioStore.playAudio();
   });
   onUnmounted(() => {
@@ -95,7 +95,7 @@
 </script>
 
 <template>
-  <ReplayAudioButton :src="selectTaskAudio2" />
+  <ReplayAudioButton :src="selectTaskAudio" />
   <StopAudioButton />
   <main class="w-full h-full flex item-center justify-center">
     <!-- 첫 화면 -->
@@ -104,11 +104,10 @@
       :class="{ 'opacity-0': !isShowAssistantView }"
     >
       <p class="text-center text-5xl font-bold">
-        안녕하세요. <br />고객님의 ATM 이용 도우미 <br />000 입니다.
+        안녕하세요. <br />고객님의 ATM 이용 도우미 <br />키키 입니다.
       </p>
 
       <img src="@/assets/introduce.png" alt="캐릭터" class="w-100 m-auto" />
-      <img :src="flyBear" alt="캐릭터" class="w-48 mt-8 opacity-70" />
     </div>
 
     <!-- 거래 선택 화면 -->
@@ -221,8 +220,9 @@
   /* 버튼 옆 곰돌이 - 절대 위치로 레이아웃에 영향 X */
   .guide-bear {
     position: absolute;
-    left: -120px; /* 버튼 바깥 왼쪽 */
-    width: 96px;
+    left: -150px; /* 버튼 바깥 왼쪽 */
+    width: 200px;
+    z-index: 1;
     transition:
       opacity 0.4s ease-in-out,
       transform 0.2s ease-in-out;

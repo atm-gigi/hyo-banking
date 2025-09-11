@@ -10,7 +10,6 @@
   const route = useRoute();
   const router = useRouter();
   const isShowAssistantView = ref(true);
-  const audio = ref(new Audio(putPaymentAudio));
   const audioStore = useAudioStore();
 
   const task = computed(() => {
@@ -50,19 +49,19 @@
     audioStore.initAudio(putPaymentAudio);
     if (audioStore.stopAudioOn) audioStore.playAudio();
 
-    setTimeout(() => {
-      if (task.value === '입금') {
-        router.push({
-          name: 'input-cash',
-          query: { task: route.query.task, payment: route.query.payment },
-        });
-      } else {
-        router.push({
-          name: 'select-amount',
-          query: { task: route.query.task, payment: route.query.payment },
-        });
-      }
-    }, 3000);
+    // setTimeout(() => {
+    //   if (task.value === '입금') {
+    //     router.push({
+    //       name: 'input-cash',
+    //       query: { task: route.query.task, payment: route.query.payment },
+    //     });
+    //   } else {
+    //     router.push({
+    //       name: 'select-amount',
+    //       query: { task: route.query.task, payment: route.query.payment },
+    //     });
+    //   }
+    // }, 3000);
   });
 
   onUnmounted(() => {
