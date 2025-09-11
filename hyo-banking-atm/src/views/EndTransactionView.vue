@@ -10,16 +10,23 @@
     if (route.query.task === TASK_TYPES.DEPOSIT) return '돈 넣기';
     if (route.query.task === TASK_TYPES.WITHDRAW) return '돈 찾기';
     if (route.query.task === TASK_TYPES.TRANSFER) return '돈 보내기';
-    if (route.query.task === TASK_TYPES.MACRO) return '매크로 처리';
+    if (route.query.task === TASK_TYPES.MACRO || route.query.task === 'macro')
+      return '간편거래 처리';
     return null;
   });
 
   onMounted(() => {
-    setTimeout(() => {
-      if (task.value === '매크로 처리') router({ name: 'home' });
-      else router.push({ name: 'statement' });
-    }, 5000);
-  });
+  setTimeout(() => {
+    // $nextTick()을 사용하여 다음 틱에 로직 실행
+    this.$nextTick(() => {
+      if (task.value === '간편거래 처리') {
+        router.push({ name: 'home' });
+      } else {
+        router.push({ name: 'statement' });
+      }
+    });
+  }, 5000);
+});
 </script>
 
 <template>
