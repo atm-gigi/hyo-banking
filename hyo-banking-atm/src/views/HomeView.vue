@@ -16,7 +16,7 @@
     router.push('/select-task');
   };
   const toUseQrToken = () => {
-    router.push('/use-qr-token');
+    router.push('/qr-guide');
   };
 </script>
 
