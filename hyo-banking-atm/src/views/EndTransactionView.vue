@@ -1,6 +1,6 @@
 <script setup>
   import { TASK_TYPES } from '@/constants';
-  import { computed, onMounted } from 'vue';
+  import { computed, onMounted, nextTick } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
@@ -22,15 +22,14 @@
 
   onMounted(() => {
     setTimeout(() => {
-    // $nextTick()을 사용하여 다음 틱에 로직 실행
-    this.$nextTick(() => {
-      if (task.value === '간편거래 처리') {
-        router.push({ name: 'home' });
-      } else {
-        router.push({ name: 'statement' });
-      }
-    });
-  }, 5000);
+      nextTick(() => {
+        if (task.value === '간편거래 처리') {
+          router.push({ name: 'home' });
+        } else {
+          router.push({ name: 'statement' });
+        }
+      });
+    }, 5000);
     audioStore.initAudio(endTransactionAudio);
     if (audioStore.stopAudioOn) audioStore.playAudio();
   });
