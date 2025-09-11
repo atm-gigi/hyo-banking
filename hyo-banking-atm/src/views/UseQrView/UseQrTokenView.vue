@@ -14,7 +14,7 @@
           class="w-[400px] h-[400px] rounded-xl border-4 border-kb-brown-200 shadow-lg overflow-hidden"
         ></div>
         <p class="text-center text-5xl leading-relaxed font-bold whitespace-nowrap">
-          안전한 QR 거래. <br />
+          간편한 ATM 거래 <br />
           ATM의 <span class="text-kb-yellow-200">QR 스캐너</span>에<br class="hidden md:block" />
           휴대폰의 <span class="text-kb-yellow-200">QR</span>을 보여주세요.
         </p>

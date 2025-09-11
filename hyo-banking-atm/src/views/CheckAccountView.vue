@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import TaskButton from '@/components/TaskButton.vue';
   import UserAPI from '@/apis/UserAPI';
@@ -17,7 +17,6 @@
   const bankName = computed(() => atmStore.targetBankCode);
   const receiverName = computed(() => atmStore.targetUserName);
   console.log('receiverName:', receiverName.value);
-  const audio = ref(new Audio(checkAccountAudio));
   const audioStore = useAudioStore();
 
   onMounted(async () => {

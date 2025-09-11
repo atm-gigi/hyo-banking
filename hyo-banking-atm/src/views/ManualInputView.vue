@@ -31,9 +31,9 @@
   });
 
   const onKeyClick = key => {
-    if (key === '정정') {
+    if (key === '하나 지움') {
       amount.value = amount.value.slice(0, -1);
-    } else if (key === '지움') {
+    } else if (key === '전체 지움') {
       amount.value = '';
     } else {
       amount.value += key;
@@ -114,9 +114,9 @@
   <ReplayAudioButton :src="manualInputAudio" />
   <StopAudioButton />
   <main class="w-full h-full flex items-center justify-center">
-    <div class="flex flex-row w-full h-full">
-      <div class="w-1/2 flex flex-col justify-center items-center h-175">
-        <h1 class="text-5xl text-center font-bold text-black mb-5">{{ title }}</h1>
+    <div class="flex flex-row w-full h-full mt-10">
+      <div class="w-1/2 flex flex-col justify-between items-center h-160">
+        <h1 class="text-5xl text-center font-bold text-black">{{ title }}</h1>
         <!-- 입력창 -->
         <div class="text-5xl text-center font-extrabold items-center mx-10">
           <span class="items-center text-blue-500 border-r-4 border-blue-500 pr-1">{{
@@ -124,17 +124,16 @@
           }}</span>
           <span> 만원</span>
         </div>
+        <div class="" :class="{ 'opacity-50 cursor-not-allowed': !isFull }">
+          <TaskButton class="w-100 h-20 bg-kb-yellow-200" text="확인" @click="handleEnter">
+          </TaskButton>
+        </div>
       </div>
 
       <!-- 키패드 -->
       <div class="flex w-1/2 h-full pb-30 p-3">
         <KeyPad @keyClick="onKeyClick" class="w-full h-[450px]" />
       </div>
-    </div>
-
-    <div class="fixed bottom-10" :class="{ 'opacity-50 cursor-not-allowed': !isFull }">
-      <TaskButton class="w-100 h-20 bg-kb-yellow-200" text="확인" @click="handleEnter">
-      </TaskButton>
     </div>
   </main>
 </template>

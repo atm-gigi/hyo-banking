@@ -4,7 +4,6 @@
   import { onMounted, ref, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
-  import selectTaskAudio from '@/assets/audio/select-task.mp3';
   import selectTaskAudio2 from '@/assets/audio/select-task2.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
@@ -14,7 +13,6 @@
   const router = useRouter();
   const atmStore = atmTransactionStore();
   const isShowAssistantView = ref(true);
-  const audio = ref(new Audio(selectTaskAudio));
   const audioStore = useAudioStore();
   const isIdleGuide = ref(false);
   const highlightIndex = ref(-1);

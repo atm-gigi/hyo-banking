@@ -1,9 +1,9 @@
 <template>
-  <main class="w-full h-full flex items-center justify-center p-6">
+  <main class="w-full h-full flex items-center justify-center p-3">
     <div class="w-full max-w-4xl">
       <!-- 헤더 -->
       <header class="mb-10 flex items-center justify-between">
-        <h1 class="text-4xl font-extrabold text-kb-brown-100">ATM 매크로 실행</h1>
+        <h1 class="text-4xl font-extrabold text-kb-brown-100">ATM 간편 거래 등록</h1>
         <span
           class="px-4 py-2 rounded-full text-lg font-semibold"
           :class="{
@@ -23,22 +23,24 @@
           <div
             class="w-20 h-20 border-8 border-kb-yellow-100 border-t-transparent rounded-full animate-spin"
           ></div>
-          <p class="text-4xl font-bold text-kb-brown-100 text-center">{{ statusMessage }}</p>
+          <p class="text-5xl font-bold text-kb-brown-100 text-center">{{ statusMessage }}</p>
         </div>
 
         <!-- 성공 -->
         <div
           v-else-if="status === 'SUCCEEDED'"
-          class="flex flex-col items-center gap-4 text-green-600"
+          class="flex justify-center items-center gap-4 text-green-600"
         >
-          <span class="text-6xl">✅</span>
-          <p class="text-4xl font-bold">{{ successMessage }}</p>
+          <p class="text-5xl font-bold mb-2">{{ successMessage }}</p>
         </div>
 
         <!-- 실패 -->
-        <div v-else-if="status === 'FAILED'" class="text-center text-rose-600">
-          <p class="text-4xl font-bold mb-2">거래가 실패했습니다</p>
-          <p v-if="macro?.errorMessage" class="text-lg">
+        <div
+          v-else-if="status === 'FAILED'"
+          class="flex justify-center items-center gap-4 text-rose-600"
+        >
+          <p class="text-5xl font-bold mb-2">거래를 실패했습니다</p>
+          <p v-if="macro?.errorMessage" class="text-2xl">
             {{ macro.errorMessage }}
             <span v-if="macro.errorCode">({{ macro.errorCode }})</span>
           </p>
@@ -132,7 +134,7 @@
   );
   const statusLabel = computed(
     () =>
-      ({ PENDING: '대기 중', RUNNING: '진행 중', SUCCEEDED: '완료', FAILED: '실패' })[status.value]
+      ({ PENDING: '대기 중', RUNNING: '진행 중', SUCCEEDED: '성공', FAILED: '실패' })[status.value]
   );
 
   // 금액 합계
@@ -215,7 +217,7 @@
       startPolling();
     } else {
       console.error('세션 생성 실패', res);
-      router.push({ name: 'undo-transaction', query: { task: '매크로' } });
+      router.push({ name: 'undo-transaction', query: { task: '간편 거래 등록' } });
     }
   });
   const getUsers = async (accountNo, bankCode) => {
