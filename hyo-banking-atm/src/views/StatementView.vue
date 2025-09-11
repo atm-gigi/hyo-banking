@@ -30,11 +30,11 @@
   // 거래 유형을 한글로 변환
   const transactionTypeDisplay = computed(() => {
     const taskMap = {
-      TRANSFER: '계좌이체및송금',
-      WITHDRAW: '현금출금',
-      DEPOSIT: '현금입금',
+      transfer: '계좌이체및송금',
+      withdraw: '현금출금',
+      deposit: '현금입금',
     };
-    return taskMap[atmStore.task] || '알 수 없는 거래';
+    return taskMap[atmStore.task.toLowerCase()] || '알 수 없는 거래';
   });
 
   // 현재 날짜와 시간을 포맷팅하는 함수

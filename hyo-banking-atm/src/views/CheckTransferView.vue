@@ -17,19 +17,20 @@
   const audioStore = useAudioStore();
 
   const bankCodeMapping = {
-    국민은행: 'KB',
-    신한은행: 'SHINHAN',
-    우리은행: 'WOORI',
-    하나은행: 'HANA',
-    농협은행: 'NH',
-    기업은행: 'IBK',
-    수협은행: 'SH',
-    제일은행: 'SC',
-    부산은행: 'BNK',
-    대구은행: 'DGB',
-    광주은행: 'GWANGJU',
-    새마을금고: 'MG',
-    신협: 'SHINHYUP',
+
+  KB: '국민은행',
+  SHINHAN: '신한은행',
+  WOORI: '우리은행',
+  HANA: '하나은행',
+  NH: '농협은행',
+  IBK: '기업은행',
+  SH: '수협은행',
+  SC: '제일은행',
+  BNK: '부산은행',
+  DGB: '대구은행',
+  GWANGJU: '광주은행',
+  MG: '새마을금고',
+  SHINHYUP: '신협',
   };
 
   const receiverName = computed(() => atmStore.targetUserName || '정보 없음');
