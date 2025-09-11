@@ -6,9 +6,9 @@
   import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
   import IconBtn from '@/components/buttons/IconBtn.vue';
   import { ref, onMounted } from 'vue';
+  import Modal from '@/components/Modal.vue';
   import { ICON_URLS } from '@/constants';
   import { getMacros, getAccounts } from '@/apis';
-  import { getBankNameByCode } from '@/constants';
 
   const authStore = useAuthStore();
   const router = useRouter();
@@ -16,6 +16,7 @@
   const isLoadingMacros = ref(false);
   const primaryAccount = ref(null);
   const isLoadingAccount = ref(false);
+  const showLogoutConfirm = ref(false);
 
   const handleDepositeClick = () => {
     router.push({ name: 'create-deposit' });
@@ -27,6 +28,20 @@
 
   const handleTransferClick = () => {
     router.push({ name: 'create-transfer' });
+  };
+
+  const handleLogoutClick = () => {
+    showLogoutConfirm.value = true;
+  };
+
+  const confirmLogout = () => {
+    showLogoutConfirm.value = false;
+    authStore.logout();
+    router.push({ name: 'start' });
+  };
+
+  const cancelLogout = () => {
+    showLogoutConfirm.value = false;
   };
 
   const loadMacros = async () => {
@@ -75,11 +90,6 @@
     });
   };
 
-  const handleMacroManageClick = () => {
-    // 매크로 관리 페이지로 이동 (추후 구현)
-    router.push({ name: 'macro-list' });
-  };
-
   onMounted(() => {
     loadMacros();
     loadPrimaryAccount();
@@ -123,9 +133,17 @@
     <div class="max-w-md mx-auto p-4">
       <!-- 환영 메시지 -->
       <div class="bg-white rounded-2xl p-6 mb-6 shadow-sm">
-        <h2 class="text-2xl font-bold text-kb-brown-200 mb-2">
-          안녕하세요, {{ authStore.userInfo?.name || '사용자' }}님
-        </h2>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-2xl font-bold text-kb-brown-200">
+            안녕하세요, {{ authStore.userInfo?.name || '사용자' }}님
+          </h2>
+          <button
+            @click="handleLogoutClick"
+            class="px-3 py-1 text-sm rounded-lg text-gray-700 hover:bg-gray-50 cursor-pointer"
+          >
+            로그아웃
+          </button>
+        </div>
 
         <!-- 계좌 정보 -->
         <div class="rounded-lg p-4">
@@ -207,5 +225,17 @@
         </button>
       </div> -->
     </div>
+
+    <!-- Logout Confirm Modal -->
+    <Modal
+      :isVisible="showLogoutConfirm"
+      title="로그아웃"
+      message="로그아웃 하시겠습니까?"
+      confirmText="확인"
+      cancelText="취소"
+      :showCancel="true"
+      @confirm="confirmLogout"
+      @cancel="cancelLogout"
+    />
   </main>
 </template>
