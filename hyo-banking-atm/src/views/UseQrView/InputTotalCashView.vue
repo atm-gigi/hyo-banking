@@ -13,7 +13,7 @@
   const handleEnter = () => {
     console.log(steps);
     router.push({
-      name: 'input-payment',
+      name: 'handle-macro-step',
       params: { steps: JSON.stringify(steps.value) },
       query: { code },
     });
