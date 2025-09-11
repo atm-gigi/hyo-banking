@@ -10,7 +10,6 @@
   const route = useRoute();
   const router = useRouter();
   const atmStore = atmTransactionStore();
-  const audio = ref(new Audio(undoTransactionAudio));
   const audioStore = useAudioStore();
 
   const task = computed(() => {

@@ -8,7 +8,6 @@
 
   const route = useRoute();
   const router = useRouter();
-  const audio = ref(new Audio(inputCashAudio));
   const audioStore = useAudioStore();
 
   const handleEnter = () => {
@@ -34,7 +33,7 @@
         name: 'check-amount',
         query: { task: route.query.task },
       });
-    }, 3000);
+    }, 6000);
   });
 
   onUnmounted(() => {

@@ -59,7 +59,7 @@
 <template>
   <button
     @click="toggleAudio"
-    class="fixed top-4 left-4 flex items-center gap-4 px-5 py-3 rounded-full text-gray-800 font-semibold text-base active:scale-95 transition-all duration-300 ease-out z-50 overflow-hidden relative border-2 border-yellow-400 h-14"
+    class="fixed top-2 left-4 flex items-center gap-4 px-5 py-3 rounded-full text-gray-800 font-semibold text-base active:scale-95 transition-all duration-300 ease-out z-50 overflow-hidden relative border-2 border-yellow-400 h-14"
     :style="{
       background: `linear-gradient(to right, #FACC15 ${progress}%, white ${progress}%)`,
     }"

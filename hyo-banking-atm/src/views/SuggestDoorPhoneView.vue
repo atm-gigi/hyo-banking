@@ -6,7 +6,6 @@
   import { useAudioStore } from '@/stores/audio';
 
   const router = useRouter();
-  const audio = ref(new Audio(suggestDoorPhoneAudio));
   const audioStore = useAudioStore();
 
   const handleEnter = () => {
@@ -23,6 +22,8 @@
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress);
+    audioStore.initAudio(suggestDoorPhoneAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 
   onUnmounted(() => {
