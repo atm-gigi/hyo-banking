@@ -31,9 +31,9 @@
   });
 
   const onKeyClick = key => {
-    if (key === '지움') {
+    if (key === '정정') {
       amount.value = amount.value.slice(0, -1);
-    } else if (key === '정정') {
+    } else if (key === '지움') {
       amount.value = '';
     } else {
       amount.value += key;
