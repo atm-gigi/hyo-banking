@@ -57,7 +57,7 @@
       // 선택된 매크로의 단계들 로드
       selectedMacroSteps.value = await getMacroSteps(macro.id);
     } catch (error) {
-      console.error('매크로 단계 로드 오류:', error);
+      console.error('간편 거래 단계 로드 오류:', error);
       selectedMacroSteps.value = [];
     }
   };
@@ -147,7 +147,7 @@
         <div
           class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"
         ></div>
-        <p class="text-gray-500 text-lg">매크로 목록을 불러오는 중...</p>
+        <p class="text-gray-500 text-lg">간편 거래 목록을 불러오는 중...</p>
       </div>
     </div>
 
@@ -157,8 +157,8 @@
     >
       <div class="text-center">
         <div class="text-gray-400 text-6xl mb-4">📱</div>
-        <p class="text-gray-500 text-lg mb-2">추가할 수 있는 매크로가 없습니다</p>
-        <p class="text-gray-400 text-sm">다른 매크로를 먼저 생성해주세요</p>
+        <p class="text-gray-500 text-lg mb-2">추가할 수 있는 간편 거래가 없습니다</p>
+        <p class="text-gray-400 text-sm">다른 간편 거래를 먼저 생성해주세요</p>
         <button
           @click="() => router.push({ name: 'home' })"
           class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold"
@@ -170,7 +170,7 @@
 
     <div v-else class="px-5 flex-1">
       <div class="mb-6">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">현재 매크로</h2>
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">현재 간편 거래</h2>
         <div class="bg-blue-50 rounded-lg p-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -185,7 +185,7 @@
       </div>
 
       <div class="mb-6">
-        <h2 class="text-lg font-semibold text-gray-700 mb-4">추가할 매크로 선택</h2>
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">추가할 간편 거래 선택</h2>
         <div class="space-y-3">
           <div
             v-for="availableMacro in availableMacros"
@@ -230,7 +230,7 @@
       </div>
 
       <div v-if="selectedMacro" class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">선택된 매크로 상세</h3>
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">선택된 간편 거래 상세</h3>
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center gap-3 mb-3">
             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">

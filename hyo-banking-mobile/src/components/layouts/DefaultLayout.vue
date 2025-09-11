@@ -17,13 +17,13 @@
 </script>
 
 <template>
-  <div class="relative mx-auto w-md h-screen overflow-y-scroll bg-white">
+  <div class="relative mx-auto w-full max-w-md h-dvh overflow-y-scroll bg-white">
     <RouterView :class="{ 'pb-20': isShowNav }" />
 
     <!-- 하단 고정 헤더 -->
     <nav
       v-if="isShowNav"
-      class="fixed w-md mx-auto bg-gray-100 border-t-1 border-t-gray-300 bottom-0 left-0 right-0 h-20 z-50 flex flex-row justify-evenly"
+      class="fixed w-full max-w-md mx-auto bg-gray-100 border-t-1 border-t-gray-300 bottom-0 left-0 right-0 h-[70px] z-50 flex flex-row justify-evenly"
     >
       <button
         @click="handleHomeClick"

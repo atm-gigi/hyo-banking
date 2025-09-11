@@ -48,7 +48,7 @@
       <!-- 매크로 이름 설정 -->
       <div class="mb-10">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
+          <span class="text-sm font-medium text-gray-700">간편 거래 이름</span>
           <button
             @click="toggleMacroNameInput"
             class="text-sm text-blue-600 hover:text-blue-800 font-medium"
@@ -79,9 +79,7 @@
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
             <span class="text-gray-600">은행:</span>
-            <span class="font-medium">{{
-              getBankNameByCode(formData.selectedBank?.code) || formData.bankName
-            }}</span>
+            <span class="font-medium"> 국민은행 </span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-600">계좌번호:</span>
@@ -92,7 +90,7 @@
             <span class="font-medium">{{ formData.amount }}만원</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-gray-600">매크로 이름:</span>
+            <span class="text-gray-600">간편 거래 이름:</span>
             <span class="font-medium">{{ formData.macroName }}</span>
           </div>
         </div>
@@ -109,7 +107,7 @@
         </button>
         <PrimaryBtn
           class="flex-1 py-2"
-          :text="isLoading ? '생성 중...' : '매크로 생성'"
+          :text="isLoading ? '생성 중...' : '간편 거래 생성'"
           :disabled="isLoading"
           @click="handleCreate"
         />

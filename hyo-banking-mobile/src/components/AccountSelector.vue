@@ -47,11 +47,7 @@
     <div v-if="props.selectedAccount" class="mb-6 p-4 border border-kb-yellow-100 rounded-lg">
       <div class="flex justify-between items-center">
         <div>
-          <div class="font-semibold">
-            {{
-              getBankNameByCode(props.selectedAccount.bankCode) || props.selectedAccount.bankName
-            }}
-          </div>
+          <div class="font-semibold">국민은행</div>
           <div class="text-md font-bold">계좌번호 {{ props.selectedAccount.accountNo }}</div>
         </div>
       </div>
@@ -108,9 +104,7 @@
 
           <div class="flex justify-between items-center pl-8">
             <div>
-              <div class="font-medium">
-                {{ getBankNameByCode(account.bankCode) || account.bankName }}
-              </div>
+              <div class="font-medium">국민은행</div>
               <div class="text-sm text-gray-600">{{ account.accountNo }}</div>
             </div>
           </div>

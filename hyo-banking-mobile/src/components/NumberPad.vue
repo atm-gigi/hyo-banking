@@ -14,26 +14,81 @@
       type: String,
       default: '만원',
     },
+    preserveLeadingZeros: {
+      type: Boolean,
+      default: false,
+    },
+    formatAccountNumber: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
 
-  const displayValue = ref(props.modelValue.toString());
+  // 계좌번호 포맷팅 함수들
+  const formatAccountNumber = value => {
+    // 숫자만 추출
+    const numbers = value.replace(/\D/g, '');
+
+    // 444444-44-44444 형식으로 포맷팅 (6자리-2자리-5자리)
+    if (numbers.length <= 6) {
+      return numbers;
+    } else if (numbers.length <= 8) {
+      return `${numbers.slice(0, 6)}-${numbers.slice(6)}`;
+    } else {
+      return `${numbers.slice(0, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8, 13)}`;
+    }
+  };
+
+  const unformatAccountNumber = value => {
+    // 하이픈 제거하고 숫자만 반환
+    return value.replace(/\D/g, '');
+  };
+
+  const displayValue = ref(
+    props.formatAccountNumber
+      ? formatAccountNumber(props.modelValue.toString())
+      : props.modelValue.toString()
+  );
 
   watch(
     () => props.modelValue,
     newValue => {
-      displayValue.value = newValue.toString();
+      if (props.formatAccountNumber) {
+        // 받은 값이 이미 포맷팅된 값이므로 그대로 사용
+        displayValue.value = newValue.toString();
+      } else {
+        displayValue.value = newValue.toString();
+      }
     }
   );
 
   const addDigit = digit => {
-    if (displayValue.value === '0') {
-      displayValue.value = digit.toString();
-    } else {
+    let newValue;
+
+    if (props.formatAccountNumber) {
+      // 계좌번호 포맷팅이 필요한 경우
+      const currentNumbers = unformatAccountNumber(displayValue.value);
+      if (currentNumbers.length < 13) {
+        // 최대 13자리까지만 입력 가능
+        newValue = currentNumbers + digit.toString();
+        displayValue.value = formatAccountNumber(newValue);
+        emit('update:modelValue', displayValue.value); // 포맷팅된 값을 전달
+      }
+    } else if (props.preserveLeadingZeros) {
+      // 계좌번호 등 앞의 0을 보존해야 하는 경우
       displayValue.value += digit.toString();
+      emit('update:modelValue', displayValue.value);
+    } else {
+      // 금액 입력 등 일반적인 경우
+      if (displayValue.value === '0') {
+        displayValue.value = digit.toString();
+      } else {
+        displayValue.value += digit.toString();
+      }
+      emit('update:modelValue', displayValue.value);
     }
-    emit('update:modelValue', displayValue.value);
   };
 
   const clear = () => {
@@ -43,8 +98,18 @@
 
   const backspace = () => {
     if (displayValue.value.length > 0) {
-      displayValue.value = displayValue.value.slice(0, -1);
-      emit('update:modelValue', displayValue.value);
+      if (props.formatAccountNumber) {
+        // 계좌번호 포맷팅이 필요한 경우
+        const currentNumbers = unformatAccountNumber(displayValue.value);
+        if (currentNumbers.length > 0) {
+          const newValue = currentNumbers.slice(0, -1);
+          displayValue.value = formatAccountNumber(newValue);
+          emit('update:modelValue', displayValue.value); // 포맷팅된 값을 전달
+        }
+      } else {
+        displayValue.value = displayValue.value.slice(0, -1);
+        emit('update:modelValue', displayValue.value);
+      }
     }
   };
 

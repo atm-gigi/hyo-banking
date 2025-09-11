@@ -107,7 +107,7 @@
 
       await Promise.all(accountPromises);
     } catch (error) {
-      console.error('매크로 로드 오류:', error);
+      console.error('간편 거래 로드 오류:', error);
     } finally {
       isLoading.value = false;
     }
@@ -115,8 +115,8 @@
 
   const handleDeleteClick = () => {
     deleteModalConfig.value = {
-      title: '매크로 삭제',
-      message: '정말로 이 매크로를 삭제하시겠습니까?',
+      title: '간편 거래 삭제',
+      message: '정말로 이 간편 거래를 삭제하시겠습니까?',
       showCancel: true,
     };
     showDeleteModal.value = true;
@@ -130,8 +130,7 @@
       showDeleteModal.value = false;
       router.push({ name: 'home' });
     } catch (error) {
-      console.error('매크로 삭제 오류:', error);
-      alert('매크로 삭제 중 오류가 발생했습니다.');
+      console.error('간편 거래 삭제 오류:', error);
       showDeleteModal.value = false;
     }
   };
@@ -247,7 +246,7 @@
     if (!macro.value || !editingName.value.trim()) {
       nameChangeModalConfig.value = {
         title: '오류',
-        message: '매크로 이름을 입력해주세요.',
+        message: '간편 거래 이름을 입력해주세요.',
         showCancel: false,
       };
       showNameChangeModal.value = true;
@@ -265,15 +264,15 @@
 
       nameChangeModalConfig.value = {
         title: '수정 완료',
-        message: '매크로 이름이 변경되었습니다.',
+        message: '간편 거래 이름이 변경되었습니다.',
         showCancel: false,
       };
       showNameChangeModal.value = true;
     } catch (error) {
-      console.error('매크로 이름 수정 오류:', error);
+      console.error('간편 거래 이름 수정 오류:', error);
       nameChangeModalConfig.value = {
         title: '오류',
-        message: '매크로 이름 수정 중 오류가 발생했습니다.',
+        message: '간편 거래 이름 수정 중 오류가 발생했습니다.',
         showCancel: false,
       };
       showNameChangeModal.value = true;
@@ -347,13 +346,13 @@
       <div class="mb-6">
         <BackButton :handleGoBack="() => router.push({ name: 'home' })" />
       </div>
-      <h1 class="text-2xl font-bold">매크로 상세</h1>
+      <h1 class="text-2xl font-bold">간편 거래 상세</h1>
     </div>
 
     <!-- 로딩 상태 -->
     <div v-if="isLoading" class="px-5 flex-1 flex items-center justify-center">
       <div class="text-center">
-        <p class="text-gray-500 text-lg">매크로 정보를 불러오는 중...</p>
+        <p class="text-gray-500 text-lg">간편 거래 정보를 불러오는 중...</p>
       </div>
     </div>
 
@@ -370,7 +369,7 @@
           이름 변경
         </button>
 
-        <div class="flex items-center justify-center mb-4">
+        <div class="flex items-center justify-center my-4">
           <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
             <span class="text-blue-600 font-bold text-xl">📱</span>
           </div>
@@ -381,7 +380,7 @@
                 v-model="editingName"
                 type="text"
                 class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
-                placeholder="매크로 이름을 입력하세요"
+                placeholder="간편 거래 이름을 입력하세요"
                 @keyup.enter="saveMacroName"
                 @keyup.escape="cancelEditName"
                 ref="nameInput"
@@ -436,12 +435,14 @@
                 금액: {{ formatAmount(step.amount) }}
               </div>
               <div v-if="step.sourceAccountNo" class="text-sm text-gray-500">
-                출금계좌: {{ step.sourceAccountNo }} ({{ getBankNameByCode(step.sourceBankCode) }})
-                - {{ getAccountOwnerName(step.sourceAccountNo, step.sourceBankCode) }}
+                <div>{{ step.sourceAccountNo }}</div>
+                <div>국민은행</div>
+                <div>{{ getAccountOwnerName(step.sourceAccountNo, step.sourceBankCode) }}</div>
               </div>
               <div v-if="step.targetAccountNo" class="text-sm text-gray-500">
-                입금계좌: {{ step.targetAccountNo }} ({{ getBankNameByCode(step.targetBankCode) }})
-                - {{ getAccountOwnerName(step.targetAccountNo, step.targetBankCode) }}
+                <div>{{ step.targetAccountNo }}</div>
+                <div>국민은행</div>
+                <div>{{ getAccountOwnerName(step.targetAccountNo, step.targetBankCode) }}</div>
               </div>
             </div>
             <button
@@ -459,7 +460,7 @@
     <!-- 매크로를 찾을 수 없는 경우 -->
     <div v-else class="px-5 flex-1 flex items-center justify-center">
       <div class="text-center">
-        <p class="text-gray-500 text-lg">매크로 정보를 찾을 수 없습니다.</p>
+        <p class="text-gray-500 text-lg">간편 거래 정보를 찾을 수 없습니다.</p>
         <button
           @click="() => router.push({ name: 'home' })"
           class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold"
