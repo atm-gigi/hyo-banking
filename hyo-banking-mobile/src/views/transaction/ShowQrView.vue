@@ -23,7 +23,7 @@
   const qrCodeUrl = ref('');
 
   const macroId = computed(() => route.params.id);
-  const macroName = computed(() => route.query.macroName || '매크로');
+  const macroName = computed(() => route.query.macroName || '간편 거래');
 
   const showAlert = (title, message, showCancel = false) => {
     modalConfig.value = { title, message, showCancel };
@@ -74,7 +74,7 @@
   // QR 토큰 데이터 로드
   const loadQrData = async () => {
     if (!macroId.value) {
-      showAlert('오류', '잘못된 매크로 정보입니다.');
+      showAlert('오류', '잘못된 간편 거래 정보입니다.');
       router.push({ name: 'home' });
       return;
     }
@@ -97,21 +97,6 @@
       console.error('QR 토큰 로드 오류:', error);
       showAlert('오류', 'QR 토큰을 가져오는 중 오류가 발생했습니다.');
       router.push({ name: 'home' });
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  const handleRefreshQr = async () => {
-    try {
-      isLoading.value = true;
-      const response = await createQrToken(macroId.value);
-      qrData.value = response;
-      await generateQRCode(qrData.value);
-      showAlert('새로고침 완료', '새 QR 코드가 생성되었습니다.');
-    } catch (error) {
-      console.error('QR 토큰 새로고침 오류:', error);
-      showAlert('오류', 'QR 토큰 새로고침 중 오류가 발생했습니다.');
     } finally {
       isLoading.value = false;
     }
@@ -154,6 +139,13 @@
           </div>
 
           <p class="text-sm text-gray-600 mb-4">ATM에서 이 QR 코드를 스캔하세요</p>
+
+          <!-- QR 코드 값 표시 -->
+          <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h4 class="text-sm font-semibold text-gray-700 mb-2">코드 값</h4>
+
+            <code class="text-xs text-gray-800 break-all">{{ qrData }}</code>
+          </div>
         </div>
       </div>
 
@@ -172,8 +164,9 @@
         <ol class="text-sm text-blue-800 space-y-2">
           <li>1. ATM에서 "QR 코드 스캔" 메뉴를 선택하세요</li>
           <li>2. 이 화면의 QR 코드를 스캔하세요</li>
-          <li>3. 매크로가 자동으로 실행됩니다</li>
-          <li>4. QR 코드는 5분 후 만료됩니다</li>
+          <li>3. 스캔이 안 될 경우, 아래 토큰 값을 수동으로 입력하세요</li>
+          <li>4. 간편 거래가 자동으로 실행됩니다</li>
+          <li>5. QR 코드는 5분 후 만료됩니다</li>
         </ol>
       </div>
 

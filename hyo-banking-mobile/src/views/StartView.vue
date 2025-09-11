@@ -62,10 +62,10 @@
       class="absolute w-full h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out"
       :class="{ 'opacity-0': isStartViewAnimating }"
     >
-      <p class="text-center text-4xl leading-relaxed font-bold">
-        안녕하세요. <br />고객님의 ATM 이용 도우미 <br />000 입니다.
+      <img src="/icon.png" alt="캐릭터" class="max-w-[110px]" />
+      <p class="mt-5 text-center text-xl leading-relaxed font-bold">
+        안녕하세요. <br />고객님의 ATM 이용 도우미 <br />효뱅킹 입니다.
       </p>
-      <img src="" alt="캐릭터" />
     </div>
 
     <!-- 로그인 하러 가기 -->
@@ -74,9 +74,9 @@
       :class="{ 'opacity-100': isStartViewAnimating }"
     >
       <div class="h-full flex flex-col justify-center items-center">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">KB 효뱅킹에 오신 것을 환영합니다</h2>
+        <img src="/icon.png" alt="국민은행" class="max-w-[110px]" />
+        <h2 class="text-xl font-bold text-gray-800 mb-4 mt-6">KB 효뱅킹에 오신 것을 환영합니다</h2>
         <p class="text-gray-600">더 쉬운 은행 서비스를 이용해보세요</p>
-        <img src="" alt="국민은행" />
       </div>
       <div class="px-5 pb-10 w-full flex flex-col gap-5">
         <PrimaryBtn @click="handleStartClick" text="시작하기" class="w-full py-3" />

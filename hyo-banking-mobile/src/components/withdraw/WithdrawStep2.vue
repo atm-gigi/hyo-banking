@@ -1,8 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col">
     <div class="flex-1">
-      <h2 class="text-xl font-bold mb-6">얼마를 뽑으시겠어요?</h2>
-
       <!-- 금액 입력 -->
       <div @click="handleAmountClick" class="cursor-pointer flex items-center gap-3 pb-3 mb-6">
         <TextInput

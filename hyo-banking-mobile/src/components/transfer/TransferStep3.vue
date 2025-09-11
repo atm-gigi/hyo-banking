@@ -1,10 +1,58 @@
+<script setup>
+  import TextInput from '@/components/TextInput.vue';
+  import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
+  import { getBankNameByCode } from '@/constants';
+
+  const props = defineProps({
+    formData: {
+      type: Object,
+      required: true,
+    },
+    foundUser: {
+      type: Object,
+      default: null,
+    },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+  });
+
+  const emit = defineEmits(['create', 'back', 'update:formData']);
+
+  const toggleMacroNameInput = () => {
+    emit('update:formData', {
+      showMacroNameInput: !props.formData.showMacroNameInput,
+    });
+
+    if (!props.formData.showMacroNameInput && props.formData.amount) {
+      emit('update:formData', {
+        macroName: `${props.formData.amount}만원 송금`,
+      });
+    }
+  };
+
+  const handleCreate = () => {
+    if (!props.formData.macroName.trim()) {
+      emit('update:formData', {
+        macroName: `${props.formData.amount}만원 송금`,
+      });
+    }
+    emit('create');
+  };
+
+  const handleBack = () => {
+    emit('back');
+  };
+</script>
+
 <template>
   <div class="flex-1 flex flex-col">
     <div class="flex-1">
       <!-- 매크로 이름 설정 -->
       <div class="mb-10">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
+          <span class="text-sm font-medium text-gray-700">간편 거래 이름</span>
           <button
             @click="toggleMacroNameInput"
             class="text-sm text-blue-600 hover:text-blue-800 font-medium"
@@ -53,7 +101,7 @@
             <span class="font-medium">{{ formData.amount }}만원</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-gray-600">매크로 이름:</span>
+            <span class="text-gray-600">간편 거래 이름:</span>
             <span class="font-medium">{{ formData.macroName }}</span>
           </div>
         </div>
@@ -70,7 +118,7 @@
         </button>
         <PrimaryBtn
           class="flex-1 py-2"
-          :text="isLoading ? '생성 중...' : '매크로 생성'"
+          :text="isLoading ? '생성 중...' : '간편 거래 생성'"
           :disabled="isLoading"
           @click="handleCreate"
         />
@@ -78,51 +126,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-  import TextInput from '@/components/TextInput.vue';
-  import PrimaryBtn from '@/components/buttons/PrimaryBtn.vue';
-  import { getBankNameByCode } from '@/constants';
-
-  const props = defineProps({
-    formData: {
-      type: Object,
-      required: true,
-    },
-    foundUser: {
-      type: Object,
-      default: null,
-    },
-    isLoading: {
-      type: Boolean,
-      default: false,
-    },
-  });
-
-  const emit = defineEmits(['create', 'back', 'update:formData']);
-
-  const toggleMacroNameInput = () => {
-    emit('update:formData', {
-      showMacroNameInput: !props.formData.showMacroNameInput,
-    });
-
-    if (!props.formData.showMacroNameInput && props.formData.amount) {
-      emit('update:formData', {
-        macroName: `${props.formData.amount}만원 송금`,
-      });
-    }
-  };
-
-  const handleCreate = () => {
-    if (!props.formData.macroName.trim()) {
-      emit('update:formData', {
-        macroName: `${props.formData.amount}만원 송금`,
-      });
-    }
-    emit('create');
-  };
-
-  const handleBack = () => {
-    emit('back');
-  };
-</script>

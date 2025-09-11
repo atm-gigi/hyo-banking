@@ -38,7 +38,7 @@
       const response = await getMacros(authStore.userId, null, 0, 10);
       macros.value = response.content || [];
     } catch (error) {
-      console.error('매크로 로드 오류:', error);
+      console.error('간편 거래 로드 오류:', error);
       macros.value = [];
     } finally {
       isLoadingMacros.value = false;
@@ -135,9 +135,7 @@
             {{ maskSensitiveInfo(primaryAccount.accountNo, 'account') }}
           </div>
           <div v-else class="text-kb-gray-100">등록된 계좌가 없습니다</div>
-          <div v-if="primaryAccount" class="text-sm text-kb-gray-100">
-            {{ getBankNameByCode(primaryAccount.bankCode) || primaryAccount.bankName }}
-          </div>
+          <div v-if="primaryAccount" class="text-sm text-kb-gray-100">국민은행</div>
         </div>
         <div>
           <PrimaryBtn class="w-full py-2" text="계좌번호 추가하기" />
@@ -147,17 +145,17 @@
       <!-- 저장된 매크로 -->
       <div class="flex flex-col gap-3 bg-white p-6 rounded-2xl shadow-sm mb-6">
         <div class="flex items-center justify-between">
-          <h2 class="font-bold text-lg">저장된 매크로</h2>
+          <h2 class="font-bold text-lg">간편 거래 목록</h2>
         </div>
         <hr class="border-gray-200" />
 
         <div v-if="isLoadingMacros" class="text-center py-8 text-gray-500">
-          <p>매크로를 불러오는 중...</p>
+          <p>간편 거래 불러오는 중...</p>
         </div>
 
         <div v-else-if="macros.length === 0" class="text-center py-8 text-gray-500">
-          <p>저장된 매크로가 없습니다.</p>
-          <p class="text-sm mt-1">거래 생성 시 매크로로 저장해보세요!</p>
+          <p>저장된 간편거래가 없습니다.</p>
+          <p class="text-sm mt-1">간편 거래를 저장해보세요!</p>
         </div>
 
         <div v-else class="space-y-3">
@@ -184,7 +182,7 @@
 
       <!-- 메뉴 버튼들 -->
       <div class="flex flex-col gap-3 bg-white p-6 rounded-2xl shadow-sm mb-6">
-        <h2 class="font-bold text-lg">ATM 거래 추가하기</h2>
+        <h2 class="font-bold text-lg">간편 거래 추가하기</h2>
         <hr class="border-gray-200" />
         <template v-for="(item, index) in menuItems" :key="item.id">
           <IconBtn

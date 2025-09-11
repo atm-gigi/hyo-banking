@@ -49,16 +49,16 @@
         sourceBankCode: null,
         targetAccountNo: depositData.targetAccount,
         targetBankCode: depositData.selectedBank.code,
-        note: `입금 매크로 - ${depositData.amount}만원 (${depositData.selectedBank.name} ${depositData.targetAccount})`,
+        note: `입금 - ${depositData.amount}만원`,
       };
       await addMacroStep(macro.id, stepData);
 
-      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+      showAlert('간편거래 생성 완료', `"${macro.name}" 간편 거래가 생성되었습니다.`);
     } catch (error) {
-      console.error('매크로 생성 오류:', error);
+      console.error('간편 거래 생성 오류:', error);
       depositMessage.value = {
         type: 'error',
-        text: error.message || '매크로 생성 중 오류가 발생했습니다.',
+        text: error.message || '간편 거래 생성 중 오류가 발생했습니다.',
       };
     } finally {
       isLoading.value = false;
@@ -121,7 +121,7 @@
             ? '어디로 입금하시겠어요? (1/3)'
             : currentStep === 2
               ? '얼마를 넣으시겠어요? (2/3)'
-              : '매크로 이름을 설정하세요 (3/3)'
+              : '간편 거래 이름을 설정하세요 (3/3)'
         }}
       </h1>
 

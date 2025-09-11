@@ -119,8 +119,6 @@
 <template>
   <div class="flex-1 flex flex-col">
     <div class="flex-1">
-      <h2 class="text-xl font-bold mb-6">누구에게 돈을 보내나요?</h2>
-
       <!-- 계좌번호 입력 -->
       <div class="mb-6">
         <div @click="handleAccountNumberClick" class="cursor-pointer flex items-center gap-3 pb-3">
@@ -133,6 +131,7 @@
             type="text"
             placeholder="계좌번호를 입력하세요"
             readonly
+            :formatAccountNumber="true"
           />
         </div>
       </div>
@@ -200,6 +199,8 @@
       @update:model-value="value => emit('update:formData', { accountNumber: value })"
       :isVisible="showNumberPad"
       currency=""
+      :preserveLeadingZeros="true"
+      :formatAccountNumber="true"
       @confirm="handleNumberPadConfirm"
       @cancel="handleNumberPadCancel"
     />

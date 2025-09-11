@@ -39,7 +39,7 @@ export const ICON_URLS = {
 
 // 은행 정보
 export const BANKS = [
-  { code: '001', name: '국민은행' },
+  { code: 'KB', name: '국민은행' },
   { code: '002', name: '신한은행' },
   { code: '003', name: '우리은행' },
   { code: '004', name: '하나은행' },

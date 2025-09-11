@@ -127,16 +127,16 @@
         sourceBankCode: null,
         targetAccountNo: accountNumber.value,
         targetBankCode: route.query.bankCode || null,
-        note: `송금 매크로 - ${amount.value}만원 (${recipientName.value})`,
+        note: `송금 - ${amount.value}만원 (${recipientName.value})`,
       };
       await addMacroStep(macro.id, stepData);
 
-      showAlert('매크로 생성 완료', `"${macro.name}" 매크로가 생성되었습니다.`);
+      showAlert('간편 거래 생성 완료', `"${macro.name}" 간편 거래가 생성되었습니다.`);
       amount.value = '';
       macroName.value = '';
     } catch (error) {
-      console.error('매크로 생성 오류:', error);
-      showAlert('오류', error.message || '매크로 생성 중 오류가 발생했습니다.');
+      console.error('간편 거래 생성 오류:', error);
+      showAlert('오류', error.message || '간편 거래 생성 중 오류가 발생했습니다.');
     }
   };
 
@@ -161,7 +161,7 @@
       <!-- 매크로 이름 설정 -->
       <div class="mb-10">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-sm font-medium text-gray-700">매크로 이름</span>
+          <span class="text-sm font-medium text-gray-700">간편 거래 이름</span>
           <button
             @click="toggleMacroNameInput"
             class="text-sm text-blue-600 hover:text-blue-800 font-medium"
@@ -232,7 +232,7 @@
         금액을 입력해주세요
       </div>
 
-      <PrimaryBtn class="w-full py-2" text="매크로 생성" @click="handleTransferClick" />
+      <PrimaryBtn class="w-full py-2" text="간편 거래 생성" @click="handleTransferClick" />
     </div>
 
     <!-- Number Pad -->
