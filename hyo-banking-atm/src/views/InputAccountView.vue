@@ -79,9 +79,9 @@
   <ReplayAudioButton :src="inputAccountAudio" />
   <StopAudioButton />
   <main class="w-full h-full flex items-center justify-center">
-    <div class="flex flex-row w-full h-full">
-      <div class="w-1/2 flex flex-col justify-center items-center mb-30">
-        <h1 class="text-5xl text-center font-bold text-black py-3">
+    <div class="flex flex-row w-full h-full mt-10">
+      <div class="w-1/2 flex flex-col justify-between items-center h-160">
+        <h1 class="text-5xl text-center font-bold text-black">
           받는 분의 계좌번호를 <br />
           눌러주세요
         </h1>
@@ -91,16 +91,16 @@
             {{ amount }}
           </span>
         </div>
+        <div class="" :class="{ 'opacity-50 cursor-not-allowed': !isAccountFull }">
+          <TaskButton class="w-100 h-18 bg-kb-yellow-200" text="확인" @click="handleEnter">
+          </TaskButton>
+        </div>
       </div>
 
       <!-- 키패드 -->
       <div class="flex w-1/2 h-full pb-30 p-3">
         <KeyPad @keyClick="onKeyClick" class="w-full h-[400px]" />
       </div>
-    </div>
-
-    <div class="fixed bottom-10" :class="{ 'opacity-50 cursor-not-allowed': !isAccountFull }">
-      <TaskButton class="w-80 h-18 bg-kb-yellow-200" text="확인" @click="handleEnter"> </TaskButton>
     </div>
   </main>
 </template>

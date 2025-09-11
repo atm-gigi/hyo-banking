@@ -1,9 +1,9 @@
 <template>
-  <main class="min-h-screen flex items-center justify-center p-6">
+  <main class="w-full h-full flex items-center justify-center p-3">
     <div class="w-full max-w-4xl">
       <!-- 헤더 -->
       <header class="mb-10 flex items-center justify-between">
-        <h1 class="text-4xl font-extrabold text-kb-brown-100">ATM 매크로 실행</h1>
+        <h1 class="text-4xl font-extrabold text-kb-brown-100">ATM 간편 거래 등록</h1>
         <span
           class="px-4 py-2 rounded-full text-lg font-semibold"
           :class="{
@@ -23,22 +23,24 @@
           <div
             class="w-20 h-20 border-8 border-kb-yellow-100 border-t-transparent rounded-full animate-spin"
           ></div>
-          <p class="text-4xl font-bold text-kb-brown-100 text-center">{{ statusMessage }}</p>
+          <p class="text-5xl font-bold text-kb-brown-100 text-center">{{ statusMessage }}</p>
         </div>
 
         <!-- 성공 -->
         <div
           v-else-if="status === 'SUCCEEDED'"
-          class="flex flex-col items-center gap-4 text-green-600"
+          class="flex justify-center items-center gap-4 text-green-600"
         >
-          <span class="text-6xl">✅</span>
-          <p class="text-4xl font-bold">{{ successMessage }}</p>
+          <p class="text-5xl font-bold mb-2">{{ successMessage }}</p>
         </div>
 
         <!-- 실패 -->
-        <div v-else-if="status === 'FAILED'" class="text-center text-rose-600">
-          <p class="text-4xl font-bold mb-2">거래가 실패했습니다</p>
-          <p v-if="macro?.errorMessage" class="text-lg">
+        <div
+          v-else-if="status === 'FAILED'"
+          class="flex justify-center items-center gap-4 text-rose-600"
+        >
+          <p class="text-5xl font-bold mb-2">거래를 실패했습니다</p>
+          <p v-if="macro?.errorMessage" class="text-2xl">
             {{ macro.errorMessage }}
             <span v-if="macro.errorCode">({{ macro.errorCode }})</span>
           </p>
@@ -59,41 +61,33 @@
                 : 'border-gray-300 bg-gray-50'
             "
           >
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">
-                  {{ s.stepType === 'DEPOSIT' ? '📥' : s.stepType === 'WITHDRAW' ? '💸' : '🔁' }}
-                </span>
-                <span class="text-xl font-bold">{{ labelOf(s.stepType) }}</span>
+            <div class="relative">
+              <span
+                class="absolute top-0 right-0 px-2 py-1 text-lg font-semibold text-blue-600 bg-blue-100 rounded-full"
+                :class="tagClassesOf(s.stepType)"
+              >
+                {{ labelOf(s.stepType) }}
+              </span>
+              <div class="mb-2">
+                <span class="block text-2xl font-bold text-gray-900">{{ s.note }} </span>
               </div>
-              <span class="text-sm text-gray-500">순서 {{ s.stepOrder }}</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-lg">
-              <!-- 계좌 정보 -->
-              <div v-if="s.stepType === 'WITHDRAW'">
-                <span class="block text-gray-500 text-sm">출금 계좌</span>
-                <div class="font-mono">{{ s.sourceBankCode }} · {{ s.sourceAccountNo }}</div>
-              </div>
-              <div v-else>
-                <span class="block text-gray-500 text-sm">입금 계좌</span>
-                <div class="font-mono">{{ s.targetBankCode }} · {{ s.targetAccountNo }}</div>
-              </div>
-
-              <div>
-                <span class="block text-gray-500 text-sm">예금주</span>
-                <div>{{ users[i] || '-' }}</div>
-              </div>
-              <div>
-                <span class="block text-gray-500 text-sm">금액</span>
-                <div class="font-bold text-kb-brown-300">
-                  {{ formatWon(s.amount ?? 0) }}
+              <div class="flex items-start gap-x-2">
+                <span class="pt-1 text-sm text-gray-500">순서 {{ s.stepOrder }}</span>
+                <span class="pt-1 text-gray-400">|</span>
+                <div>
+                  <p class="text-lg">
+                    <span class="font-extrabold">{{ users[i] || '고객' }}</span>
+                    (<span class="font-mono">
+                      {{
+                        s.stepType === 'WITHDRAW'
+                          ? s.sourceBankCode + ' · ' + s.sourceAccountNo
+                          : s.targetBankCode + ' · ' + s.targetAccountNo
+                      }} </span
+                    >)님에게
+                    <span class="font-bold text-kb-brown-300">{{ formatWon(s.amount ?? 0) }}</span
+                    >을 {{ s.stepType === 'WITHDRAW' ? '보냈습니다' : '넣었습니다' }}.
+                  </p>
                 </div>
-              </div>
-
-              <div>
-                <span class="block text-gray-500 text-sm">비고</span>
-                <div>{{ s.note || '-' }}</div>
               </div>
             </div>
           </li>
@@ -140,7 +134,7 @@
   );
   const statusLabel = computed(
     () =>
-      ({ PENDING: '대기 중', RUNNING: '진행 중', SUCCEEDED: '완료', FAILED: '실패' })[status.value]
+      ({ PENDING: '대기 중', RUNNING: '진행 중', SUCCEEDED: '성공', FAILED: '실패' })[status.value]
   );
 
   // 금액 합계
@@ -175,14 +169,38 @@
   function labelOf(type) {
     switch (type) {
       case 'DEPOSIT':
-        return '입금';
+        return '돈 넣기';
       case 'WITHDRAW':
-        return '출금';
+        return '돈 꺼내기';
       case 'TRANSFER':
-        return '이체';
+        return '돈 보내기';
       default:
         return type;
     }
+  }
+
+  function tagClassesOf(type) {
+    // 공통으로 사용될 기본 클래스
+    const baseClasses = 'absolute top-0 right-0 px-2 py-1 text-lg font-semibold rounded-full';
+
+    let colorClasses = '';
+    switch (type) {
+      case 'DEPOSIT': // 돈 넣기 (입금)
+        colorClasses = 'bg-red-100 text-red-600';
+        break;
+      case 'WITHDRAW': // 돈 꺼내기 (출금)
+        colorClasses = 'bg-blue-100 text-blue-600';
+        break;
+      case 'TRANSFER': // 돈 보내기 (송금)
+        colorClasses = 'bg-yellow-100 text-yellow-600';
+        break;
+      default: // 기본값
+        colorClasses = 'bg-gray-100 text-gray-600';
+        break;
+    }
+
+    // 기본 클래스와 색상 클래스를 합쳐서 반환
+    return `${baseClasses} ${colorClasses}`;
   }
 
   onMounted(async () => {
@@ -199,7 +217,7 @@
       startPolling();
     } else {
       console.error('세션 생성 실패', res);
-      router.push({ name: 'undo-transaction', query: { task: '매크로' } });
+      router.push({ name: 'undo-transaction', query: { task: '간편 거래 등록' } });
     }
   });
   const getUsers = async (accountNo, bankCode) => {
