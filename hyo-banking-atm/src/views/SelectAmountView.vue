@@ -5,6 +5,7 @@
   import TransactionAPI from '@/apis/TransactionAPI';
   import { atmTransactionStore } from '@/stores/atmTransactionStore';
   import selectAmountAudio from '@/assets/audio/select-amount.mp3';
+  import selectAmountWithdrawAudio from '@/assets/audio/select-amount-withdraw.mp3';
   import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
   import StopAudioButton from '@/components/StopAudioButton.vue';
   import { useAudioStore } from '@/stores/audio';
@@ -111,13 +112,20 @@
   };
 
   onMounted(() => {
-    audioStore.initAudio(selectAmountAudio);
+    // task에 따라 다른 음성 선택
+    if (route.query.task === 'withdraw') {
+      audio.value = selectAmountWithdrawAudio;
+    } else {
+      audio.value = selectAmountAudio;
+    }
+
+    audioStore.initAudio(audio.value);
     if (audioStore.stopAudioOn) audioStore.playAudio();
   });
 </script>
 
 <template>
-  <ReplayAudioButton :src="selectAmountAudio" />
+  <ReplayAudioButton :src="audio" />
   <StopAudioButton />
   <main class="w-full h-full grid grid-cols-2 gap-5 p-10">
     <button
