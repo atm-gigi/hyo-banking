@@ -45,13 +45,13 @@
     // 숫자만 추출
     const numbers = value.replace(/\D/g, '');
 
-    // 444444-44-44444 형식으로 포맷팅 (6자리-2자리-5자리)
+    // 444444-44-444444 형식으로 포맷팅 (6자리-2자리-6자리)
     if (numbers.length <= 6) {
       return numbers;
     } else if (numbers.length <= 8) {
       return `${numbers.slice(0, 6)}-${numbers.slice(6)}`;
     } else {
-      return `${numbers.slice(0, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8, 13)}`;
+      return `${numbers.slice(0, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8, 14)}`;
     }
   };
 

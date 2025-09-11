@@ -31,13 +31,13 @@
     // 숫자만 추출
     const numbers = value.replace(/\D/g, '');
 
-    // 444444-44-44444 형식으로 포맷팅 (6자리-2자리-5자리)
+    // 444444-44-444444 형식으로 포맷팅 (6자리-2자리-6자리)
     if (numbers.length <= 6) {
       return numbers;
     } else if (numbers.length <= 8) {
       return `${numbers.slice(0, 6)}-${numbers.slice(6)}`;
     } else {
-      return `${numbers.slice(0, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8, 13)}`;
+      return `${numbers.slice(0, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8, 14)}`;
     }
   };
 
@@ -70,8 +70,8 @@
     if (props.formatAccountNumber) {
       // 계좌번호 포맷팅이 필요한 경우
       const currentNumbers = unformatAccountNumber(displayValue.value);
-      if (currentNumbers.length < 13) {
-        // 최대 13자리까지만 입력 가능
+      if (currentNumbers.length < 14) {
+        // 최대 14자리까지만 입력 가능 (6-2-6)
         newValue = currentNumbers + digit.toString();
         displayValue.value = formatAccountNumber(newValue);
         emit('update:modelValue', displayValue.value); // 포맷팅된 값을 전달
