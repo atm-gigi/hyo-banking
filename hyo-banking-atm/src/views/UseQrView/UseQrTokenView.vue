@@ -1,7 +1,5 @@
 <template>
-  <main
-    class="min-h-screen w-full h-full flex bg-gray-100 overflow-hidden justify-center items-center"
-  >
+  <main class="min-h-screen w-full h-full flex overflow-hidden justify-center items-center">
     <div
       :class="[
         'mx-auto max-w-4xl px-4 py-10 transition-all duration-500 ease-out',
@@ -55,7 +53,7 @@
     <!--오른쪽 슬라이드 키패드 (드로어) -->
     <aside
       :class="[
-        'fixed top-1/2 -translate-y-1/2 right-4 w-[22rem] md:w-[26rem]  bg-gray-100',
+        'fixed top-1/2 -translate-y-1/2 right-4 w-[22rem] md:w-[26rem]',
         'transition-transform duration-500 ease-out flex flex-col',
         keypadOpen ? 'translate-x-0' : 'translate-x-full',
       ]"

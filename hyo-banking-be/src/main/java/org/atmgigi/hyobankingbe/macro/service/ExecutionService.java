@@ -105,6 +105,7 @@ public class ExecutionService {
             }
             macroExecution.success(); // status = SUCCEEDED, finished_at = now
         } catch (Exception e) {
+            e.printStackTrace();
             macroExecution.fail("MACRO_FAILED", e.getMessage()); // status = FAILED, error_msg 저장
             log.error( e.getMessage());
         }

@@ -98,7 +98,7 @@
 
   const handleEnter = () => {
     router.push({
-      name: 'handle-macro-step',
+      name: 'input-password-withdraw',
       params: { steps: JSON.stringify(steps) },
       query: { code },
     });
@@ -130,7 +130,11 @@
     newVal => {
       console.log(newVal);
       if (newVal.length === 0) {
-        router.push({ name: 'handle-macro-step', params: { steps: JSON.stringify(steps) } });
+        router.push({
+          name: 'input-password-withdraw',
+          params: { steps: JSON.stringify(steps) },
+          query: { code },
+        });
       }
     },
     { immediate: true }
