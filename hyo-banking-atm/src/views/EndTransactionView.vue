@@ -16,11 +16,17 @@
   });
 
   onMounted(() => {
-    setTimeout(() => {
-      if (task.value === '간편거래 처리') router({ path: '/home' });
-      else router.push({ name: 'statement' });
-    }, 5000);
-  });
+  setTimeout(() => {
+    // $nextTick()을 사용하여 다음 틱에 로직 실행
+    this.$nextTick(() => {
+      if (task.value === '간편거래 처리') {
+        router.push({ path: '/home' });
+      } else {
+        router.push({ name: 'statement' });
+      }
+    });
+  }, 5000);
+});
 </script>
 
 <template>
