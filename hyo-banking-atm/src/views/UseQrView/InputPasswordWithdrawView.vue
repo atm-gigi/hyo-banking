@@ -59,8 +59,8 @@
   });
 </script>
 <template>
-  <main class="w-full h-full flex items-center justify-center">
-    <div class="flex flex-row w-full h-full">
+  <main class="w-full h-full flex items-center justify-center mt-10">
+    <div class="flex flex-row w-full h-full gap-x-10">
       <div class="w-1/2 flex flex-col justify-center items-center">
         <h1 class="text-5xl text-center font-bold text-black mb-5">비밀번호를 입력해주세요</h1>
         <!-- 입력창 -->

@@ -1,5 +1,5 @@
 <template>
-  <main class="min-h-screen flex items-center justify-center p-6">
+  <main class="w-full h-full flex items-center justify-center p-6">
     <div class="w-full max-w-4xl">
       <!-- 헤더 -->
       <header class="mb-10 flex items-center justify-between">
@@ -59,41 +59,33 @@
                 : 'border-gray-300 bg-gray-50'
             "
           >
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">
-                  {{ s.stepType === 'DEPOSIT' ? '📥' : s.stepType === 'WITHDRAW' ? '💸' : '🔁' }}
-                </span>
-                <span class="text-xl font-bold">{{ labelOf(s.stepType) }}</span>
+            <div class="relative">
+              <span
+                class="absolute top-0 right-0 px-2 py-1 text-lg font-semibold text-blue-600 bg-blue-100 rounded-full"
+                :class="tagClassesOf(s.stepType)"
+              >
+                {{ labelOf(s.stepType) }}
+              </span>
+              <div class="mb-2">
+                <span class="block text-2xl font-bold text-gray-900">{{ s.note }} </span>
               </div>
-              <span class="text-sm text-gray-500">순서 {{ s.stepOrder }}</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-lg">
-              <!-- 계좌 정보 -->
-              <div v-if="s.stepType === 'WITHDRAW'">
-                <span class="block text-gray-500 text-sm">출금 계좌</span>
-                <div class="font-mono">{{ s.sourceBankCode }} · {{ s.sourceAccountNo }}</div>
-              </div>
-              <div v-else>
-                <span class="block text-gray-500 text-sm">입금 계좌</span>
-                <div class="font-mono">{{ s.targetBankCode }} · {{ s.targetAccountNo }}</div>
-              </div>
-
-              <div>
-                <span class="block text-gray-500 text-sm">예금주</span>
-                <div>{{ users[i] || '-' }}</div>
-              </div>
-              <div>
-                <span class="block text-gray-500 text-sm">금액</span>
-                <div class="font-bold text-kb-brown-300">
-                  {{ formatWon(s.amount ?? 0) }}
+              <div class="flex items-start gap-x-2">
+                <span class="pt-1 text-sm text-gray-500">순서 {{ s.stepOrder }}</span>
+                <span class="pt-1 text-gray-400">|</span>
+                <div>
+                  <p class="text-lg">
+                    <span class="font-extrabold">{{ users[i] || '고객' }}</span>
+                    (<span class="font-mono">
+                      {{
+                        s.stepType === 'WITHDRAW'
+                          ? s.sourceBankCode + ' · ' + s.sourceAccountNo
+                          : s.targetBankCode + ' · ' + s.targetAccountNo
+                      }} </span
+                    >)님에게
+                    <span class="font-bold text-kb-brown-300">{{ formatWon(s.amount ?? 0) }}</span
+                    >을 {{ s.stepType === 'WITHDRAW' ? '보냈습니다' : '넣었습니다' }}.
+                  </p>
                 </div>
-              </div>
-
-              <div>
-                <span class="block text-gray-500 text-sm">비고</span>
-                <div>{{ s.note || '-' }}</div>
               </div>
             </div>
           </li>
@@ -175,14 +167,38 @@
   function labelOf(type) {
     switch (type) {
       case 'DEPOSIT':
-        return '입금';
+        return '돈 넣기';
       case 'WITHDRAW':
-        return '출금';
+        return '돈 꺼내기';
       case 'TRANSFER':
-        return '이체';
+        return '돈 보내기';
       default:
         return type;
     }
+  }
+
+  function tagClassesOf(type) {
+    // 공통으로 사용될 기본 클래스
+    const baseClasses = 'absolute top-0 right-0 px-2 py-1 text-lg font-semibold rounded-full';
+
+    let colorClasses = '';
+    switch (type) {
+      case 'DEPOSIT': // 돈 넣기 (입금)
+        colorClasses = 'bg-red-100 text-red-600';
+        break;
+      case 'WITHDRAW': // 돈 꺼내기 (출금)
+        colorClasses = 'bg-blue-100 text-blue-600';
+        break;
+      case 'TRANSFER': // 돈 보내기 (송금)
+        colorClasses = 'bg-yellow-100 text-yellow-600';
+        break;
+      default: // 기본값
+        colorClasses = 'bg-gray-100 text-gray-600';
+        break;
+    }
+
+    // 기본 클래스와 색상 클래스를 합쳐서 반환
+    return `${baseClasses} ${colorClasses}`;
   }
 
   onMounted(async () => {

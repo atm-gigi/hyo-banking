@@ -35,7 +35,7 @@
       <div class="mt-6 bg-yellow-100 border-l-8 border-yellow-400 p-4 rounded-md">
         <p class="text-3xl font-semibold py-1">
           <span class="font-bold leading-relaxed">뭔가 이상한가요?</span> <br />
-          절대 {{ payment }} 넣지 마시고, 바로 옆 인터폰(📞)으로 직원을 불러주세요.
+          절대 카드나 통장을 넣지 마시고, 바로 옆 인터폰(📞)으로 직원을 불러주세요.
         </p>
       </div>
     </div>

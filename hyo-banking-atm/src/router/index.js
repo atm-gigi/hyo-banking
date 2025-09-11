@@ -128,7 +128,7 @@ const router = createRouter({
     {
       path: '/input-password-withdraw/:steps',
       name: 'input-password-withdraw',
-      component: () => '@/views/UseQrView/InputPasswordWithdrawView.vue',
+      component: () => import('../views/UseQrView/InputPasswordWithdrawView.vue'),
     },
     {
       path: '/statement',

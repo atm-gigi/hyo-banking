@@ -1,5 +1,5 @@
 <template>
-  <main class="min-h-screen w-full h-full flex overflow-hidden justify-center items-center">
+  <main class="w-full h-full flex overflow-hidden justify-center items-center">
     <div
       :class="[
         'mx-auto max-w-4xl px-4 py-10 transition-all duration-500 ease-out',
