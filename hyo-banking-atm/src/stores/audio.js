@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useAudioStore = defineStore('audio', () => {
-  const stopAudioOn = ref(false); // 버튼 상태
+  const stopAudioOn = ref(true); // 버튼 상태
   const audio = ref(null); // 오디오 객체
 
   const initAudio = src => {
