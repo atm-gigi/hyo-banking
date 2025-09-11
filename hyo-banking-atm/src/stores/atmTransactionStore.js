@@ -5,7 +5,7 @@ export const atmTransactionStore = defineStore('atmTransactionInfo', () => {
   const userId = ref(1);
   const accountId = ref(1);
   const txnId = ref(null);
-  const accountNo = ref('110-123-456789');
+  const accountNo = ref('001123-45-6789');
   const currencyCode = ref('KRW');
   const bankCode = ref('KB');
   const balance = ref(0);

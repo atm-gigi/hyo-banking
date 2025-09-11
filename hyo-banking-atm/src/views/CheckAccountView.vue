@@ -22,7 +22,10 @@
   onMounted(async () => {
     try {
       // 4. 스토어에 저장된 계좌 정보로 사용자 이름을 조회합니다.
-      const userId = await UserAPI.getUserId(accountNumber.value, bankName.value);
+      const user = await UserAPI.getUserId(accountNumber.value, bankName.value);
+      atmStore.setTargetUserName(user.name);
+      atmStore.setTargetUserId(user.userId);
+      const userId = user.userId;
       console.log('수취인 정보 조회 성공:', userId);
       audioStore.initAudio(checkAccountAudio);
       if (audioStore.stopAudioOn) audioStore.playAudio();

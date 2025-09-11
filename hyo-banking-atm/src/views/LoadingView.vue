@@ -36,7 +36,9 @@
   });
 
   const handleEnter = async () => {
-    const userId = await UserAPI.getUserId(atmStore.accountNo, atmStore.bankCode);
+    const user = await UserAPI.getUserId(atmStore.accountNo, atmStore.bankCode);
+    const userId = user.userId;
+    atmStore.setTargetUserId(user.userId);
     console.log('User ID for balance check:', userId);
     const balance = await UserAPI.getBalance(userId);
     console.log('Current balance:', balance);

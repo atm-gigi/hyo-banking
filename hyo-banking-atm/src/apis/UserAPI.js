@@ -15,10 +15,7 @@ const UserAPI = {
     try {
       const response = await apiClient.get(`/user/${accountNo}/${bankCode}`);
 
-      atmStore.setTargetUserName(response.data.name);
-      atmStore.setTargetUserId(response.data.userId);
-
-      return response.data.userId;
+      return response.data;
     } catch (error) {
       console.error('Error fetching user info:', error);
       throw error;

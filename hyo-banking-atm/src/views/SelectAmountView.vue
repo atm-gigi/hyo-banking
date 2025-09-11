@@ -51,11 +51,9 @@
         if (route.query.task === 'transfer') {
           // Use 'await' to wait for the API call to finish
           const response = await TransactionAPI.createTransaction({
-            txnType: TASK_TYPES.TRANSFER,
-            sourceBankCode: atmStore.bankCode || 'KB',
-            sourceAccountNo: atmStore.accountNo || '110-123-456789',
-            targetBankCode: atmStore.targetBankCode || 'SH',
-            targetAccountNo: atmStore.targetAccountNo || '111-123-456789',
+            txnType: TASK_TYPES.TRANSFER.toUpperCase(),
+            targetBankCode: atmStore.targetBankCode,
+            targetAccountNo: atmStore.targetAccountNo,
             amount: amount.value,
             currencyCode: 'KRW',
             description: 'ATM 송금 - 강남지점',
@@ -71,9 +69,9 @@
         } else {
           // Use 'await' here as well
           const response = await TransactionAPI.createTransaction({
-            txnType: TASK_TYPES.WITHDRAW,
+            txnType: TASK_TYPES.WITHDRAW.toUpperCase(),
             sourceBankCode: atmStore.bankCode || 'KB',
-            sourceAccountNo: atmStore.accountNo || '110-123-456789',
+            sourceAccountNo: atmStore.accountNo || '001123-45-6789',
             amount: amount.value,
             currencyCode: atmStore.currencyCode || 'KRW',
             description: 'ATM 출금 - 강남지점',
