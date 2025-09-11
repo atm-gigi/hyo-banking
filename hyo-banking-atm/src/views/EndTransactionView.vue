@@ -2,9 +2,14 @@
   import { TASK_TYPES } from '@/constants';
   import { computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import ReplayAudioButton from '@/components/ReplayAudioButton.vue';
+  import StopAudioButton from '@/components/StopAudioButton.vue';
+  import { useAudioStore } from '@/stores/audio';
+  import endTransactionAudio from '@/assets/audio/end-transaction.mp3';
 
   const route = useRoute();
   const router = useRouter();
+  const audioStore = useAudioStore();
 
   const task = computed(() => {
     if (route.query.task === TASK_TYPES.DEPOSIT) return '돈 넣기';
@@ -16,7 +21,7 @@
   });
 
   onMounted(() => {
-  setTimeout(() => {
+    setTimeout(() => {
     // $nextTick()을 사용하여 다음 틱에 로직 실행
     this.$nextTick(() => {
       if (task.value === '간편거래 처리') {
@@ -26,10 +31,14 @@
       }
     });
   }, 5000);
-});
+    audioStore.initAudio(endTransactionAudio);
+    if (audioStore.stopAudioOn) audioStore.playAudio();
+  });
 </script>
 
 <template>
+  <ReplayAudioButton :src="selectBankAudio" />
+  <StopAudioButton />
   <main class="relative h-screen flex flex-col justify-between">
     <div>
       <p class="py-10 text-center text-5xl font-bold">
